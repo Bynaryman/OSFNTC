@@ -79,8 +79,13 @@ LDFLAGS += -L$(SNAP_ROOT)/software/lib
 ifndef OCSE_ROOT
 OCSE_ROOT=$(abspath $(TOPDIR)/../ocse)
 endif
+ifeq ($(ARCH),power)
+LDFLAGS += -Wl,-rpath,-L/usr/lib/powerpc64le-linux-gnu/libocxl
+EXTRALIB += /usr/lib/powerpc64le-linux-gnu/libocxl.so
+else
 LDFLAGS += -L$(OCSE_ROOT)/libocxl -Wl,-rpath,$(OCSE_ROOT)/libocxl
 EXTRALIB += $(OCSE_ROOT)/libocxl/libocxl.so
+endif
 EXTRALIB += $(SNAP_ROOT)/software/lib/libosnap.so
 EXTRALIB += -lpthread
 endif
