@@ -1327,6 +1327,7 @@ CCOMMON_OPT	+= -DUSE_OPENMP
 endif
 
 ifeq ($(USE_OCAPI), 1)
+$(info ARCH IS $(ARCH))
 CFLAGS += -DUSE_OCAPI=1
 $(info $(SNAP_ROOT))
 $(info $(OCSE_ROOT))

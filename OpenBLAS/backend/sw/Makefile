@@ -15,5 +15,5 @@ projs += gemm
 # If you have the host code outside of the default snap directory structure,
 # change to /path/to/snap/actions/software.mk
 $(info SNAP ROOT : $(SNAP_ROOT))
-include /home/binaryman/Documents/PhD/high_end/oc-accel/actions/software.mk
-#include $(SNAP_ROOT)/actions/software.mk
+#include /home/binaryman/Documents/PhD/high_end/oc-accel/actions/software.mk
+include $(SNAP_ROOT)/actions/software.mk
