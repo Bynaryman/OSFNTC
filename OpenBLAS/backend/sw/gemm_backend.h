@@ -22,7 +22,7 @@
 
 //#include "../../common.h"
 // #define CBLAS 1 // so we have c prototypes
-#include "cblas.h"
+#include "../../cblas.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -485,7 +485,8 @@ static int gemm_backend_test (
     free(B_T);
     free(mem_out);
     free(aggregate_dma_memory);
-    exit(EXIT_SUCCESS);
+    //exit(EXIT_SUCCESS);
+    return 0;
 
     out_error2:
         snap_detach_action(action);
