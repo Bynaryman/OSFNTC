@@ -295,7 +295,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
   FLOAT *b = (FLOAT*) vb;
   FLOAT *c = (FLOAT*) vc;
 #endif
-printf("order is:%d\n", order);
 
   blas_arg_t args;
   int transa, transb;

@@ -475,15 +475,15 @@ static int gemm_backend_test (
     rc = snap_action_sync_execute_job(action, &cjob, timeout);
     gettimeofday(&etime_action_execution, NULL);
     if (rc != 0) {
-        VERBOSE0(stderr, "err: job execution %d: %s!\n", rc, strerror(errno));
+        VERBOSE0(stdout, "err: job execution %d: %s!\n", rc, strerror(errno));
         goto out_error3;
     }
     if (cjob.retc == SNAP_RETC_SUCCESS) {
         VERBOSE3(stdout, "SUCCESS\n");
     }
     else {
-        VERBOSE3(stdout, "FAILED\n");
-        VERBOSE0(stderr, "err: Unexpected RETC=%x!\n", cjob.retc);
+        VERBOSE0(stdout, "FAILED\n");
+        VERBOSE0(stdout, "err: Unexpected RETC=%x!\n", cjob.retc);
         goto out_error3;
     }
 
