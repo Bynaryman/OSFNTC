@@ -1,7 +1,4 @@
-verilog xil_defaultlib --include "../../viv_project/framework.ip_user_files/ipstatic/hdl" --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx/encrypted_buffer_bypass" --include "../../hdl/core" --include "../../oc-bip/config_subsystem" \
-"../../ip/axi_dwidth_converter/sim/axi_dwidth_converter.v" \
-
-verilog work --include "../../viv_project/framework.ip_user_files/ipstatic/hdl" --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx/encrypted_buffer_bypass" --include "../../hdl/core" --include "../../oc-bip/config_subsystem" \
+verilog work --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx/encrypted_buffer_bypass" --include "../../hdl/core" --include "../../oc-bip/config_subsystem" \
 "../../hdl/oc/axi_lite_master.v" \
 "../../hdl/oc/brdg_axi_slave.v" \
 "../../hdl/oc/brdg_axi_slave_cmd_fifo.v" \
@@ -37,7 +34,7 @@ verilog work --include "../../viv_project/framework.ip_user_files/ipstatic/hdl" 
 "../../hdl/oc/ram_true_dual.v" \
 "../../hdl/oc/tlx_mmio_converter.v" \
 
-sv work --include "../../viv_project/framework.ip_user_files/ipstatic/hdl" --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx/encrypted_buffer_bypass" --include "../../hdl/core" --include "../../oc-bip/config_subsystem" \
+sv work --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx/encrypted_buffer_bypass" --include "../../hdl/core" --include "../../oc-bip/config_subsystem" \
 "../../oc-bip/sim/src/top.sv" \
 
 verilog work "glbl.v"

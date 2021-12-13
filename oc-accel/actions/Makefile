@@ -15,7 +15,7 @@
 #
 PLATFORM ?= $(shell uname -m)
 
-subdirs += $(wildcard hls_*) $(wildcard hdl_*)
+subdirs += $(wildcard hls_*) $(wildcard hdl_*) cgemm
 software_subdirs = $(addsuffix /sw,$(subdirs))
 hardware_subdirs = $(addsuffix /hw,$(subdirs))
 
