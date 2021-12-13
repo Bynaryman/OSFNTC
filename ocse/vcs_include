@@ -1,0 +1,2 @@
+-CFLAGS '-I$OCSE_INSTALL_DIR/common'
+-CFLAGS '-I$VCS_HOME/`vcs -platform`/lib'

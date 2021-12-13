@@ -1,0 +1,834 @@
+#!/bin/bash
+
+#
+# Copyright 2017, International Business Machines
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#
+# Figure out SNAP supported cards in the system. We have AlphaData KU3
+# and Nallatech 250S cards. This script should help automatic testing of
+# any available cards in one system. It should print out a list of
+# available cards of each type.
+#
+
+# output formatting
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+# v2.0 : modified Jan 16th 2018 to have -v option providing extra information
+# v2.1 : modified Feb 26th 2020 adding AD9Hx in CAPI2 and OC modes
+# v2.2 : modified March 19th 2020 adding -t (accel type) option; this is to prevent reporting 2 cards (1 CAPI2, 1 OpenCAPI) as only 1 card with 2 characteristics (both have $card ID=0)
+# v2.3 : modified April 17th 2020 adding -d (debug) option; Displays DEBUG additional info
+# v2.4 : add OC-BW250SOC card
+# v2.5 : use real slot number for OC cards
+# v2.6 : add generation of report tar.gzip archive in debug mode
+# v2.7 : February 18th, 2021: Debug mode, collecting dmesg command output
+
+version=2.7
+accel=UNKNOWN
+VERBOSE=0
+
+# Print usage message helper function
+function usage() {
+	echo "Usage: $PROGRAM"
+	echo "    [-v] Prints extra information (to be put as first param)"
+	echo "    [-d] Debug mode to get additional system info and eventually build a tar.gz report file (in local directory)"
+	echo "          -d option asks you if you want to generate a tar.gz report file"
+	echo "    [-Dy] Debug mode (cf -d above) with the generation of a tar.gz report file (without asking)"
+	echo "    [-Dn] Debug mode (cf -d above) WITHOUT the generation of a tar.gz report file (without asking)"
+	echo "    [-A] <accelerator> use either ADKU3, N250S, S121B_BPIx16, S121B_SPIx4, AD8K5, RCXVUP, FX609, S241, N250SP, AD9V3, OC-AD9V3, AD9H3, AD9H335, OC-AD9H3, OC-AD9H335, AD9H7, OC-AD9H7, OC-BW250SOC, U200 or ALL"
+	echo "    [-C] <0..3> Print accelerator name for this Card"
+	echo "    [-t] <1..3> Specifies the Type of CAPI: CAPI1.0, CAPI2.0 or OPENCAPI (CAPI3.0)"
+	echo "    [-V] provides version"
+	echo "  prints out a list of CAPI Cards found in this System."
+	echo
+	echo "  Supported CAPI Cards are:"
+	echo "     [N250S ADKU3 S121B_BPIx16 S121B_SPIx4 AD8K5 RCXVUP N250SP S241 FX609 AD9V3 AD9H3 AD9H335 AD9H7 U200]"
+	echo "  Supported OpenCAPI Cards are:"
+	echo "     [OC-AD9V3 OC-AD9H3 OC-AD9H335 OC-AD9H7 OC-BW250SOC]"
+	echo "     ------------------- Example -----------------------------------------"
+	echo "     $PROGRAM -A ALL"
+	echo "        Print a list (e.g. 0 1 2 3) of all CAPI cards in this System"
+	echo "     $PROGRAM -A ADKU3"
+	echo "        Prints a list of ADKU3 CAPI Cards found"
+        echo "     $PROGRAM -A OC-AD9V3"
+        echo "        Prints a list of OC-AD9V3 OpenCAPI Cards found"
+	echo "     $PROGRAM -C 0"
+	echo "         Prints the Type of CAPI/OpenCAPI Card in PCI slot 0"
+	echo "     $PROGRAM -C 0 -t 3"
+	echo "         Prints the Type of OpenCAPI-only Card 0"
+	echo "     $PROGRAM -v -A ALL"
+	echo "         Prints Verbose Informations for all CAPI/OpenCAPI Cards"
+	echo "  Exit code will return how many accelerator's are available."
+}
+
+# Add a function to delay this script if Flash Update is in progress.
+# Flash Update will reset the Capi Card and the card will disappear for
+# some time.
+function wait_no_flash() {
+	for i in `seq 1 50`; do
+		if [ ! -d /var/cxl/capi-flash-script.lock ]; then
+			break;
+		fi
+		sleep 5
+		if [ $VERBOSE -eq 1 ] ; then
+		  echo "capi-flash-script is locked in /var/cxl. Waiting for unlock (250s)"
+		fi
+	done
+	if [ $i -ge 50 ]; then
+		if [ $VERBOSE -eq 1 ] ; then
+		  echo "ERROR: Timeout. Flash is being accessed ......."
+		fi
+		exit 0
+	fi
+}
+
+function wait_no_flash_oc() {
+        for i in `seq 1 50`; do 
+                if [ ! -d /var/ocxl/oc-flash-script.lock ]; then
+                        break;                                  
+                fi                                                      
+                sleep 5                                                         
+                if [ $VERBOSE -eq 1 ] ; then                                                      
+                  echo "oc-flash-script is locked in /var/ocxl. Waiting for unlock (250s)"               
+                fi                                                                                        
+        done                                                                                              
+        if [ $i -ge 50 ]; then                                                                                            
+                if [ $VERBOSE -eq 1 ] ; then                                                                                                
+                  echo "ERROR: Timeout. Flash is being accessed ......."                                                                                   
+                fi                                                                                                                                          
+                exit 0                                                                                                                                      
+        fi                                                                                                                                          
+}
+#
+# We need to take into account that there might be other CAPI cards
+# in our system. Therefore we check the psl_revision, which identifies
+# the card hardware and the device id in the configuration record cr0
+# which is the unique id the card has. The combination of both, should
+# be more or less bullet prove.
+#
+function detect_snap_cards() {
+	local check_dev=$1
+	local check_sub=$2
+	local card_name=$3
+	local rc=0
+
+	wait_no_flash
+
+	# We have MAX 4 CAPI cards in one system
+	for card in `seq 0 3` ; do
+		if [ ! -d /sys/class/cxl/card${card} ]; then
+			continue
+		fi
+
+		device=`cat /sys/class/cxl/card${card}/afu${card}.0/cr0/device`
+		if [ "$device" != "$check_dev" ]; then
+			continue
+		fi
+		sub=`cat /sys/class/cxl/card$card/device/subsystem_device`
+		if [ "$sub" = "$check_sub" ]; then
+			if [ $VERBOSE -eq 1 ] ; then
+				psl_revision=`cat /sys/class/cxl/card${card}/psl_revision`
+				image_loaded=`cat /sys/class/cxl/card${card}/image_loaded`
+				load_image_on_perst=`cat /sys/class/cxl/card${card}/load_image_on_perst`
+				pci=`ls -lhaF //sys/class/cxl/card${card}/device | awk -F"../../../" '{print $2}'`
+				slot=`cat /sys/firmware/opal/msglog | grep -a SLOT | grep -a ${pci::-9} | tail -1 | cut -d = -f 2`
+				pci_bis=`cd /sys/class/cxl/card${card}/device/pci*; ls -d *:*`
+
+				echo -e ""
+				echo -e "$card_name card has been detected in CAPI card position: ${card}"
+				psl_revision_hex=`printf '0x%x\n' ${psl_revision}`
+				echo " PSL Revision is                                                : ${psl_revision_hex}"
+				echo -e " Device ID    is                                                : ${check_dev}"
+                                echo -e " Sub device   is                                                : ${check_sub}"
+				echo -e " Image loaded is self defined as                                : ${image_loaded}"
+				echo -e " Next image to be loaded at next reset (load_image_on_perst) is : ${load_image_on_perst}"
+                                echo -e " Hardware Card PCI location is                                  : ${pci::-1}"
+                                echo -e " Virtual  Card PCI location is                                  : ${pci_bis}"
+				echo -e " Card PCI physical slot is (requires sudo priv)                 : ${slot}"
+			else
+				echo -n "${card} "
+			fi
+			rc=$((rc +1))
+		fi
+	done
+	wait_no_flash_oc
+	# Find all OC cards in the system
+	if [ -d /sys/class/ocxl ]; then
+		
+	        allcards=`ls -d /sys/class/ocxl/IBM* | awk -F"/sys/class/ocxl/" '{ print $2 }' |sort |sed s/IBM,AFP3./OPENCAPI-/g |sed s/IBM,oc-snap./OPENCAPI-/g | awk -F"-" '{print $2}'`
+		allcards_array=($allcards)
+		# get number of cards in system
+		n=`ls -d /sys/class/ocxl/IBM* | awk -F"/sys/class/ocxl/" '{ print $2 }' | wc -w`
+		for ((card = 0 ; card < $n ; card++)); do
+	        mycard=${allcards_array[$card]::-2}
+	                if [ ! -d /sys/bus/pci/devices/${mycard} ]; then
+	                        continue
+	                fi
+	  
+                device=`cat /sys/bus/pci/devices/${mycard}/device`
+                if [ "$device" != "$check_dev" ]; then
+                        continue
+                fi
+                sub=`cat /sys/bus/pci/devices/${mycard}/subsystem_device`
+                if [ "$sub" = "$check_sub" ]; then
+                        pci=${allcards_array[$card]}
+                        #pci slot read is in hexa and will be displayed without the 0x
+                        pci_slot_hex=$(printf '%x' "0x${pci::-10}")
+                        if [ $VERBOSE -eq 1 ] ; then
+                                #psl_revision=`cat /sys/class/cxl/card${card}/psl_revision`
+#                                image_loaded=`cat /var/ocxl/card${card}| awk {'print $8'}`
+#                                load_image_on_perst=`cat /sys/class/cxl/card${card}/load_image_on_perst`a
+                                image_loaded="factory"
+				load_image_on_perst="factory"
+
+#                                slot=`cat /sys/firmware/opal/msglog | grep -a SLOT | grep -a ${pci::-9} | tail -1 | cut -d = -f 2`
+                                echo -e ""
+                                #echo -e "$card_name card has been detected in OPENCAPI card position: ${card}"
+                                echo -e "$card_name card has been detected in OPENCAPI card position: ${pci_slot_hex}"
+                                psl_revision_hex=`printf '0x%x\n' ${psl_revision}`
+#                                echo " PSL Revision is                                                : ${psl_revision_hex}"
+                                echo -e " Device ID    is                                                : ${check_dev}"
+                                echo -e " Sub device   is                                                : ${check_sub}"
+                                echo -e " Image loaded is self defined as                                : ${image_loaded}"
+#                               echo -e " Next image to be loaded at next reset (load_image_on_perst) is : ${load_image_on_perst}"  # OC doesn't support this feature
+                                echo -e " Virtual Card PCI location is                                   : ${pci::-2}"
+                                echo -e " Card PCI physical slot is                                      : Not Applicable"
+                        else
+                                echo -n "${pci_slot_hex} "
+                        fi
+                        rc=$((rc +1))
+                fi
+
+		done
+	fi
+	return $rc
+}
+
+function detect_card_name()
+{
+	local card=$1
+	local dev=$2
+	local sub=$3
+	local name=$4
+
+	wait_no_flash
+
+	if [ -d /sys/class/cxl/card${card} ]; then
+		psl_revision=`cat /sys/class/cxl/card${card}/psl_revision`
+		this_dev=`cat /sys/class/cxl/card${card}/afu${card}.0/cr0/device`
+		if [ "$this_dev" = "$dev" ]; then
+			this_sub=`cat /sys/class/cxl/card$card/device/subsystem_device`
+			if [ "$this_sub" = "$sub" ]; then
+			        if [ $VERBOSE -eq 1 ] ; then
+					echo -e "CAPI Card $card is detected as $name card"
+				else
+					echo -n $name
+				fi
+				return 1
+			fi
+		fi
+	fi
+	return 0
+}
+
+function detect_oc_card_name()
+{
+        local card=$1
+        local dev=$2
+        local sub=$3
+        local name=$4
+
+        wait_no_flash_oc
+
+        # Find all OC cards in the system
+        #allcards=`ls -d /sys/class/ocxl/IBM* | awk -F"/sys/class/ocxl/" '{ print $2 }' |sort |sed s/IBM,AFP3./OPENCAPI-/g |sed s/IBM,oc-snap./OPENCAPI-/g | awk -F"-" '{print $2}'`
+        #allcards_array=($allcards)
+        #mycard=${allcards_array[$card]::-2}
+
+        # card argument is now the PCI slot number in hexa rather than the order number of the cards found
+        mycard=$(printf '%.4x:00:00.1' "0x${card}")
+
+
+        if [ -d /sys/bus/pci/devices/${mycard} ]; then
+                this_dev=`cat /sys/bus/pci/devices/${mycard}/device`
+                if [ "$this_dev" = "$dev" ]; then
+                        this_sub=`cat /sys/bus/pci/devices/${mycard}/subsystem_device`
+                        if [ "$this_sub" = "$sub" ]; then
+                                if [ $VERBOSE -eq 1 ] ; then
+                                        echo -e "OPENCAPI Card $card is detected as $name card"
+                                else
+                                        echo -n $name
+                                fi
+                                return 1
+                        fi
+                fi
+        fi
+        return 0
+}
+
+function debug_output()
+{
+	local cmd=$1
+
+	echo; echo "#############################################################################################################"
+	echo "$cmd"
+	echo "------------------------------------------"
+	echo
+	eval $cmd
+}
+
+# Main Start here
+# Parse any options given on the command line
+PROGRAM=$0
+CardOption=0
+type=0
+while getopts ":vA:C:VdD:ht:" opt; do
+	case ${opt} in
+	v)
+		VERBOSE=1
+		echo "oc_find_card version is ${version}"
+		;;
+	d|D)
+		DEBUG=1
+		TarFileOption=${OPTARG} # TarFileOption="" if "d" option
+		DistribLike=`{ [ -f /etc/os-release ] && grep -a '^ID=' /etc/os-release | cut -d= -f2 ; } || { [ -f /etc/system-release ] && cat /etc/system-release ; }`
+		if (echo $DistribLike | egrep -a -qi 'centos|fedora|rhel'); then DistribLike=fedora; PackageCmd="rpm -qva"
+		elif (echo $DistribLike | egrep -a -qi 'ubuntu|debian'); then DistribLike=debian; PackageCmd="dpkg -l"
+		else DistribLike=unknown; PackageCmd="echo 'Unknown Distribution !'"
+		fi
+		MyName=$(who am i | awk '{print $1}')
+		Time=$(date +%F-%H%M%S)
+		OutputDir=./OCFindCard_Debug_$Time
+		TarFileDir=./OCFindCard_Debug_output
+		DebugResultTarFile=$TarFileDir/OCFindCard_Debug_$Time.tar.gz
+		mkdir $OutputDir
+		trap "rm -rf $OutputDir" EXIT
+		SystemInfo=$OutputDir/System_INFO.txt
+		> $SystemInfo
+		OutputFile=$OutputDir/oc_find_card_OUTPUT.txt
+		> $OutputFile
+
+		echo;echo "###########################################################################################################"
+		echo;echo "( ͡° ͜ʖ ͡°) DEBUG INFO (more info if run as root)"
+		echo
+ 		echo "==========================================================================================================="
+		echo "DEBUG MODE DESCRIPTION:"
+		echo "-----------------------"
+		echo
+		echo "this mode displays below all the useful debugging short information on screen"
+		echo "+"
+		echo "it offers the possibility to save this screen output plus also some needed log files (msglog, dmesg, etc.) to the following tar.gz report file:"
+		echo "    $DebugResultTarFile"
+		echo
+		echo "(keeping/sending the $DebugResultTarFile file allows you to keep/send all the relevant information"
+		echo
+
+		if [[ $TarFileOption == "" ]]; then
+			echo "==========================================================================================================="
+			echo "TAR.GZ REPORT FILE CHOICE:"
+			echo "---------------------------"
+			echo
+			echo -e "Do you want to generate a tar.gz report file [Y/n]: \c"
+			read TarFileOption
+			if [ "X$TarFileOption" != "X" ] && [ "X$TarFileOption" != "Xy" ] && [ "X$TarFileOption" != "Xyes" ] && [ "X$TarFileOption" != "XY" ]; then
+				TarFileOption="n"
+			else
+				TarFileOption="y"
+				echo "  -> A report file is going to be generated: $DebugResultTarFile"
+			fi
+			echo
+		fi
+
+		{
+		echo;echo "###########################################################################################################"
+		echo;echo "( ͡° ͜ʖ ͡°) DEBUG INFO (more info if run as root)"
+		echo
+
+		echo "==========================================================================================================="
+		echo "COLLECTING SYSTEM INFO:"
+		echo "-----------------------"
+		echo
+		echo "hostname, installed packages, etc... Please have a look at $SystemInfo file"
+		echo "(in the tar.gz report file if generated)"
+		debug_output "hostname" >> $SystemInfo
+		debug_output "cat /etc/os-release" >> $SystemInfo
+		debug_output "uname -a" >> $SystemInfo
+		debug_output "$PackageCmd" >> $SystemInfo
+
+		echo
+		echo "==========================================================================================================="
+		echo "FIRMWARE INFO:"
+		echo "--------------"
+		echo
+		echo "Active SKIBOOT firmware release:      `cat /proc/device-tree/ibm,opal/firmware/version | tr -d '\0'`  (/proc/device-tree/ibm,opal/firmware/version)"  # tr strips NUL bytes (ubuntu warns if not doing) 
+		echo "(Active and LSMCode SKIBOOT may be different if a custom SKIBOOT has been applyied. The 'Active' one is the really running one)"
+		echo
+		echo "LSMCODE output:"
+		lsmcode
+		echo
+		echo "Testing /proc/device-tree/ibm,secureboot/secure-enabled existence:"
+		if [ -f /proc/device-tree/ibm,secureboot/secure-enabled ]; then
+			echo "  file exists ==> Secure-Boot ENABLED"
+		else
+			echo "  file doesn't exist ==> Secure-Boot DISABLED"
+		fi
+
+		echo
+		echo "==========================================================================================================="
+		echo "OS INFO:"
+		echo "--------"
+		echo
+		echo "LINUX distribution:            `{ [ -f /etc/os-release ] && grep -a PRETTY_NAME /etc/os-release | cut -d= -f2 ; } || { [ -f /etc/system-release ] && cat /etc/system-release ; }`"
+		echo "LINUX version:                 `{ [ -f /etc/os-release ] && grep -a '^VERSION=' /etc/os-release | cut -d= -f2 ; } || { [ -f /etc/system-release ] && cat /etc/system-release ; }`"
+		echo "OS KERNEL release:             `uname -r`"; echo
+
+		echo
+		echo "CXL / OCXL installed packages:"
+		eval $PackageCmd | grep -a -i cxl
+
+		echo
+		echo "==========================================================================================================="
+		echo "PCI ACCELERATOR CARDS:"
+		echo "----------------------"
+		echo
+		echo "PCI cards detected (lspci):"
+		lspci -nn | grep -a -i accelerator
+		echo "(0632: CAPI card, 062b: OPENCAPI card)"
+		echo
+		echo "Card installed on non-CAPI PCI slot (dmesg):"
+		dmesg | grep -a incompatible
+		echo
+		echo "CAPI /dev/cxl directory:"
+		ls -la /dev/cxl
+		echo
+		echo "CAPI /sys/class/cxl directory:"
+		ls -la /sys/class/cxl
+		echo
+		echo "OPENCAPI /dev/ocxl directory:"
+		ls -la /dev/ocxl
+		echo
+		echo "OPENCAPI /sys/class/ocxl directory:"
+		ls -la /sys/class/ocxl
+		echo
+		echo "EEH_MAX_FREEZES: default number of resets allowed per PCI device per hour (/sys/kernel/debug/powerpc/eeh_max_freezes)"
+		PCIMaxReset=`[ -f /sys/kernel/debug/powerpc/eeh_max_freezes ] && cat /sys/kernel/debug/powerpc/eeh_max_freezes`
+		printf "%d ($PCIMaxReset)\n" $PCIMaxReset
+		echo
+
+		echo
+		echo "==========================================================================================================="
+		echo "OPAL MSGLOG (from /sys/firmware/opal/msglog file):"
+		echo "--------------------------------------------------"
+		mkdir -p $OutputDir/sys/firmware/opal
+		cp /sys/firmware/opal/msglog $OutputDir/sys/firmware/opal/msglog
+		chmod 666 $OutputDir/sys/firmware/opal/msglog
+		echo
+		echo "Looking for 'degraded':"
+		grep -a -i degraded /sys/firmware/opal/msglog
+		echo
+		echo
+		echo "Looking for 'OCAPI':"
+		grep -a OCAPI /sys/firmware/opal/msglog
+		echo
+		echo
+		echo "Looking for 'HMI':"
+		grep -a HMI /sys/firmware/opal/msglog
+		echo
+		echo
+		echo "OCAPI link information:"
+		grep -a OCAPI /sys/firmware/opal/msglog | grep -a link
+
+		echo
+		echo "==========================================================================================================="
+		echo "DMESG COMMAND OUTPUT:"
+		echo "--------------------------------------------------"
+		echo
+		echo "Saving dmesg command output into the tar.gz result file"
+		dmesg > $OutputDir/dmesg.out
+
+		echo
+		echo "==========================================================================================================="
+		echo "`basename $0` WITHOUT THE -d DEBUG OPTION (in order to get normal output in the archive report):"
+		echo "-----------------------------------------------------------------------------------------------"
+		$0 -AALL -v # Running the script in normal mode (without the -d) just to get the normal output inside the tar.gz archive report
+
+		echo
+		echo "==========================================================================================================="
+		echo "oc_maint -v -Cxx FOR ALL OPENCAPI CARD:"
+		echo "---------------------------------------"
+		for i in `$0 -AALL -v | grep position | grep OPENCAPI | awk -F: '{print $2}'`; do
+			echo
+			echo "`dirname $0`/oc_maint -v -C$i"
+			`dirname $0`/oc_maint -v -C$i
+		done
+
+		echo
+		echo "==========================================================================================================="
+		echo "More info could be found in /sys/firmware/opal/msglog rolling file (firmware journal)"
+		echo "or with dmesg (kernel journal) or journalctl (systemd journal) commands"
+		echo
+		echo "( ͡° ͜ʖ ͡°) END OF DEBUG INFO"
+		echo;echo "###########################################################################################################"
+		} 2>&1 | tee $OutputFile
+
+		if [[ $TarFileOption == "y" ]]; then
+			mkdir -p $TarFileDir
+			echo
+			echo "==========================================================================================================="
+			echo "GENERATING $DebugResultTarFile report file:"
+			echo "-------------------------------------------"
+			chown -Rh $MyName:$MyName $OutputDir
+			tar cvzf $DebugResultTarFile $OutputDir
+			chown $MyName:$MyName $DebugResultTarFile
+			echo
+			echo "$DebugResultTarFile tar.gz archive generated"
+			echo;echo "###########################################################################################################"
+		fi
+		echo
+		;;
+	A)
+		accel=${OPTARG};
+		;;
+	C)
+		card=${OPTARG};
+		CardOption=1
+		;;
+	t)
+		type=${OPTARG}
+		;;
+	V)
+		echo "${version}" >&2
+		exit 0
+		;;
+	h)
+		usage;
+		exit 0;
+		;;
+	\?)
+		printf "${bold}ERROR:${normal} Invalid option: -${OPTARG}\n" >&2
+		exit 1
+		;;
+	:)
+		printf "${bold}ERROR:${normal} Option -$OPTARG requires an argument.\n" >&2
+		exit 1
+		;;
+	esac
+done
+
+shift $((OPTIND-1))
+# now do something with $@
+
+if  [ $CardOption == 1 ]; then
+  	rc=0
+
+#card argument is now the PCI slot number rather than the order number of the cards found
+#	if [[ $card -gt 3 ]]; then
+#		echo "Invalid option for -C -$OPTARG" >&2
+#		usage
+#		exit 0
+#	fi
+
+	if [[ $type -gt 3 ]]; then
+		echo "Invalid option for -t -$OPTARG" >&2
+		usage
+		exit 0
+	fi
+
+	if [ $type -eq 3 ] || [ $type -eq 0 ]; then # OpenCAPI or nothing requested (no -t option)
+		detect_oc_card_name $card  "0x062b" "0x060f" "OC-AD9V3"
+    	if [ $? == 1 ]; then
+        	rc=1
+    	fi
+		detect_oc_card_name $card  "0x062b" "0x0667" "OC-AD9H3"
+		if [ $? == 1 ]; then
+        	rc=1
+		fi
+		detect_oc_card_name $card  "0x062b" "0x066B" "OC-AD9H335"
+		if [ $? == 1 ]; then
+        	rc=1
+		fi
+		detect_oc_card_name $card  "0x062b" "0x0666" "OC-AD9H7"
+        	if [ $? == 1 ]; then
+            	rc=1
+        	fi
+		detect_oc_card_name $card  "0x062b" "0x066a" "OC-BW250SOC"
+        	if [ $? == 1 ]; then
+            	rc=1
+        	fi
+	fi
+
+	if [ $type -eq 2 ] || [ $type -eq 0 ]; then # CAPI2 or nothing requested (no -t option)
+		detect_card_name $card  "0x0632" "0x060c" "RCXVUP"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x060d" "N250SP"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0661" "FX609"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0660" "S241"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x04dd" "N250SP"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x060f" "AD9V3"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0667" "AD9H3"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x066b" "AD9H335"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0665" "U200"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0666" "AD9H7"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0669" "U50"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+	fi
+
+	if [ $type -eq 1 ] || [ $type -eq 0 ]; then # CAPI1 or nothing requested (no -t option)
+		detect_card_name $card  "0x0632" "0x0605" "ADKU3"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x060a" "N250S"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0607" "S121B_v16.1_BPIx16"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0664" "S121B_v16.2_SPIx4"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+		detect_card_name $card  "0x0632" "0x0608" "AD8K5"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+	fi
+
+	if [ $type -eq 0 ]; then # nothing requested => specific cases (no -t option)
+		detect_card_name $card  "0x0602" "" "GZIP"
+		if [ $? == 1 ]; then
+			rc=1
+		fi
+	fi
+
+	exit $rc
+fi
+
+RC=0
+
+case ${accel} in
+	# KU3 Card from AlphaData
+	"ADKU3")
+		detect_snap_cards "0x0632" "0x0605" "ADKU3"
+		RC=$?
+		;;
+	# NSA121B Card from Semptian BPIx16
+	"S121B_BPIx16")
+		detect_snap_cards "0x0632" "0x0607" "S121B_v16.1_BPIx16"
+		RC=$?
+		;;
+	# NSA121B Card from Semptian SPIx4
+	"S121B_SPIx4")
+		detect_snap_cards "0x0632" "0x0664" "S121B_v16.2_SPIx4"
+		RC=$?
+		;;
+	# 250s Card from Nallatech
+	"N250S")
+		detect_snap_cards "0x0632" "0x060a" "N250S"
+		RC=$?
+		;;
+	# AD8K5 Card from AlphaData
+	"AD8K5")
+		detect_snap_cards "0x0632" "0x0608" "AD8K5"
+		RC=$?
+		;;
+	# RCXVUP CAPI 2.0 card from ReflexCES
+	"RCXVUP")
+		detect_snap_cards "0x0632" "0x060c" "RCXVUP"
+		RC=$?
+		;;
+	# N250SP CAPI 2.0 card from Nallatech (SNAP mode)
+	"N250SP")
+		detect_snap_cards "0x0632" "0x060d" "N250SP"
+		RC=$?
+		;;
+	# S241 CAPI 2.0 card from Semptian
+	"S241")
+		detect_snap_cards "0x0632" "0x0660" "S241"
+		RC=$?
+		;;
+	# FX609 CAPI 2.0 card from Flyslice
+	"FX609")
+		detect_snap_cards "0x0632" "0x0661" "FX609"
+		RC=$?
+		;;
+	# N250SP CAPI 2.0 card from Nallatech (FlashGT+ mode)
+	"N250SP")
+		detect_snap_cards "0x0632" "0x04dd" "N250SP"
+		RC=$?
+		;;
+	# OC-AD9V3 OpenCAPI 3.0 card from Alphadata
+	"OC-AD9V3")
+		detect_snap_cards "0x062b" "0x060f" "OC-AD9V3"
+		RC=$?
+		;;
+	# OC-AD9H3 OpenCAPI 3.0 card from Alphadata
+	"OC-AD9H3")
+		detect_snap_cards "0x062b" "0x0667" "OC-AD9H3"
+		RC=$?
+		;;
+	# OC-AD9H335 OpenCAPI 3.0 card from Alphadata
+	"OC-AD9H335")
+		detect_snap_cards "0x062b" "0x066b" "OC-AD9H335"
+		RC=$?
+		;;
+	# OC-AD9H7 OpenCAPI 3.0 card from Alphadata
+	"OC-AD9H7")
+		detect_snap_cards "0x062b" "0x0666" "OC-AD9H7"
+		RC=$?
+		;;
+	# OC-BW250SOC OpenCAPI 3.0 card from Bittware
+	"OC-BW250SOC")
+		detect_snap_cards "0x062b" "0x066a" "OC-BW250SOC"
+		RC=$?
+		;;
+	# U200 CAPI 2.0 card from Xilinx
+	"U200")
+		detect_snap_cards "0x0632" "0x0665" "U200"
+		RC=$?
+		;;
+	# AD9V3 CAPI 2.0 card from Alphadata
+        "AD9V3")
+                detect_snap_cards "0x0632" "0x060f" "AD9V3"
+                RC=$?
+                ;;
+	# AD9H3 CAPI 2.0 card from Alphadata
+	"AD9H3")
+		detect_snap_cards "0x0632" "0x0667" "AD9H3"
+		RC=$?
+		;;
+	# AD9H335 CAPI 2.0 card from Alphadata
+	"AD9H335")
+		detect_snap_cards "0x0632" "0x066B" "AD9H335"
+		RC=$?
+		;;
+	# AD9H7 CAPI 2.0 card from Alphadata
+	"AD9H7")
+		detect_snap_cards "0x0632" "0x0666" "AD9H7"
+		RC=$?
+		;;
+	# U50 CAPI 2.0 card from Xilinx
+	"U50")
+		detect_snap_cards "0x0632" "0x0669" "U50"
+		RC=$?
+		;;
+
+	"ALL")
+		# detect all cards and add Number of Cards
+		detect_snap_cards "0x0632" "0x0605" "ADKU3"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0607" "S121B_v16.1_BPIx16"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0664" "S121B_v16.2_SPIx4"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x060a" "N250S"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0608" "AD8K5"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x060c" "RCXVUP"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x060d" "N250SP"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0661" "FX609"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0660" "S241"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x04dd" "N250SP"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x060f" "AD9V3"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0667" "AD9H3"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x066b" "AD9H335"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0665" "U200"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0666" "AD9H7"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x0632" "0x0669" "U50"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x062b" "0x060f" "OC-AD9V3"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x062b" "0x0667" "OC-AD9H3"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x062b" "0x066b" "OC-AD9H335"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x062b" "0x0666" "OC-AD9H7"
+		RC=$((RC + $?))
+
+		detect_snap_cards "0x062b" "0x066a" "OC-BW250SOC"
+		RC=$((RC + $?))
+
+		echo -e "\nTotal $RC cards detected \n"
+ 		;;
+	*)
+		usage
+		exit 0
+		;;
+esac
+exit $RC

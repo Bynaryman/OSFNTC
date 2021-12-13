@@ -1,0 +1,15 @@
+*.a
+*.so
+*.d
+*.d-e
+*.o
+*.sl
+.*.swp
+*~
+gmon.out
+debug.log
+common/misc
+debug/debug
+pslse/pslse
+test/afu/afu
+gprof.out

@@ -1,0 +1,86 @@
+Quick start instructions for various simulators:
+
+tested:
+A) NCsim
+B) Modelsim SE
+C) VCS
+C) Xsim
+
+
+A) NCsim
+
+	1) Set the CDS_INST_DIR environment variable to the path where Cadence
+		was installed.  It should contain "tools/include".
+
+	2) Add the afu_driver/src directory where you built libdpi.so in the
+		QUICK_START instructions to the LD_LIBRARY_PATH environment
+		variable.
+
+	3) Use ncvlog to compile afu_driver/verilog/top.v along with your
+		AFU Verilog files.  Make sure to pass "-SV" as well.
+
+	4) Use ncelab to elaborate work.top with the option:
+		"-TIMESCALE 1ns/1ns"
+
+	5) Run the work.top simulation using ncsim.
+
+	6) At this point the simulator will be waiting for ocse to connect.
+		Refer back to QUICK_START for those instructions.
+
+B) modelsim_se
+
+	1) Build your AFU logic with the file afu_driver/verilog/top.v as your
+		top level logic that instances your AFU logic underneath.
+		Use the vsim command to get the compile done (on the command prompt)
+			vlog -64 -sv -work work -vopt -nocovercells  $OCSE_INSTALL_DIR/afu_driver/verilog/top.v -f <afu_file_list>
+
+	2) Create a symbolic link in your run directory to point to the libdpi.so, 
+		which has been created upon the "make" on $OCSE_INSTALL_DIR/afu_driver/src/
+		that you built when following the instructions in QUICK_START.
+
+	3) Start the simulator on command prompt using:
+			vsim -64 -c -sv_lib libdpi work.top
+
+	4) If we use the command above, without the "-c" argument, the GUI will open up and we can simulate accordingly
+
+	5) "Run" you simulation.
+
+	6) At this point the simulator will be waiting for ocse to connect.
+		Refer back to QUICK_START for those instructions.
+
+
+
+
+C) VCS
+	1) Set the VPI_USER_H_DIR environment variable to
+		"$VCS_HOME/include"
+
+	2) Use vcs to compile afu_driver.c (and its dependant code, as given below),  top.v, as well as
+		your AFU HDL files. The following command has been tested and
+		works:
+		
+		vcs  -l compile.log -sverilog -gui -R -file $OCSE_INSTALL_DIR/vcs_include $OCSE_INSTALL_DIR/afu_driver/src/afu_driver.c $OCSE_INSTALL_DIR/common/tlx_interface.c $OCSE_INSTALL_DIR/common/utils.c $OCSE_INSTALL_DIR/common/debug.c +vpi $OCSE_INSTALL_DIR/afu_driver/verilog/top.v +incdir+$VERILOG_INIT -f <afu_file_list>
+		
+		Apparently, this will mean, that we are doing the afu_driver.c compile 
+		along with the testbench and the DUT compile, while using vcs
+		
+	3) "Run" you simulation.
+
+	4) At this point the simulator will be waiting for ocse to connect.
+		Refer back to QUICK_START for those instructions.
+
+D) Xsim
+	1) Set the VPI_USER_H_DIR environment variable to 
+		"$XSIM_HOME/../data/xsim/include"
+
+        2) Compile the files using xvlog
+
+        3) Create a softlink of the libdpi.so created upon compiling the afu_driver
+
+        4) elaborate the design using
+		"xelab -timescale 1ns/1ps -svlog $TESTB/top.v -sv_root $ROOT_DIR -sv_lib libdpi -debug all"
+		where the env variable $TESTB points to the pslse/afu_driver/verilog directory, while the $ROOT_DIR points to the run directory, from where the sim is being run
+
+	5) Invoke the simulator using the command
+		xsim -g work.top &
+			and then follow the instructions in the QUICK_START guide for further connecting to the pslse

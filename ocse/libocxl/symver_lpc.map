@@ -1,0 +1,11 @@
+LIBOCXL_LPC_1 {
+	global:
+		ocxl_lpc_map;
+		ocxl_lpc_unmap;
+		ocxl_lpc_write;
+		ocxl_lpc_write_be;
+		ocxl_lpc_read;
+		
+	local:
+		*;
+};
