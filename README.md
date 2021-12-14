@@ -21,5 +21,9 @@ python setup.py install
 pip install cython
 git submodule update --init
 
+# flopoco
+embeds all the code to generate systolic arrays with automated pipelining
+specific command to make it work are located in a .txt file in flopoco/
+
 # misc
 some pre-made configuration files for installation of other repositories
