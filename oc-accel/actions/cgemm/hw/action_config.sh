@@ -1,13 +1,13 @@
 #!/bin/bash
 N=8
 M=7
-arithmetic_in="ieee:8:7"
+arithmetic_in="ieee:11:52"
 arithmetic_out="same"
 # msb="254"
 # lsb="-298"
-msb="254"
-lsb="-266"
-bits_ovf="7"
+msb="5"
+lsb="-121"
+bits_ovf="1"
 has_HSSD="true"
 chunk_size="-1"
 

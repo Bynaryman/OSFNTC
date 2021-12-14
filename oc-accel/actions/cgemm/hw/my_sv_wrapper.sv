@@ -41,13 +41,13 @@ module my_sv_wrapper #
 );
 
 // localparams
-localparam integer ARITH_IN_WIDTH = 16;
-localparam integer ARITH_OUT_WIDTH = 16;
+localparam integer ARITH_IN_WIDTH = 64;
+localparam integer ARITH_OUT_WIDTH = 64;
 localparam integer N = 8;
 localparam integer M = 7;
 // this number exists only after a flopoco run
-localparam integer S3FDP_PP_DEPTH = 2;
-localparam integer L2A_PP_DEPTH = 7;
+localparam integer S3FDP_PP_DEPTH = 21;
+localparam integer L2A_PP_DEPTH = 3;
 localparam integer FIFO_DEPTH = 1024;
 localparam integer OUT_WIDTH = M*ARITH_OUT_WIDTH;
 localparam integer FIFO_WIDTH = OUT_WIDTH;
