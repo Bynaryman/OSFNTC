@@ -1,0 +1,246 @@
+digraph S3FDP_4_3_HSDD_F600_uid2
+{
+	//graph drawing options
+	label=S3FDP_4_3_HSDD_F600_uid2;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator S3FDP_4_3_HSDD_F600_uid2
+	S3_x__S3FDP_4_3_HSDD_F600_uid2 [ label="S3_x\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	S3_y__S3FDP_4_3_HSDD_F600_uid2 [ label="S3_y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	FTZ__S3FDP_4_3_HSDD_F600_uid2 [ label="FTZ\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	EOB__S3FDP_4_3_HSDD_F600_uid2 [ label="EOB\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	A__S3FDP_4_3_HSDD_F600_uid2 [ label="A\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	EOB_Q__S3FDP_4_3_HSDD_F600_uid2 [ label="EOB_Q\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	isNaN__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same S3_x__S3FDP_4_3_HSDD_F600_uid2, S3_y__S3FDP_4_3_HSDD_F600_uid2, FTZ__S3FDP_4_3_HSDD_F600_uid2, EOB__S3FDP_4_3_HSDD_F600_uid2};
+	{rank=same A__S3FDP_4_3_HSDD_F600_uid2, EOB_Q__S3FDP_4_3_HSDD_F600_uid2, isNaN__S3FDP_4_3_HSDD_F600_uid2};
+	//internal signals of operator S3FDP_4_3_HSDD_F600_uid2
+	sign_X__S3FDP_4_3_HSDD_F600_uid2 [ label="sign_X\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	sign_Y__S3FDP_4_3_HSDD_F600_uid2 [ label="sign_Y\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	sign_M__S3FDP_4_3_HSDD_F600_uid2 [ label="sign_M\ndT = 2.15e-10\n(0, 2.15e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	isNaN_X__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN_X\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	isNaN_Y__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN_Y\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	isNaN_M__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN_M\ndT = 2.15e-10\n(0, 2.15e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	significand_X__S3FDP_4_3_HSDD_F600_uid2 [ label="significand_X\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	significand_Y__S3FDP_4_3_HSDD_F600_uid2 [ label="significand_Y\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	significand_product__S3FDP_4_3_HSDD_F600_uid2 [ label="significand_product\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	scale_X_biased__S3FDP_4_3_HSDD_F600_uid2 [ label="scale_X_biased\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	scale_Y_biased__S3FDP_4_3_HSDD_F600_uid2 [ label="scale_Y_biased\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	scale_product_twice_biased__S3FDP_4_3_HSDD_F600_uid2 [ label="scale_product_twice_biased\ndT = 4.72e-10\n(0, 4.72e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	significand_product_cpt1__S3FDP_4_3_HSDD_F600_uid2 [ label="significand_product_cpt1\ndT = 2.15e-10\n(0, 4.3e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	shift_value__S3FDP_4_3_HSDD_F600_uid2 [ label="shift_value\ndT = 4.72e-10\n(0, 9.44e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	shifted_significand__S3FDP_4_3_HSDD_F600_uid2 [ label="shifted_significand\ndT = 0\n(1, 3.8041e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	too_small__S3FDP_4_3_HSDD_F600_uid2 [ label="too_small\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	too_big__S3FDP_4_3_HSDD_F600_uid2 [ label="too_big\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	summand1c__S3FDP_4_3_HSDD_F600_uid2 [ label="summand1c\ndT = 0\n(1, 3.8041e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	ext_summand1c__S3FDP_4_3_HSDD_F600_uid2 [ label="ext_summand1c\ndT = 0\n(1, 3.8041e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	not_ftz__S3FDP_4_3_HSDD_F600_uid2 [ label="not_ftz\ndT = 2.15e-10\n(0, 2.15e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	EOB_internal__S3FDP_4_3_HSDD_F600_uid2 [ label="EOB_internal\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	not_ftz_sync__S3FDP_4_3_HSDD_F600_uid2 [ label="not_ftz_sync\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	carry_0_sync__S3FDP_4_3_HSDD_F600_uid2 [ label="carry_0_sync\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	EOB_internal_delayed__S3FDP_4_3_HSDD_F600_uid2 [ label="EOB_internal_delayed\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	isNaN_M_sync__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN_M_sync\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	too_big_sync__S3FDP_4_3_HSDD_F600_uid2 [ label="too_big_sync\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	isNaN_o__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN_o\ndT = 2.15e-10\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	isNaN_delayed__S3FDP_4_3_HSDD_F600_uid2 [ label="isNaN_delayed\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	carry_0__S3FDP_4_3_HSDD_F600_uid2 [ label="carry_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	summand_0__S3FDP_4_3_HSDD_F600_uid2 [ label="summand_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	summand_and_carry_0__S3FDP_4_3_HSDD_F600_uid2 [ label="summand_and_carry_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	acc_0__S3FDP_4_3_HSDD_F600_uid2 [ label="acc_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	acc_0_q__S3FDP_4_3_HSDD_F600_uid2 [ label="acc_0_q\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator S3FDP_4_3_HSDD_F600_uid2
+
+	subgraph cluster_IntMultiplier_F600_uid4
+	{
+		//graph drawing options
+		label=IntMultiplier_F600_uid4;
+		labelloc=bottom;
+		labeljust=right;
+		style="bold, dotted";
+		ratio=auto;
+		nodesep=0.25;
+		ranksep=0.5;
+
+		//input/output signals of operator IntMultiplier_F600_uid4
+		X__IntMultiplier_F600_uid4 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		Y__IntMultiplier_F600_uid4 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		R__IntMultiplier_F600_uid4 [ label="R\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+		{rank=same X__IntMultiplier_F600_uid4, Y__IntMultiplier_F600_uid4};
+		{rank=same R__IntMultiplier_F600_uid4};
+		//internal signals of operator IntMultiplier_F600_uid4
+		XX_m5__IntMultiplier_F600_uid4 [ label="XX_m5\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		YY_m5__IntMultiplier_F600_uid4 [ label="YY_m5\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		tile_0_X__IntMultiplier_F600_uid4 [ label="tile_0_X\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		tile_0_Y__IntMultiplier_F600_uid4 [ label="tile_0_Y\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		tile_0_output__IntMultiplier_F600_uid4 [ label="tile_0_output\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 [ label="tile_0_filtered_output\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w0_0__IntMultiplier_F600_uid4 [ label="bh6_w0_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w1_0__IntMultiplier_F600_uid4 [ label="bh6_w1_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w2_0__IntMultiplier_F600_uid4 [ label="bh6_w2_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w3_0__IntMultiplier_F600_uid4 [ label="bh6_w3_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w4_0__IntMultiplier_F600_uid4 [ label="bh6_w4_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w5_0__IntMultiplier_F600_uid4 [ label="bh6_w5_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w6_0__IntMultiplier_F600_uid4 [ label="bh6_w6_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bh6_w7_0__IntMultiplier_F600_uid4 [ label="bh6_w7_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ label="tmp_bitheapResult_bh6_7\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		bitheapResult_bh6__IntMultiplier_F600_uid4 [ label="bitheapResult_bh6\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+		//subcomponents of operator IntMultiplier_F600_uid4
+
+		subgraph cluster_DSPBlock_4x4_F600_uid8
+		{
+			//graph drawing options
+			label=DSPBlock_4x4_F600_uid8;
+			labelloc=bottom;
+			labeljust=right;
+			style="bold, dotted";
+			ratio=auto;
+			nodesep=0.25;
+			ranksep=0.5;
+
+			//input/output signals of operator DSPBlock_4x4_F600_uid8
+			X__DSPBlock_4x4_F600_uid8 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+			Y__DSPBlock_4x4_F600_uid8 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+			R__DSPBlock_4x4_F600_uid8 [ label="R\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+			{rank=same X__DSPBlock_4x4_F600_uid8, Y__DSPBlock_4x4_F600_uid8};
+			{rank=same R__DSPBlock_4x4_F600_uid8};
+			//internal signals of operator DSPBlock_4x4_F600_uid8
+			Mint__DSPBlock_4x4_F600_uid8 [ label="Mint\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+			M__DSPBlock_4x4_F600_uid8 [ label="M\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+			Rtmp__DSPBlock_4x4_F600_uid8 [ label="Rtmp\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+			//subcomponents of operator DSPBlock_4x4_F600_uid8
+
+			//input and internal signal connections of operator DSPBlock_4x4_F600_uid8
+			X__DSPBlock_4x4_F600_uid8 -> Mint__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+			Y__DSPBlock_4x4_F600_uid8 -> Mint__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+			Mint__DSPBlock_4x4_F600_uid8 -> M__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+			M__DSPBlock_4x4_F600_uid8 -> Rtmp__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+			Rtmp__DSPBlock_4x4_F600_uid8 -> R__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		}
+
+			//output signal connections of operator DSPBlock_4x4_F600_uid8
+			R__DSPBlock_4x4_F600_uid8 -> tile_0_output__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+
+		//input and internal signal connections of operator IntMultiplier_F600_uid4
+		X__IntMultiplier_F600_uid4 -> XX_m5__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		X__IntMultiplier_F600_uid4 -> tile_0_X__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		Y__IntMultiplier_F600_uid4 -> YY_m5__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		Y__IntMultiplier_F600_uid4 -> tile_0_Y__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_X__IntMultiplier_F600_uid4 -> X__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_Y__IntMultiplier_F600_uid4 -> Y__DSPBlock_4x4_F600_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_output__IntMultiplier_F600_uid4 -> tile_0_filtered_output__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w0_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w1_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w2_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w3_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w4_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w5_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w6_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tile_0_filtered_output__IntMultiplier_F600_uid4 -> bh6_w7_0__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w0_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w1_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w2_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w3_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w4_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w5_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w6_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bh6_w7_0__IntMultiplier_F600_uid4 -> tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		tmp_bitheapResult_bh6_7__IntMultiplier_F600_uid4 -> bitheapResult_bh6__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		bitheapResult_bh6__IntMultiplier_F600_uid4 -> R__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	}
+
+		//output signal connections of operator IntMultiplier_F600_uid4
+		R__IntMultiplier_F600_uid4 -> significand_product__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+
+	subgraph cluster_LeftShifter8_by_max_31_F600_uid11
+	{
+		//graph drawing options
+		label=LeftShifter8_by_max_31_F600_uid11;
+		labelloc=bottom;
+		labeljust=right;
+		style="bold, dotted";
+		ratio=auto;
+		nodesep=0.25;
+		ranksep=0.5;
+
+		//input/output signals of operator LeftShifter8_by_max_31_F600_uid11
+		X__LeftShifter8_by_max_31_F600_uid11 [ label="X\ndT = 0\n(0, 4.3e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		S__LeftShifter8_by_max_31_F600_uid11 [ label="S\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		padBit__LeftShifter8_by_max_31_F600_uid11 [ label="padBit\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		R__LeftShifter8_by_max_31_F600_uid11 [ label="R\ndT = 0\n(1, 3.8041e-10)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+		{rank=same X__LeftShifter8_by_max_31_F600_uid11, S__LeftShifter8_by_max_31_F600_uid11, padBit__LeftShifter8_by_max_31_F600_uid11};
+		{rank=same R__LeftShifter8_by_max_31_F600_uid11};
+		//internal signals of operator LeftShifter8_by_max_31_F600_uid11
+		ps__LeftShifter8_by_max_31_F600_uid11 [ label="ps\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level0__LeftShifter8_by_max_31_F600_uid11 [ label="level0\ndT = 0\n(0, 4.3e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level1__LeftShifter8_by_max_31_F600_uid11 [ label="level1\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level2__LeftShifter8_by_max_31_F600_uid11 [ label="level2\ndT = 3.84231e-10\n(0, 1.32823e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level3__LeftShifter8_by_max_31_F600_uid11 [ label="level3\ndT = 0\n(0, 1.32823e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level4__LeftShifter8_by_max_31_F600_uid11 [ label="level4\ndT = 5.68846e-10\n(1, 3.8041e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level5__LeftShifter8_by_max_31_F600_uid11 [ label="level5\ndT = 0\n(1, 3.8041e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+
+		//subcomponents of operator LeftShifter8_by_max_31_F600_uid11
+
+		//input and internal signal connections of operator LeftShifter8_by_max_31_F600_uid11
+		X__LeftShifter8_by_max_31_F600_uid11 -> level0__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		S__LeftShifter8_by_max_31_F600_uid11 -> ps__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__LeftShifter8_by_max_31_F600_uid11 -> level1__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__LeftShifter8_by_max_31_F600_uid11 -> level2__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__LeftShifter8_by_max_31_F600_uid11 -> level3__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__LeftShifter8_by_max_31_F600_uid11 -> level4__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__LeftShifter8_by_max_31_F600_uid11 -> level5__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__LeftShifter8_by_max_31_F600_uid11 -> level1__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__LeftShifter8_by_max_31_F600_uid11 -> level2__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__LeftShifter8_by_max_31_F600_uid11 -> level3__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__LeftShifter8_by_max_31_F600_uid11 -> level4__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__LeftShifter8_by_max_31_F600_uid11 -> level5__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level0__LeftShifter8_by_max_31_F600_uid11 -> level1__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level1__LeftShifter8_by_max_31_F600_uid11 -> level2__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__LeftShifter8_by_max_31_F600_uid11 -> level3__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__LeftShifter8_by_max_31_F600_uid11 -> level4__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level4__LeftShifter8_by_max_31_F600_uid11 -> level5__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level5__LeftShifter8_by_max_31_F600_uid11 -> R__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	}
+
+		//output signal connections of operator LeftShifter8_by_max_31_F600_uid11
+		R__LeftShifter8_by_max_31_F600_uid11 -> shifted_significand__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+
+	//input and internal signal connections of operator S3FDP_4_3_HSDD_F600_uid2
+	S3_x__S3FDP_4_3_HSDD_F600_uid2 -> sign_X__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_x__S3FDP_4_3_HSDD_F600_uid2 -> isNaN_X__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_x__S3FDP_4_3_HSDD_F600_uid2 -> significand_X__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_x__S3FDP_4_3_HSDD_F600_uid2 -> scale_X_biased__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_y__S3FDP_4_3_HSDD_F600_uid2 -> sign_Y__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_y__S3FDP_4_3_HSDD_F600_uid2 -> isNaN_Y__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_y__S3FDP_4_3_HSDD_F600_uid2 -> significand_Y__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S3_y__S3FDP_4_3_HSDD_F600_uid2 -> scale_Y_biased__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	FTZ__S3FDP_4_3_HSDD_F600_uid2 -> not_ftz__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	EOB__S3FDP_4_3_HSDD_F600_uid2 -> EOB_internal__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sign_X__S3FDP_4_3_HSDD_F600_uid2 -> sign_M__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sign_Y__S3FDP_4_3_HSDD_F600_uid2 -> sign_M__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sign_M__S3FDP_4_3_HSDD_F600_uid2 -> significand_product_cpt1__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sign_M__S3FDP_4_3_HSDD_F600_uid2 -> padBit__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sign_M__S3FDP_4_3_HSDD_F600_uid2 -> ext_summand1c__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	isNaN_X__S3FDP_4_3_HSDD_F600_uid2 -> isNaN_M__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	isNaN_Y__S3FDP_4_3_HSDD_F600_uid2 -> isNaN_M__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	significand_X__S3FDP_4_3_HSDD_F600_uid2 -> X__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	significand_Y__S3FDP_4_3_HSDD_F600_uid2 -> Y__IntMultiplier_F600_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	significand_product__S3FDP_4_3_HSDD_F600_uid2 -> significand_product_cpt1__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	scale_X_biased__S3FDP_4_3_HSDD_F600_uid2 -> scale_product_twice_biased__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	scale_Y_biased__S3FDP_4_3_HSDD_F600_uid2 -> scale_product_twice_biased__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	scale_product_twice_biased__S3FDP_4_3_HSDD_F600_uid2 -> shift_value__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	significand_product_cpt1__S3FDP_4_3_HSDD_F600_uid2 -> X__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	shift_value__S3FDP_4_3_HSDD_F600_uid2 -> S__LeftShifter8_by_max_31_F600_uid11 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	shift_value__S3FDP_4_3_HSDD_F600_uid2 -> too_small__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	shift_value__S3FDP_4_3_HSDD_F600_uid2 -> too_big__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	shifted_significand__S3FDP_4_3_HSDD_F600_uid2 -> summand1c__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	too_small__S3FDP_4_3_HSDD_F600_uid2 -> ext_summand1c__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	summand1c__S3FDP_4_3_HSDD_F600_uid2 -> ext_summand1c__S3FDP_4_3_HSDD_F600_uid2 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

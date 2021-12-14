@@ -1,0 +1,32 @@
+pour casts implicites:
+-conversion sans erreur:
+	FP(we1, wf1) inclus ds FP(we2, wf2) <=> we1<=wf1 & we1<=wf2
+	uint(w1) inclus ds uint(w2) <=> w1<=w2
+	uint(w1) unclus ds sint(w2) <=> w1<w2 (w1<=w2+1)
+-conversion ac warning:
+	warning fort:
+	-risque d'overflow lors d'une conversion de truc vers machin
+	warning faible:
+	-arrondi lors de conversion de truc vers machin
+fix to float to fix:
+	fix to float: en général, pas d'overflow mais arrondi. => warning faible (opérateur présent dans flopoco)
+	float to fix: à moins que m très grand et wE très petit, risque d'overflow
+	FP(wE, wF) inclus dans sfix(m,l) <=> (2^(wE-1)-1)(2-2^(-wF))<2^(m+1)-1
+	si cast ufix dans fp => warning fort sur l'info de signe
+	aller chercher pour les mantisses => google. => donner valeurs des paramètres dans les warnings.
+
+float vers float => tests sur tailles.
+faire des dessins ascii
+détecter les cas où pas de conversion.
+Prévoir jeu de tests complet.
+parenthésage comme en C: implicite de gauche à droite dans a+b+c sauf si l'utilisateur met des parenthèses.
+Prévoir option fortran (le compilateur choisit un truc intelligent).
+pour toutes les opérations: caster le résultat sur le plus gros format => addition= a+b. sizeof(a+b)=max(a,b)+1
+pareil pour les flottants, mais pas de +1: juste max(a,b)(pour l'addition, pour divisions/multiplications, moins clair)
+choisir une solution qui marche, ne pas l'optimal.
+prévoir messages de cas non supportés.
+à gérer: surtypes stricts: convertir plus petit en plus grand et résultat en plus grand. (puis recast à la fin)
+virgule fixe = important.
+!: pas tous les opérateurs dans tous les types: reconversions à faire.
+
+créer des fonctions d'affichage d'arbre/verbose/tout ça.

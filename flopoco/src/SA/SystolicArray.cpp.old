@@ -1,0 +1,142 @@
+/*
+
+  Systolic Array implementaion. Orthogonal N*N for the moment.
+  Here should be the entry point for others topologies after a future refacto.
+
+  Author: Ledoux Louis
+
+ */
+
+#include "SA/PositUtils.hpp"
+#include "SystolicArray.hpp"
+
+#include <vector>
+#include <sstream>
+
+#include "Operator.hpp"
+#include "SA/PE.hpp"
+
+using namespace std;
+
+namespace flopoco{
+
+	SystolicArray::SystolicArray(
+			OperatorPtr parentOp,
+			Target* target,
+			int N,
+			int M,
+			int n,
+			int es):
+				Operator(parentOp, target),
+				m_N(N),
+				m_M(M){
+
+		ostringstream module_name;
+		std::string topology = "orthogonal";
+		module_name << "SA_" << topology << "_" << N << "w" << M << "h_" << n << "_" << es;
+		setNameWithFreqAndUID(module_name.str());
+		setCopyrightString("Ledoux Louis - BSC / UPC");
+
+		const int pd_size_normal = get_pd_size(n, es, POSIT_MEMORY);
+
+		// IOs declaration
+		for (int i = 0 ; i < N ; i++) addInput(join("col",i),pd_size_normal,true);
+		for (int j = 0 ; j < M ; j++) addInput(join("row",j),pd_size_normal,true);
+		addInput("FTZ");  // active high boolean to put the accumulator registers to 0
+
+		// Instantiates and connect the PEs
+		ostringstream comment;
+		ostringstream pe_ij_name;
+		ostringstream parametric_PE_ij, inputs_PE_ij, outputs_PE_ij;
+		ostringstream row_input_PE_ij_str, row_output_PE_ij_str, col_input_PE_ij_str, col_output_PE_ij_str;
+		ostringstream A_ij_str, C_ij_str;
+		//PE* pe = new PE(this, target, n, es);
+		//pe->setNameWithFreqAndUID("PE");
+		//pe->setShared();
+		const int wQ = 32;//(**(pe->getIOList()->end())).width();
+		for (int i = 0 ; i < N ; i++) {
+			for (int j = 0 ; j < M ; j++) {
+
+				A_ij_str << "A_" << i << "_" << j;
+				C_ij_str << "C_" << i << "_" << j;
+				addOutput(A_ij_str.str(), wQ);
+				addOutput(C_ij_str.str(), wQ);
+
+				comment << "PE(" << i << "," << j << ")";
+				addFullComment(comment.str());
+
+				row_output_PE_ij_str << "wire_row_out_" << i << "_" << j+1;
+				col_output_PE_ij_str << "wire_col_out_" << i+1 << "_" << j;
+				if (i==0) {
+					col_input_PE_ij_str << "col" << j;
+				} else {
+					col_input_PE_ij_str << "wire_col_out_" << i << "_" << j;
+				}
+				if (j==0) {
+					row_input_PE_ij_str << "row" << i;
+				} else {
+					row_input_PE_ij_str << "wire_row_out_" << i << "_" << j;
+				}
+
+				parametric_PE_ij << "n=" << n;
+				parametric_PE_ij << " es=" << es;
+				inputs_PE_ij << "pd_row_i_A=> " << row_input_PE_ij_str.str() << ",";
+				inputs_PE_ij << "pd_col_j_B=> " << col_input_PE_ij_str.str() << ",";
+				inputs_PE_ij << "FTZ=>FTZ";
+				outputs_PE_ij << "A=>" << A_ij_str.str() << ",";
+				outputs_PE_ij << "C=>" << C_ij_str.str() << ",";
+				outputs_PE_ij << "pd_row_im1_A=>"<< row_output_PE_ij_str.str() << ",";
+				outputs_PE_ij << "pd_col_jm1_B=>"<< col_output_PE_ij_str.str();
+
+				pe_ij_name << "pe_" << i << "_" << j;
+				newInstance("PE", pe_ij_name.str(), parametric_PE_ij.str(), inputs_PE_ij.str(), outputs_PE_ij.str());
+				vhdl << endl;
+
+
+				comment.str("");
+				pe_ij_name.str("");
+				parametric_PE_ij.str("");
+				inputs_PE_ij.str("");
+				outputs_PE_ij.str("");
+				row_input_PE_ij_str.str("");
+				row_output_PE_ij_str.str("");
+				col_input_PE_ij_str.str("");
+				col_output_PE_ij_str.str("");
+				A_ij_str.str("");
+				C_ij_str.str("");
+			}
+		}
+
+	}
+
+	SystolicArray::~SystolicArray() {}
+
+	void SystolicArray::emulate(TestCase * tc) {}
+
+	OperatorPtr SystolicArray::parseArguments(OperatorPtr parentOp, Target *target , vector<string> &args) {
+		int posit_width, posit_es;
+		int SA_width, SA_height;
+		UserInterface::parseInt(args, "N", &SA_width);
+		UserInterface::parseInt(args, "M", &SA_height);
+		UserInterface::parseInt(args, "n", &posit_width);
+		UserInterface::parseInt(args, "es", &posit_es);
+		return new SystolicArray(parentOp, target, SA_width, SA_height, posit_width, posit_es);
+	}
+
+	void SystolicArray::registerFactory() {
+		UserInterface::add(
+			"SystolicArray",  // name
+			"Build the raw orthogonal Systolic Array",  // description, string
+			"SA",  // category, from the list defined in UserInterface.cpp
+			"",  //seeAlso
+			"N(int): The Systolic Array width; \
+			 M(int): The Systolic Array height; \
+			 n(int): The posit word size; \
+			 es(int): The size of the tunable exponent",
+			"",  // More documentation for the HTML pages. If you want to link to your blog, it is here.
+			SystolicArray::parseArguments
+		) ;
+	}
+
+}
+

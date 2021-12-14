@@ -1,0 +1,53 @@
+digraph RightShifter54_by_max_54_F300_uid788
+{
+	//graph drawing options
+	label=RightShifter54_by_max_54_F300_uid788;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator RightShifter54_by_max_54_F300_uid788
+	X__RightShifter54_by_max_54_F300_uid788 [ label="X\ndT = 0\n(72, 2.69495e-09)", shape=box, color=black, style="bold, filled", fillcolor=sienna, peripheries=2 ];
+	S__RightShifter54_by_max_54_F300_uid788 [ label="S\ndT = 0\n(73, 2.92619e-10)", shape=box, color=black, style="bold, filled", fillcolor=indigo, peripheries=2 ];
+	padBit__RightShifter54_by_max_54_F300_uid788 [ label="padBit\ndT = 0\n(7, 2.89767e-09)", shape=box, color=black, style="bold, filled", fillcolor=mintcream, peripheries=2 ];
+	R__RightShifter54_by_max_54_F300_uid788 [ label="R\ndT = 0\n(74, 1.49275e-09)", shape=box, color=black, style="bold, filled", fillcolor=greenyellow, peripheries=3 ];
+	{rank=same X__RightShifter54_by_max_54_F300_uid788, S__RightShifter54_by_max_54_F300_uid788, padBit__RightShifter54_by_max_54_F300_uid788};
+	{rank=same R__RightShifter54_by_max_54_F300_uid788};
+	//internal signals of operator RightShifter54_by_max_54_F300_uid788
+	ps__RightShifter54_by_max_54_F300_uid788 [ label="ps\ndT = 0\n(73, 2.92619e-10)", shape=box, color=black, style=filled, fillcolor=indigo, peripheries=1 ];
+	level0__RightShifter54_by_max_54_F300_uid788 [ label="level0\ndT = 0\n(72, 2.69495e-09)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level1__RightShifter54_by_max_54_F300_uid788 [ label="level1\ndT = 0\n(73, 2.92619e-10)", shape=box, color=black, style=filled, fillcolor=indigo, peripheries=1 ];
+	level2__RightShifter54_by_max_54_F300_uid788 [ label="level2\ndT = 1.09192e-09\n(73, 1.38454e-09)", shape=box, color=black, style=filled, fillcolor=indigo, peripheries=1 ];
+	level3__RightShifter54_by_max_54_F300_uid788 [ label="level3\ndT = 0\n(73, 1.38454e-09)", shape=box, color=black, style=filled, fillcolor=indigo, peripheries=1 ];
+	level4__RightShifter54_by_max_54_F300_uid788 [ label="level4\ndT = 1.27654e-09\n(73, 2.66108e-09)", shape=box, color=black, style=filled, fillcolor=indigo, peripheries=1 ];
+	level5__RightShifter54_by_max_54_F300_uid788 [ label="level5\ndT = 0\n(73, 2.66108e-09)", shape=box, color=black, style=filled, fillcolor=indigo, peripheries=1 ];
+	level6__RightShifter54_by_max_54_F300_uid788 [ label="level6\ndT = 2.015e-09\n(74, 1.49275e-09)", shape=box, color=black, style=filled, fillcolor=greenyellow, peripheries=1 ];
+
+	//subcomponents of operator RightShifter54_by_max_54_F300_uid788
+
+	//input and internal signal connections of operator RightShifter54_by_max_54_F300_uid788
+	X__RightShifter54_by_max_54_F300_uid788 -> level0__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__RightShifter54_by_max_54_F300_uid788 -> ps__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifter54_by_max_54_F300_uid788 -> level1__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifter54_by_max_54_F300_uid788 -> level2__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifter54_by_max_54_F300_uid788 -> level3__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifter54_by_max_54_F300_uid788 -> level4__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifter54_by_max_54_F300_uid788 -> level5__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifter54_by_max_54_F300_uid788 -> level6__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter54_by_max_54_F300_uid788 -> level1__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter54_by_max_54_F300_uid788 -> level2__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter54_by_max_54_F300_uid788 -> level3__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter54_by_max_54_F300_uid788 -> level4__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter54_by_max_54_F300_uid788 -> level5__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter54_by_max_54_F300_uid788 -> level6__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__RightShifter54_by_max_54_F300_uid788 -> level1__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifter54_by_max_54_F300_uid788 -> level2__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifter54_by_max_54_F300_uid788 -> level3__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifter54_by_max_54_F300_uid788 -> level4__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifter54_by_max_54_F300_uid788 -> level5__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__RightShifter54_by_max_54_F300_uid788 -> level6__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__RightShifter54_by_max_54_F300_uid788 -> R__RightShifter54_by_max_54_F300_uid788 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

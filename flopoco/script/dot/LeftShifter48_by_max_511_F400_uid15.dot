@@ -1,0 +1,65 @@
+digraph LeftShifter48_by_max_511_F400_uid15
+{
+	//graph drawing options
+	label=LeftShifter48_by_max_511_F400_uid15;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LeftShifter48_by_max_511_F400_uid15
+	X__LeftShifter48_by_max_511_F400_uid15 [ label="X\ndT = 0\n(0, 9.08e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	S__LeftShifter48_by_max_511_F400_uid15 [ label="S\ndT = 0\n(0, 9.96e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 [ label="padBit\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__LeftShifter48_by_max_511_F400_uid15 [ label="R\ndT = 0\n(4, 5.79077e-10)", shape=box, color=black, style="bold, filled", fillcolor=cadetblue, peripheries=3 ];
+	{rank=same X__LeftShifter48_by_max_511_F400_uid15, S__LeftShifter48_by_max_511_F400_uid15, padBit__LeftShifter48_by_max_511_F400_uid15};
+	{rank=same R__LeftShifter48_by_max_511_F400_uid15};
+	//internal signals of operator LeftShifter48_by_max_511_F400_uid15
+	ps__LeftShifter48_by_max_511_F400_uid15 [ label="ps\ndT = 0\n(0, 9.96e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level0__LeftShifter48_by_max_511_F400_uid15 [ label="level0\ndT = 0\n(0, 9.08e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level1__LeftShifter48_by_max_511_F400_uid15 [ label="level1\ndT = 0\n(0, 9.96e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level2__LeftShifter48_by_max_511_F400_uid15 [ label="level2\ndT = 9.99615e-10\n(0, 1.99562e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level3__LeftShifter48_by_max_511_F400_uid15 [ label="level3\ndT = 0\n(0, 1.99562e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level4__LeftShifter48_by_max_511_F400_uid15 [ label="level4\ndT = 1.18423e-09\n(1, 8.29846e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level5__LeftShifter48_by_max_511_F400_uid15 [ label="level5\ndT = 0\n(1, 8.29846e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level6__LeftShifter48_by_max_511_F400_uid15 [ label="level6\ndT = 1.92269e-09\n(2, 4.02538e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level7__LeftShifter48_by_max_511_F400_uid15 [ label="level7\ndT = 0\n(2, 4.02538e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level8__LeftShifter48_by_max_511_F400_uid15 [ label="level8\ndT = 4.87654e-09\n(4, 5.79077e-10)", shape=box, color=black, style=filled, fillcolor=cadetblue, peripheries=1 ];
+	level9__LeftShifter48_by_max_511_F400_uid15 [ label="level9\ndT = 0\n(4, 5.79077e-10)", shape=box, color=black, style=filled, fillcolor=cadetblue, peripheries=1 ];
+
+	//subcomponents of operator LeftShifter48_by_max_511_F400_uid15
+
+	//input and internal signal connections of operator LeftShifter48_by_max_511_F400_uid15
+	X__LeftShifter48_by_max_511_F400_uid15 -> level0__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__LeftShifter48_by_max_511_F400_uid15 -> ps__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level1__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level2__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level3__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level4__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level5__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level6__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level7__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level8__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter48_by_max_511_F400_uid15 -> level9__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level1__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level2__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level3__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level4__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level5__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level6__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level7__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level8__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter48_by_max_511_F400_uid15 -> level9__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__LeftShifter48_by_max_511_F400_uid15 -> level1__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LeftShifter48_by_max_511_F400_uid15 -> level2__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LeftShifter48_by_max_511_F400_uid15 -> level3__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LeftShifter48_by_max_511_F400_uid15 -> level4__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LeftShifter48_by_max_511_F400_uid15 -> level5__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LeftShifter48_by_max_511_F400_uid15 -> level6__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LeftShifter48_by_max_511_F400_uid15 -> level7__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level7__LeftShifter48_by_max_511_F400_uid15 -> level8__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level8__LeftShifter48_by_max_511_F400_uid15 -> level9__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level9__LeftShifter48_by_max_511_F400_uid15 -> R__LeftShifter48_by_max_511_F400_uid15 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

@@ -1,0 +1,78 @@
+digraph RightShifterSticky32_by_max_32_F500_uid74
+{
+	//graph drawing options
+	label=RightShifterSticky32_by_max_32_F500_uid74;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator RightShifterSticky32_by_max_32_F500_uid74
+	X__RightShifterSticky32_by_max_32_F500_uid74 [ label="X\ndT = 0\n(14, 4.73894e-10)", shape=box, color=black, style="bold, filled", fillcolor=maroon, peripheries=2 ];
+	S__RightShifterSticky32_by_max_32_F500_uid74 [ label="S\ndT = 0\n(14, 3.71894e-10)", shape=box, color=black, style="bold, filled", fillcolor=maroon, peripheries=2 ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 [ label="padBit\ndT = 0\n(14, 2.58894e-10)", shape=box, color=black, style="bold, filled", fillcolor=maroon, peripheries=2 ];
+	R__RightShifterSticky32_by_max_32_F500_uid74 [ label="R\ndT = 0\n(14, 1.11889e-09)", shape=box, color=black, style="bold, filled", fillcolor=maroon, peripheries=3 ];
+	Sticky__RightShifterSticky32_by_max_32_F500_uid74 [ label="Sticky\ndT = 0\n(15, 1.23014e-09)", shape=box, color=black, style="bold, filled", fillcolor=palegoldenrod, peripheries=3 ];
+	{rank=same X__RightShifterSticky32_by_max_32_F500_uid74, S__RightShifterSticky32_by_max_32_F500_uid74, padBit__RightShifterSticky32_by_max_32_F500_uid74};
+	{rank=same R__RightShifterSticky32_by_max_32_F500_uid74, Sticky__RightShifterSticky32_by_max_32_F500_uid74};
+	//internal signals of operator RightShifterSticky32_by_max_32_F500_uid74
+	ps__RightShifterSticky32_by_max_32_F500_uid74 [ label="ps\ndT = 0\n(14, 3.71894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	level6__RightShifterSticky32_by_max_32_F500_uid74 [ label="level6\ndT = 0\n(14, 4.73894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	stk5__RightShifterSticky32_by_max_32_F500_uid74 [ label="stk5\ndT = 4.4125e-10\n(14, 9.15144e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	level5__RightShifterSticky32_by_max_32_F500_uid74 [ label="level5\ndT = 0\n(14, 4.73894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	stk4__RightShifterSticky32_by_max_32_F500_uid74 [ label="stk4\ndT = 4.35625e-10\n(14, 1.35077e-09)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	level4__RightShifterSticky32_by_max_32_F500_uid74 [ label="level4\ndT = 2.15e-10\n(14, 6.88894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	stk3__RightShifterSticky32_by_max_32_F500_uid74 [ label="stk3\ndT = 4.3375e-10\n(14, 1.78452e-09)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	level3__RightShifterSticky32_by_max_32_F500_uid74 [ label="level3\ndT = 0\n(14, 6.88894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	stk2__RightShifterSticky32_by_max_32_F500_uid74 [ label="stk2\ndT = 4.31875e-10\n(15, 3.66394e-10)", shape=box, color=black, style=filled, fillcolor=palegoldenrod, peripheries=1 ];
+	level2__RightShifterSticky32_by_max_32_F500_uid74 [ label="level2\ndT = 2.15e-10\n(14, 9.03894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	stk1__RightShifterSticky32_by_max_32_F500_uid74 [ label="stk1\ndT = 4.31875e-10\n(15, 7.98269e-10)", shape=box, color=black, style=filled, fillcolor=palegoldenrod, peripheries=1 ];
+	level1__RightShifterSticky32_by_max_32_F500_uid74 [ label="level1\ndT = 0\n(14, 9.03894e-10)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+	stk0__RightShifterSticky32_by_max_32_F500_uid74 [ label="stk0\ndT = 4.31875e-10\n(15, 1.23014e-09)", shape=box, color=black, style=filled, fillcolor=palegoldenrod, peripheries=1 ];
+	level0__RightShifterSticky32_by_max_32_F500_uid74 [ label="level0\ndT = 2.15e-10\n(14, 1.11889e-09)", shape=box, color=black, style=filled, fillcolor=maroon, peripheries=1 ];
+
+	//subcomponents of operator RightShifterSticky32_by_max_32_F500_uid74
+
+	//input and internal signal connections of operator RightShifterSticky32_by_max_32_F500_uid74
+	X__RightShifterSticky32_by_max_32_F500_uid74 -> level6__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__RightShifterSticky32_by_max_32_F500_uid74 -> ps__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 -> level5__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 -> level4__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 -> level3__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 -> level2__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 -> level1__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky32_by_max_32_F500_uid74 -> level0__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> stk5__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> level5__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> stk4__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> level4__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> stk3__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> level3__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> stk2__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> level2__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> stk1__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> level1__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> stk0__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky32_by_max_32_F500_uid74 -> level0__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__RightShifterSticky32_by_max_32_F500_uid74 -> stk5__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__RightShifterSticky32_by_max_32_F500_uid74 -> level5__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk5__RightShifterSticky32_by_max_32_F500_uid74 -> stk4__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__RightShifterSticky32_by_max_32_F500_uid74 -> stk4__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__RightShifterSticky32_by_max_32_F500_uid74 -> level4__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk4__RightShifterSticky32_by_max_32_F500_uid74 -> stk3__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifterSticky32_by_max_32_F500_uid74 -> stk3__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifterSticky32_by_max_32_F500_uid74 -> level3__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk3__RightShifterSticky32_by_max_32_F500_uid74 -> stk2__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky32_by_max_32_F500_uid74 -> stk2__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky32_by_max_32_F500_uid74 -> level2__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk2__RightShifterSticky32_by_max_32_F500_uid74 -> stk1__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky32_by_max_32_F500_uid74 -> stk1__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky32_by_max_32_F500_uid74 -> level1__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk1__RightShifterSticky32_by_max_32_F500_uid74 -> stk0__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky32_by_max_32_F500_uid74 -> stk0__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky32_by_max_32_F500_uid74 -> level0__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk0__RightShifterSticky32_by_max_32_F500_uid74 -> Sticky__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__RightShifterSticky32_by_max_32_F500_uid74 -> R__RightShifterSticky32_by_max_32_F500_uid74 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

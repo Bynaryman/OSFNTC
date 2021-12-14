@@ -1,0 +1,34 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabu}
+
+\begin{document}
+
+\begin{tabular}{rll}
+\noindent INPUT & $\rightarrow$ & DECLARATIONS INSTRUCTIONS OUTPUTS\\
+\hline
+DECLARATIONS & $\rightarrow$ & DECLARATION DECLARATIONLIST\\
+DECLARATIONLIST & $\rightarrow$ & DECLARATIONS | $\epsilon$\\
+DECLARATION & $\rightarrow$ & TYPE ( PARAM ) VAR ;\\
+VAR & $\rightarrow$ & var VARLIST\\
+VARLIST & $\rightarrow$ & , VAR | $\epsilon$\\
+TYPE & $\rightarrow$ & uint | sint | float | ufix | sfix\\
+PARAM & $\rightarrow$ & param PARAMLIST\\
+PARAMLIST & $\rightarrow$ & , PARAM | $\epsilon$\\
+\hline
+INSTRUCTIONS & $\rightarrow$ & INSTRUCTION INSTRUCTIONLIST\\
+INSTRUCTIONLIST & $\rightarrow$ & INSTRUCTIONS | $\epsilon$\\
+INSTRUCTION & $\rightarrow$ & var = CAST ;\\
+EXPR & $\rightarrow$ & OPERANDE OPERATION | FONCTION (EXPR)\\
+OPERATION & $\rightarrow$ & OPERATEUR OPERANDE | $\epsilon$\\
+OPERANDE & $\rightarrow$ & var | ( EXPR ) | CAST\\
+OPERATEUR & $\rightarrow$ & + | - | * | /\\
+FONCTION & $\rightarrow$ & exp | log\\
+CAST & $\rightarrow$ & TYPE ( PARAM ) ( EXPR )\\
+\hline
+OUTPUTS & $\rightarrow$ & return VAR ;\\
+\end{tabular}
+
+\end{document}

@@ -1,0 +1,34 @@
+\documentclass[10pt, a4paper, twocolumn]{article}
+\title{Flopoco FixRealKCM documentation}
+\begin{document}
+\maketitle
+\section{Usage}
+\subsection{Basic CLI usage}
+The FixRealKCM options are :
+\begin{itemize}
+\item \texttt{signedIn} : wether input is to be considered as 2's complement signed integer or unsigned integer,
+\item \texttt{constant}  : the constant by which the product is made. It has to be expressed in sollya formalism  (e.g \texttt{log(2)}, \texttt{5.0/8.0}, 6\dots),
+\item \texttt{msbIn} : the weight associated to input most significant bit,
+\item \texttt{lsbIn} : the weight associated to input least significant bit,
+\item \texttt{lsbOut} : the demanded precision on output lsb,
+\item \texttt{targetUlpError} (optional) : floating point value in $]0.5 ; 1]$ expressing error tolerance on last bit. Default value is 1. Error between computed result and real result will be strictly lesser than $targetUlpError \cdot 2^{lsbOut}$.
+\end{itemize}
+\subsection{KCM with shared BitHeap}
+Multiple FixRealKCMs outputs can be branched to the same BitHeap in order to reduce the number of BitHeap compression steps when computing a sum of products.\\
+
+These are the steps which should be followed in order to obtain this result :
+\begin{enumerate}
+\item Compute the number of extra precision bits $g_e$ needed due to the multiple subproducts.
+\[ g_e =  \lceil\log_2(n)\rceil\]
+with $n$ the number of subproducts.
+\item Compute the maximal number of guardbits $g_{kcm}$ needed for the FixRealKCMs with the static method \texttt{neededGuardBits}. If needed precision is $p$, then the subproducts should be precise to $p + g_e$.
+
+\item Create a BitHeap large enough to get all subproduct inputs
+
+\item Create all the KCMs indicating them the weight of the BitHeap lsbInput (which is the weight of the KCM lsbOut minus $g_{kcm}$).
+\end{enumerate}
+FixSOPC\footnote{\texttt{src/FixFilters/FixSOPC.cpp}} is a good example of an operator with embedded FixRealKCMs.
+
+\section{Code structure}
+There are four important methods for the operator : \texttt{init}, \texttt{computeTablesNumber}, \texttt{createTables} and \texttt{connectTablesToBitHeap}. The first one parse the constant and create and set operator fields. The second is used to compute tables sizes. The third take care of the actual creation of the tables ad the fourth is used to connect the tables to the bitHeap (which is either created by the FixRealKCM or by an encompassing operator depending on which cnstructor is called). 
+\end{document}

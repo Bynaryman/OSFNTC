@@ -1,0 +1,29 @@
+digraph IntMultiplierLUT_4x1_F600_uid1575
+{
+	//graph drawing options
+	label=IntMultiplierLUT_4x1_F600_uid1575;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator IntMultiplierLUT_4x1_F600_uid1575
+	X__IntMultiplierLUT_4x1_F600_uid1575 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__IntMultiplierLUT_4x1_F600_uid1575 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__IntMultiplierLUT_4x1_F600_uid1575 [ label="R\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__IntMultiplierLUT_4x1_F600_uid1575, Y__IntMultiplierLUT_4x1_F600_uid1575};
+	{rank=same R__IntMultiplierLUT_4x1_F600_uid1575};
+	//internal signals of operator IntMultiplierLUT_4x1_F600_uid1575
+	replicated__IntMultiplierLUT_4x1_F600_uid1575 [ label="replicated\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	prod__IntMultiplierLUT_4x1_F600_uid1575 [ label="prod\ndT = 2.15e-10\n(0, 2.15e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator IntMultiplierLUT_4x1_F600_uid1575
+
+	//input and internal signal connections of operator IntMultiplierLUT_4x1_F600_uid1575
+	X__IntMultiplierLUT_4x1_F600_uid1575 -> prod__IntMultiplierLUT_4x1_F600_uid1575 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__IntMultiplierLUT_4x1_F600_uid1575 -> replicated__IntMultiplierLUT_4x1_F600_uid1575 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	replicated__IntMultiplierLUT_4x1_F600_uid1575 -> prod__IntMultiplierLUT_4x1_F600_uid1575 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	prod__IntMultiplierLUT_4x1_F600_uid1575 -> R__IntMultiplierLUT_4x1_F600_uid1575 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

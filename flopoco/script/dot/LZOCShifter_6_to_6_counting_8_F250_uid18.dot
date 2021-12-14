@@ -1,0 +1,52 @@
+digraph LZOCShifter_6_to_6_counting_8_F250_uid18
+{
+	//graph drawing options
+	label=LZOCShifter_6_to_6_counting_8_F250_uid18;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LZOCShifter_6_to_6_counting_8_F250_uid18
+	I__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="I\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	OZb__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="OZb\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Count__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="Count\ndT = 0\n(0, 1.69842e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	O__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="O\ndT = 0\n(0, 1.91342e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same I__LZOCShifter_6_to_6_counting_8_F250_uid18, OZb__LZOCShifter_6_to_6_counting_8_F250_uid18};
+	{rank=same Count__LZOCShifter_6_to_6_counting_8_F250_uid18, O__LZOCShifter_6_to_6_counting_8_F250_uid18};
+	//internal signals of operator LZOCShifter_6_to_6_counting_8_F250_uid18
+	level3__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="level3\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	sozb__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="sozb\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count2__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="count2\ndT = 4.24058e-10\n(0, 4.24058e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level2__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="level2\ndT = 2.15e-10\n(0, 6.39058e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count1__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="count1\ndT = 4.22183e-10\n(0, 1.06124e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level1__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="level1\ndT = 2.15e-10\n(0, 1.27624e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count0__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="count0\ndT = 4.22183e-10\n(0, 1.69842e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level0__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="level0\ndT = 2.15e-10\n(0, 1.91342e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	sCount__LZOCShifter_6_to_6_counting_8_F250_uid18 [ label="sCount\ndT = 0\n(0, 1.69842e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator LZOCShifter_6_to_6_counting_8_F250_uid18
+
+	//input and internal signal connections of operator LZOCShifter_6_to_6_counting_8_F250_uid18
+	I__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level3__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	OZb__LZOCShifter_6_to_6_counting_8_F250_uid18 -> sozb__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZOCShifter_6_to_6_counting_8_F250_uid18 -> count2__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level2__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_6_to_6_counting_8_F250_uid18 -> count2__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_6_to_6_counting_8_F250_uid18 -> count1__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_6_to_6_counting_8_F250_uid18 -> count0__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count2__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level2__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count2__LZOCShifter_6_to_6_counting_8_F250_uid18 -> sCount__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZOCShifter_6_to_6_counting_8_F250_uid18 -> count1__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level1__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count1__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level1__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count1__LZOCShifter_6_to_6_counting_8_F250_uid18 -> sCount__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LZOCShifter_6_to_6_counting_8_F250_uid18 -> count0__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level0__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count0__LZOCShifter_6_to_6_counting_8_F250_uid18 -> level0__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count0__LZOCShifter_6_to_6_counting_8_F250_uid18 -> sCount__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__LZOCShifter_6_to_6_counting_8_F250_uid18 -> O__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sCount__LZOCShifter_6_to_6_counting_8_F250_uid18 -> Count__LZOCShifter_6_to_6_counting_8_F250_uid18 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

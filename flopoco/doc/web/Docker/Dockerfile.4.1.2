@@ -1,0 +1,11 @@
+FROM ubuntu:xenial
+RUN apt-get update
+RUN yes | apt-get install wget sudo
+RUN wget flopoco.gforge.inria.fr/install_scripts/install-plain-4.1.2-on-xenial64.sh
+RUN yes | sh install-plain-4.1.2-on-xenial64.sh 
+
+VOLUME ["/flopoco_workspace"]
+
+ENTRYPOINT ["/flopoco-4.1.2/flopoco"]
+
+WORKDIR /flopoco_workspace

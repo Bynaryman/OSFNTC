@@ -1,0 +1,31 @@
+digraph DSPBlock_2x24_F500_uid803
+{
+	//graph drawing options
+	label=DSPBlock_2x24_F500_uid803;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator DSPBlock_2x24_F500_uid803
+	X__DSPBlock_2x24_F500_uid803 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__DSPBlock_2x24_F500_uid803 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__DSPBlock_2x24_F500_uid803 [ label="R\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__DSPBlock_2x24_F500_uid803, Y__DSPBlock_2x24_F500_uid803};
+	{rank=same R__DSPBlock_2x24_F500_uid803};
+	//internal signals of operator DSPBlock_2x24_F500_uid803
+	Mint__DSPBlock_2x24_F500_uid803 [ label="Mint\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	M__DSPBlock_2x24_F500_uid803 [ label="M\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Rtmp__DSPBlock_2x24_F500_uid803 [ label="Rtmp\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator DSPBlock_2x24_F500_uid803
+
+	//input and internal signal connections of operator DSPBlock_2x24_F500_uid803
+	X__DSPBlock_2x24_F500_uid803 -> Mint__DSPBlock_2x24_F500_uid803 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__DSPBlock_2x24_F500_uid803 -> Mint__DSPBlock_2x24_F500_uid803 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Mint__DSPBlock_2x24_F500_uid803 -> M__DSPBlock_2x24_F500_uid803 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	M__DSPBlock_2x24_F500_uid803 -> Rtmp__DSPBlock_2x24_F500_uid803 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Rtmp__DSPBlock_2x24_F500_uid803 -> R__DSPBlock_2x24_F500_uid803 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

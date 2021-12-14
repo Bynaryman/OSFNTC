@@ -1,0 +1,7 @@
+- rename all the Int* into Fixed*
+- update to flopoco5 interface
+- change all the interfaces to MSBweight, LSBweight instead of wI, wF
+
+FP stuff:
+- use FPAddSub
+- add them too

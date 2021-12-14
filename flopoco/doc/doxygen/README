@@ -1,0 +1,10 @@
+Here is the project's doxygen.
+To generate it, you will need doxygen:
+
+sudo apt-get install doxygen
+
+Then, to update the doc, open a terminal in the current folder an do:
+
+doxygen Doxyfile
+
+now you can run the doxygen by launching html/index.html in your browser

@@ -1,0 +1,66 @@
+digraph LZOCShifter_30_to_30_counting_32_F600_uid66
+{
+	//graph drawing options
+	label=LZOCShifter_30_to_30_counting_32_F600_uid66;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LZOCShifter_30_to_30_counting_32_F600_uid66
+	I__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="I\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	OZb__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="OZb\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Count__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="Count\ndT = 0\n(3, 2.82067e-10)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=3 ];
+	O__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="O\ndT = 0\n(3, 4.97067e-10)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=3 ];
+	{rank=same I__LZOCShifter_30_to_30_counting_32_F600_uid66, OZb__LZOCShifter_30_to_30_counting_32_F600_uid66};
+	{rank=same Count__LZOCShifter_30_to_30_counting_32_F600_uid66, O__LZOCShifter_30_to_30_counting_32_F600_uid66};
+	//internal signals of operator LZOCShifter_30_to_30_counting_32_F600_uid66
+	level5__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="level5\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="sozb\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count4__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="count4\ndT = 8.00788e-10\n(0, 8.00788e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level4__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="level4\ndT = 2.15e-10\n(0, 1.01579e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count3__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="count3\ndT = 7.95163e-10\n(1, 2.94285e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level3__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="level3\ndT = 2.15e-10\n(1, 5.09285e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	count2__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="count2\ndT = 7.93288e-10\n(1, 1.30257e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level2__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="level2\ndT = 2.15e-10\n(2, 9.07051e-13)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	count1__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="count1\ndT = 7.91413e-10\n(2, 7.92321e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level1__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="level1\ndT = 2.15e-10\n(2, 1.00732e-09)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	count0__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="count0\ndT = 7.91413e-10\n(3, 2.82067e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level0__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="level0\ndT = 2.15e-10\n(3, 4.97067e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 [ label="sCount\ndT = 0\n(3, 2.82067e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+
+	//subcomponents of operator LZOCShifter_30_to_30_counting_32_F600_uid66
+
+	//input and internal signal connections of operator LZOCShifter_30_to_30_counting_32_F600_uid66
+	I__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level5__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	OZb__LZOCShifter_30_to_30_counting_32_F600_uid66 -> sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count4__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level4__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count4__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count3__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count2__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count1__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count0__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count4__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level4__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count4__LZOCShifter_30_to_30_counting_32_F600_uid66 -> sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count3__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level3__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count3__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level3__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count3__LZOCShifter_30_to_30_counting_32_F600_uid66 -> sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count2__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level2__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count2__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level2__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count2__LZOCShifter_30_to_30_counting_32_F600_uid66 -> sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count1__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level1__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count1__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level1__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count1__LZOCShifter_30_to_30_counting_32_F600_uid66 -> sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LZOCShifter_30_to_30_counting_32_F600_uid66 -> count0__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level0__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count0__LZOCShifter_30_to_30_counting_32_F600_uid66 -> level0__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count0__LZOCShifter_30_to_30_counting_32_F600_uid66 -> sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__LZOCShifter_30_to_30_counting_32_F600_uid66 -> O__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sCount__LZOCShifter_30_to_30_counting_32_F600_uid66 -> Count__LZOCShifter_30_to_30_counting_32_F600_uid66 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

@@ -1,0 +1,29 @@
+digraph IntAdder_38_F400_uid57
+{
+	//graph drawing options
+	label=IntAdder_38_F400_uid57;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator IntAdder_38_F400_uid57
+	X__IntAdder_38_F400_uid57 [ label="X\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__IntAdder_38_F400_uid57 [ label="Y\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Cin__IntAdder_38_F400_uid57 [ label="Cin\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__IntAdder_38_F400_uid57 [ label="R\ndT = 0\n(0, 8.36e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__IntAdder_38_F400_uid57, Y__IntAdder_38_F400_uid57, Cin__IntAdder_38_F400_uid57};
+	{rank=same R__IntAdder_38_F400_uid57};
+	//internal signals of operator IntAdder_38_F400_uid57
+	Rtmp__IntAdder_38_F400_uid57 [ label="Rtmp\ndT = 6.21e-10\n(0, 8.36e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator IntAdder_38_F400_uid57
+
+	//input and internal signal connections of operator IntAdder_38_F400_uid57
+	X__IntAdder_38_F400_uid57 -> Rtmp__IntAdder_38_F400_uid57 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__IntAdder_38_F400_uid57 -> Rtmp__IntAdder_38_F400_uid57 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Cin__IntAdder_38_F400_uid57 -> Rtmp__IntAdder_38_F400_uid57 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Rtmp__IntAdder_38_F400_uid57 -> R__IntAdder_38_F400_uid57 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

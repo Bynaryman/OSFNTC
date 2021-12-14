@@ -1,0 +1,57 @@
+digraph LeftShifter60_by_max_127_F500_uid61
+{
+	//graph drawing options
+	label=LeftShifter60_by_max_127_F500_uid61;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LeftShifter60_by_max_127_F500_uid61
+	X__LeftShifter60_by_max_127_F500_uid61 [ label="X\ndT = 0\n(0, 1.205e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	S__LeftShifter60_by_max_127_F500_uid61 [ label="S\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 [ label="padBit\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__LeftShifter60_by_max_127_F500_uid61 [ label="R\ndT = 0\n(3, 3.15385e-10)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=3 ];
+	{rank=same X__LeftShifter60_by_max_127_F500_uid61, S__LeftShifter60_by_max_127_F500_uid61, padBit__LeftShifter60_by_max_127_F500_uid61};
+	{rank=same R__LeftShifter60_by_max_127_F500_uid61};
+	//internal signals of operator LeftShifter60_by_max_127_F500_uid61
+	ps__LeftShifter60_by_max_127_F500_uid61 [ label="ps\ndT = 0\n(0, 9.44e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level0__LeftShifter60_by_max_127_F500_uid61 [ label="level0\ndT = 0\n(0, 1.205e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level1__LeftShifter60_by_max_127_F500_uid61 [ label="level1\ndT = 0\n(0, 1.205e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level2__LeftShifter60_by_max_127_F500_uid61 [ label="level2\ndT = 1.18423e-09\n(1, 5.39231e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level3__LeftShifter60_by_max_127_F500_uid61 [ label="level3\ndT = 0\n(1, 5.39231e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level4__LeftShifter60_by_max_127_F500_uid61 [ label="level4\ndT = 1.36885e-09\n(2, 5.80769e-11)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level5__LeftShifter60_by_max_127_F500_uid61 [ label="level5\ndT = 0\n(2, 5.80769e-11)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level6__LeftShifter60_by_max_127_F500_uid61 [ label="level6\ndT = 2.10731e-09\n(3, 3.15385e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level7__LeftShifter60_by_max_127_F500_uid61 [ label="level7\ndT = 0\n(3, 3.15385e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+
+	//subcomponents of operator LeftShifter60_by_max_127_F500_uid61
+
+	//input and internal signal connections of operator LeftShifter60_by_max_127_F500_uid61
+	X__LeftShifter60_by_max_127_F500_uid61 -> level0__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__LeftShifter60_by_max_127_F500_uid61 -> ps__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level1__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level2__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level3__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level4__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level5__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level6__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__LeftShifter60_by_max_127_F500_uid61 -> level7__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level1__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level2__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level3__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level4__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level5__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level6__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter60_by_max_127_F500_uid61 -> level7__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__LeftShifter60_by_max_127_F500_uid61 -> level1__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LeftShifter60_by_max_127_F500_uid61 -> level2__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LeftShifter60_by_max_127_F500_uid61 -> level3__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LeftShifter60_by_max_127_F500_uid61 -> level4__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LeftShifter60_by_max_127_F500_uid61 -> level5__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LeftShifter60_by_max_127_F500_uid61 -> level6__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LeftShifter60_by_max_127_F500_uid61 -> level7__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level7__LeftShifter60_by_max_127_F500_uid61 -> R__LeftShifter60_by_max_127_F500_uid61 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

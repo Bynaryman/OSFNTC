@@ -1,0 +1,30 @@
+% Just a latex file to produce the logo from a fig.
+% Then screen capture and clip by hand.
+% To make a transparent background:
+%  convert -transparent white flopoco.png flopocoLogo.png
+
+
+
+\documentclass[times, 10pt,twocolumn]{article} 
+\usepackage{amsmath,amssymb,url}
+\usepackage{url,subfigure,boxedminipage}
+\usepackage[pdftex]{graphicx,color}
+%\graphicspath{{}}
+\title{FloPoCo logo}
+
+\begin{document} 
+
+%\maketitle
+
+  \begin{center}
+    \scalebox{0.8}{\mbox{\input{flopocoLogo.pdf_t}}}%
+ \end{center}
+\color[rgb]{0,0.5,0.5}$${\sqrt{x^2+y^2+z^2}}$$
+\color[rgb]{1,0,0}$$\frac{x}{\sqrt{x^2+y^2}}$$
+\color[rgb]{0,0,1}$$\pi{x}$$
+\color[rgb]{1,0,1}$$e^{j\frac{2k\pi}{n}}$$
+\color[rgb]{.56,0,0}$$\log{x}$$
+\color[rgb]{1,0,0}$$a_0+a_1(x+a_2(x+a_3))$$
+\color[rgb]{0,.69,0}$$\displaystyle y=\sum_{i=0}^n x_i$$
+
+\end{document}

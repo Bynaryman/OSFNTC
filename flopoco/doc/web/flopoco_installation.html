@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<link rel="stylesheet" href="flopoco.css">
+			<meta charset="utf-8"> 
+  <title>FloPoCo installation manual</title>
+</head>
+
+<body>
+<h1>FloPoCo installation  manual</h1>
+
+<p style="text-align: center"> <img src="FloPoCoSmall.png"/>	</p>
+<ul>
+	<li> <a href="#docker">Installation by Docker (recommended if you want to use flopoco)</a></li>  
+	<li> <a href="#linux">Installation on Linux or MacOS (recommended if you want to hack flopoco)</a></li>  
+	<li> <a href="#windows">Installation in Windows</a></li> 
+</ul>
+<p>Operators tend to come and go as we struggle to support them, and we apologize for that. Hopefully the new Autotest features will bring more stability. Meanwhile, it is possible that the operator you want works better in an older version: read the <a href="ReleaseNotes.txt">release notes</a>.</p> 
+
+
+<hr/>
+<h2><a name="docker">Installation by Docker</a></h2>
+<ul>
+	<li>Install Docker on your computer. 
+		<ul>
+			<li> On Debian/Ubuntu,
+				<p>
+					<kbd>apt install docker.io <br> sudo usermod -aG docker ${USER}</kbd>
+				</p>
+			</li>
+			<li>For Windows, see <a href="https://www.docker.com/">docker.com</a>
+				</li>
+		</ul>
+	<li> Download the Dockerfile corresponding to the version you want <a href="Docker/">from this directory</a></li>  
+	<li> Download and compile FloPoCo and its dependencies by the following command:
+	<p><kbd>
+    docker build -t flopoco -f Dockerfile.4.1.2 .
+	</kbd></p>
+	(replace Dockerfile.4.1.2 with the one you selected)
+	</li> 
+	<li> The following command sets up a convenient alias (in linux)
+	<p><kbd>
+    alias flopoco="docker run --rm=true -v `pwd`:/flopoco_workspace flopoco"
+	</kbd></p>
+	Now if you type for instance 
+	<p><kbd>
+    flopoco FPAdd we=8 wf=23
+	</kbd></p>	</li>
+	you will obtain in the current directory a flopoco.vhdl file containing a single-precision floating-point adder.
+</ul>
+
+<hr/>
+<h2><a name="linux">Installation in Ubuntu and other Debian derivative</a></h2>
+
+<p>For Debian/Ubuntu, simply look at <a href="install_scripts/"> this directory of installation scripts </a>. Each script works for one environment, and Vagrant or Docker are your friends to set up this environment if you just want to use flopoco.
+</p>
+	
+<p>If you want to hack FloPoCo, these scripts will give you an idea of the dependencies to install, in particular: Sollya (mandatory, used in a lot of operators), WCPG (optional, used in the FixIIR operator), and ScaLP (optional, will improve the quality of many operators).</p>
+
+<p>
+	<a href="https://digidev.digi.e-technik.uni-kassel.de/scalp/">ScaLP</a> provides a uniform interface to several ILP solver.
+The instructions provided  build ScaLP with the LPSolve back-end, which is the only backend for which installation can be fully automated.
+Better results may be obtained using other backends: SCIP, Gurobi (both freely available for academic purpose) or CPlex.
+You are therefore encouraged to download one of these, install it, then recompile ScaLP (adding the relevant arguments to its cmake command, see ScaLP documentation), then FloPoCo.
+</p>
+
+
+
+
+
+<h4>Unstable git master version</h4>
+
+<p> See <a href="install_scripts/install-plain-gitmaster-on-bionic64.sh"> the install script for the plain version</a>, or <a href="install_scripts/install-full-gitmaster-on-bionic64.sh"> the install script for the full version with all possible optional dependencies</a>.
+	These scripts are written for ubuntu 18.04 (bionic).
+	You can install them in a virtual machine using Vagrant as follows:
+</p>	
+
+<p><kbd>
+		vagrant init ubuntu/bionic64	&&	vagrant up  
+<br>
+  		vagrant ssh
+</kbd></p>
+<p><kbd>
+  		# the following happens in the virtual machine
+<br>
+  		wget http://flopoco.gforge.inria.fr/install_scripts/install-plain-gitmaster-on-bionic64.sh
+<br>
+  	sh install-plain-gitmaster-on-bionic64.sh
+</kbd></p>
+To install all the possible dependencies, replace the two last lines with
+<p><kbd>
+  		wget http://flopoco.gforge.inria.fr/install_scripts/install-full-gitmaster-on-bionic64.sh
+<br>
+  	sh install-full-gitmaster-on-bionic64.sh
+</kbd></p>
+Your mileage may vary, but these scripts provide a good starting point.
+
+<h4>Version 4.1.2, the last one with the old pipelining framework</h4>
+
+<p> See <a href="install_scripts/install-plain-4.1.2-on-xenial64.sh"> the install script </a>.
+	It was written for ubuntu 16.04 (xenial), and is probably broken on more recent versions. In this case you can install it in a virtual machine using Vagrant as follows:
+</p>	
+
+<p><kbd>
+		vagrant init ubuntu/xenial64	&&	vagrant up
+<br>
+  		vagrant ssh
+</kbd></p>
+<p><kbd>
+  		# the following happens in the virtual machine
+<br>
+  		wget http://flopoco.gforge.inria.fr/install_scripts/install-plain-4.1.2-on-xenial64.sh
+<br>
+  	sh install-plain-4.1.2-on-xenial64.sh 
+</kbd></p>
+
+
+
+
+<h4>Version 2.5.0, the last version before the transition to Sollya4 broke everything that bit heaps had not yet broken</h4>
+See the <a href="install_scripts/install-2.5.0-on-precise.sh">the install script</a>, that it tested to work in Ubuntu 12.04, aka "precise".
+
+<h4>Version 2.3.2, the last version before the Great Leader embarked the project in the bit heap hazardous adventure</h4>
+See the <a href="install_scripts/install-2.3.2-on-precise.sh">the install script</a>, that it tested to work in Ubuntu 12.04, aka "precise".
+
+<h4>Older versions may include operators that have later been deprecated. Look up the <a href="https://gforge.inria.fr/scm/?group_id=1030">source code repository</a></h4>
+
+
+
+<hr/>
+<h2><a name="windows">Installation in Windows</a></h2>
+
+Here is a simple way to get FloPoCo running in a virtual machine under Windows.
+
+You will need to install : 
+	<ul>
+	  <li><a href="http://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
+	  <li><a href="http://www.vagrantup.com/">Vagrant</a></li>
+	  <li>A SSH Client. If you are running Linux or Mac, you already have one. If you are using Windows, I recommended you "Putty".</li>
+	</ul> 
+	
+	<h3>Installing Ubuntu in a Vagrant virtual box</h3>
+	
+	<p>Create a folder where you want to contain all the Vagrant files.	</p>
+		<p>	Open a command prompt and go into this folder. If you are using windows, you can quickly open a command prompt by holding down shift and right-clicking the project folder, then choose “open command window here”.	</p>
+	
+	<p>	Now type the following commands :
+		<p><kbd>vagrant init ubuntu/bionic64</kbd></p>
+		<p><kbd>vagrant up</kbd></p>
+  The first time, it may take some time depending on your internet connection.	</p>
+	
+	<h3>Connecting to the virtual machine by SSH</h3>
+	You have two solutions at this point :
+	<ul>
+		<li>Using your favorite ssh client, connect to your virtual machine with the following parameters :
+		<ul>
+			<li>Adress : 127.0.0.1</li>
+			<li>Port : The port is given during the execution of "vagrant up". By default 2222.</li>
+			<li>Login : vagrant</li>
+			<li>Password : vagrant</li>
+		</ul></li>
+		
+		<li>You can also try to type "vagrant ssh" in your prompt, sometime it works. The result is the same thing.
+		</ul></li>
+	
+	
+	<h3>Installing Flopoco on your virtual machine</h3>
+	Go to the <a href="#linux">Linux installation instructions</a></a> :
+	Copy one of the one-line installation scripts and paste it into the prompt of your virtual machine.
+	Wait. Sometime, you will be asked to press "y".
+		
+	<h3>Some common problems</h3>
+	<ul>
+		<li>You can not acess the VM using SSH : open VirtualBox, click right on your Vagrant Machine in the list, and shutdown and restart the VM.</li>
+		<li>During the execution of "vagrant up", the script loops trying to access the Vm using ssh : Don't worry (be happy), Stop the script. And restart your virtual machine directly into VirtualBox.</li>
+		<li>If you have some problems when "vagrant up" and using Linux, try to run the commands as root.</li>
+		<li>The single-line installation script hangs, possibly with a lot of "y" in the terminal: just reboot the virtual machine and start again. It works the second time.</li>
+		<li>If nothing work, just reboot your computer. Reboot solves more or less everything.</li>
+	</ul>
+	If you encountered others problems, give us feedback and if possible solutions so that we can add them to the preceeding list.
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+body { 
+		background: white; 
+		color: black; 
+		font-family: sans-serif;
+}
+body a:link {color:rgb(50,50,50);}
+body a:visited {color:rgb(100,100,100);}
+body a:hover   {color:red;}
+
+footer {padding:2em 0 0 0}
+ul, ol, dl                       { margin-left: 3em; }
+blockquote                       { margin-left: 5em; margin-right: 5em; }
+h1                               { color: black; text-align: center;}
+h2                               { background: #FFFF73; font-style: italic; }
+h2 a:link, h2 a:visited          { color: #000073; }
+
+kbd {background: #CCFFFF; font-size:120%;}
+dt.operatorname                { color: #0000FF; font-weight: bold;}
+dd.parametername               { font-weight: bold;}
+code.parametertype               { color: red;}
+dd.operatordescription           { color: black;}
+span.optionalparam               {color: #555555;}

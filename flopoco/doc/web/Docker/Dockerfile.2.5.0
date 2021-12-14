@@ -1,0 +1,11 @@
+FROM ubuntu:precise
+RUN apt-get update
+RUN yes | apt-get install wget sudo
+RUN wget flopoco.gforge.inria.fr/install_scripts/install-2.5.0-on-precise.sh
+RUN yes | sh install-2.5.0-on-precise.sh 
+
+VOLUME ["/flopoco_workspace"]
+
+ENTRYPOINT ["/flopoco-2.5.0/flopoco"]
+
+WORKDIR /flopoco_workspace

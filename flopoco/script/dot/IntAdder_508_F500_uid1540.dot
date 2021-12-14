@@ -1,0 +1,50 @@
+digraph IntAdder_508_F500_uid1540
+{
+	//graph drawing options
+	label=IntAdder_508_F500_uid1540;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator IntAdder_508_F500_uid1540
+	X__IntAdder_508_F500_uid1540 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__IntAdder_508_F500_uid1540 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Cin__IntAdder_508_F500_uid1540 [ label="Cin\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__IntAdder_508_F500_uid1540 [ label="R\ndT = 0\n(1, 1.647e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+	{rank=same X__IntAdder_508_F500_uid1540, Y__IntAdder_508_F500_uid1540, Cin__IntAdder_508_F500_uid1540};
+	{rank=same R__IntAdder_508_F500_uid1540};
+	//internal signals of operator IntAdder_508_F500_uid1540
+	Cin_0__IntAdder_508_F500_uid1540 [ label="Cin_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	X_0__IntAdder_508_F500_uid1540 [ label="X_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Y_0__IntAdder_508_F500_uid1540 [ label="Y_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	S_0__IntAdder_508_F500_uid1540 [ label="S_0\ndT = 1.851e-09\n(1, 1e-12)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	R_0__IntAdder_508_F500_uid1540 [ label="R_0\ndT = 0\n(1, 1e-12)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	Cin_1__IntAdder_508_F500_uid1540 [ label="Cin_1\ndT = 0\n(1, 1e-12)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	X_1__IntAdder_508_F500_uid1540 [ label="X_1\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Y_1__IntAdder_508_F500_uid1540 [ label="Y_1\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	S_1__IntAdder_508_F500_uid1540 [ label="S_1\ndT = 1.646e-09\n(1, 1.647e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	R_1__IntAdder_508_F500_uid1540 [ label="R_1\ndT = 0\n(1, 1.647e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+
+	//subcomponents of operator IntAdder_508_F500_uid1540
+
+	//input and internal signal connections of operator IntAdder_508_F500_uid1540
+	X__IntAdder_508_F500_uid1540 -> X_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	X__IntAdder_508_F500_uid1540 -> X_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__IntAdder_508_F500_uid1540 -> Y_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__IntAdder_508_F500_uid1540 -> Y_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Cin__IntAdder_508_F500_uid1540 -> Cin_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Cin_0__IntAdder_508_F500_uid1540 -> S_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	X_0__IntAdder_508_F500_uid1540 -> S_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y_0__IntAdder_508_F500_uid1540 -> S_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S_0__IntAdder_508_F500_uid1540 -> R_0__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S_0__IntAdder_508_F500_uid1540 -> Cin_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	R_0__IntAdder_508_F500_uid1540 -> R__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Cin_1__IntAdder_508_F500_uid1540 -> S_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	X_1__IntAdder_508_F500_uid1540 -> S_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y_1__IntAdder_508_F500_uid1540 -> S_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S_1__IntAdder_508_F500_uid1540 -> R_1__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	R_1__IntAdder_508_F500_uid1540 -> R__IntAdder_508_F500_uid1540 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

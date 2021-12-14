@@ -1,0 +1,162 @@
+New pipeline, internal documentation (work in progress)
+
+* Big picture:
+** The VHDL Lexer
+The VHDL Lexer (implemented in src/VHDLLexerRule.l) 
+- builds the signal graph in dependenceTable
+- invokes the scheduler at each ";"
+
+
+* Overview of the scheduling process
+
+In case of loops we will do two scheduling passes.
+- first pass: do as if there was no loop, see below
+  - the existence of loops is detected through the use of the stopPipelining() and restartPipelining() methods
+- the loops in the circuit are handled with the help of the user
+	- the user inserts a new directive at the beginning of the loop
+  		void stopPipelining(bool insertRegister=true)
+	- the scheduling is stopped from that point on
+	- instead of scheduling as usual, the scheduler only increases the critical path
+	- the user inserts a new directive to restart the scheduling
+  		void restartPipelining(bool insertRegister=true)
+  - the loops just detected will give the maximum achievable frequency
+   	- imposed by the largest loop
+- second pass: start pipelining the circuit from the inputs using the maximum frequency just determined
+
+The bit heap compression is part of the scheduling process, not part of the constructor code
+  - add to Operator a list of its bit heaps
+  - addBit() etc build the bit heap in-edges
+  - getSumName() builds the out-edges
+  - generateCompressorVHDL() 
+    - does some bookkeeping so that we can re-launch it in case of loops
+    - writes its VHDL to a separate stream (attribute of BitHeap)
+    - scheduled separately because we know it has no loops (using Martin's algos for instance)
+
+First pass (and only pass if no loop):
+- pipelining is done on the go, during the constructor
+- new nodes are added to the graph by declare
+- after each statement that is written into the vhdl stream (statement in the sense of a VHDL statement, so it will be triggered by a ';')
+	- the lexer is invoked, then the scheduler is invoked on all of the nodes that were added/modified
+		- vhdlStream needs to be able to trigger the scheduler and the lexer
+		- need to know a list of edges that contain unknown nodes
+		- edges that contain unknown signal names are put to the side
+			- ? list of to-be-processed edges
+			- ? list of the corresponding to-be-scheduled nodes
+		- theses edges are tested when the next instructions are processed and when new declares are made
+		- ? when adding these delayed edges, checks must be made to see if the predecessor is also a successor, in which case this is a loop
+			- this can be achieved by doing a depth-first traversal of the tree, while remembering the node from which the node originated
+	- the scheduling is restarted for the newly added nodes, and the nodes that have been affected by the newly added edges
+		- need to know the newly added nodes and the newly modified nodes
+		- the scheduling for a node changes the timing of the node itself
+		- the scheduling also updates the node's predecessors
+- bitheap code gets inserted in a separate stream, and is only added at the end
+	- if the nodes which are inputs to the bitheap have their timing modified after the bitheap is compressed, then the compression is called again and the new compression code replaces the old one in the separate bitheap code stream
+- loops are detected and processed within the same pass
+	- the start of the loop is indicated by the user
+	- the end of the loop is indicated by the user
+	- care must be taken for smaller loops inside the original loop
+		- same remark as before: this can be avoided if we stop the scheduler when it reaches an already scheduled node
+- once the constructor call is over, a new scheduler can be called: asap or alap
+	- uses the same tree
+	- constructs a new schedule
+- sub-components
+  - problematic because the inputs have to be connected to their corresponding signals in the parent operator, before the scheduling starts
+  - possible solution:
+    - required context: all current instance creations are passed to the new method of creating instanced; addInput()+addOutput()+instance() -> newInstance()
+    - all the code for creating an instance is hosted inside newInstance()
+    - the connections (addInput() and addOutput()) are done before the call to the constructor of the new subcomponent
+      - a list of (instance_name, source_signal_name, sink_signal_name) is created
+      - the list is created inside the parent operator that creates the subcomponents
+    - then the call to the constructor of the subcomponent is made
+      - when adding a new input/output (inside addInput()/addOutput()) checks are made to see if the respective input/output is connected to another signal
+      - if the signal is connected, then the connection is made
+      - if no information on the connection is present, then this is probably a global operator, so the inputs/outputs do not need to be connected to anything
+    - instance performs as usual, called after the call to the constructor
+    - only call to the scheduler of the subcomponent is needed
+    - newInstance()
+      - can be implemented directly in the Operator class
+      - it gets all the information required for creating a new instance from:
+        - the parameter configuration string: "param_name=value, param_name=value, ..."
+        - from the information contained in the UserInterface class, which contains all the parameter names and their default values, if they have any
+
+
+
+* Abandoned alternative 
+The following alternative was considerered (and even completely implemented):
+1/ build the complete signal dependency graph, 
+2/ schedule it optimally (i.e. better than ASAP in principle)
+The problem is that in many cases, we want to take decisions in the architecture depending on the scheduling of the inputs.
+Examples: pipelined adders, bit heap compressors, etc.
+This is perceived more important than the possible benefit of optimality over ASAP.
+However, it implies an input-to-output scheduling flow (typically ASAP).
+
+
+* Copypasted obsolete stuff to remove once it has been pushed up.
+** Scheduling  
+
+
+*** Relevant methods: 
+void Operator::startScheduling() will be obsoleted
+void Operator::scheduleSignal(Signal *targetSignal)
+void Operator::parse2()
+
+*** Flow
+start with the inputs of the circuit. 
+The inputs are assumed to be all synchronized at the same cycle, and their critical path might vary.
+
+When scheduleSignal() is called on an internal node (i.e. not an input), it first checks if the node has already been scheduled. 
+If yes,	it exits:  there is nothing else to do (this might also be a backward loop).
+Otherwise, check if all of the predecessors have been scheduled.
+If yes, then the node schedules itself, according to the timing of its predecessors and to its own constraints.
+Otherwise it simply exits: this signal will have to be scheduled in a recursive call (at the end of vhdl construction?)
+
+scheduleSignalRecursive(s) starts by launching scheduleSignal(s), and then for each successor ss of s launches scheduleSignalRecursive()
+
+*** Backward loops:
+ When dealing with a loop, the timing procedures will come
+		to a halt inside the loop, as they will detect that the node which has
+		data coming from the backward edge has already been scheduled, so there
+		is nothing else left to do.
+
+*** Sub-components:
+ start by launching the scheduling procedures on the signals
+		of the operator.
+		We first schedule the signal, and then detect whether the signal and
+		its predecessors belong to the same operator (meaning the signal belongs to
+		a sub-component of the parent operator of the respective signal's predecessor).
+		If this is not an input signal, we start scheduling the signal's sucessors.
+		If this is an input signal, we then check if all of the other inputs of the
+		respective sub-component have also been scheduled. If not, we can just
+		stop the current call. If yes, then we synchronize all of the inputs to
+		the same cycle, and then launch the scheduling procedure for the
+		sub-component.
+		When encountering an output port, the scheduling procedures should
+		treat it as a regular signal: set its timing and launch the scheduling
+		of its successors.
+
+** technicallities
+*** First level parsing
+In the VHDL stream,
+- Left-hand-side identifiers are surrounded with ??
+- Right-hand-side identifiers are surrounded with $$
+- These include non-signal IDs such as conv_std_logic_vector etc.
+  The latter will be filtered out (i.e. transmitted to the output VHDL with no change) thanks to the signal dictionary information.
+Examples (taken from FPAdd)
+
+   ??R?? <= $$X$$ + $$Y$$ + $$Cin$$;
+
+   fracAdder: ??IntAdder_27_F400_uid11??
+      port map ( ??clk??  => $$clk$$,
+                 ??rst??  => $$rst$$,
+                 ??Cin?? => $$cInAddFar$$,
+                 ??X?? => $$fracXfar$$,
+                 ??Y?? => $$fracYfarXorOp$$,
+                 ??R?? => $$fracAddResult$$);
+
+   ??shiftVal?? <= $$expDiff$$(4 downto 0) when $$shiftedOut$$='0' else $$CONV_STD_LOGIC_VECTOR$$(26,5);
+
+   with $$sXsYExnXY$$ select 
+   ??excRt?? <= "00" when "000000"|"010000"|"100000"|"110000",
+      "01" when "000101"|"010101"|"100101"|"110101"|"000100"|"010100"|"100100"|"110100"|"000001"|"010001"|"100001"|"110001",
+      "10" when "111010"|"001010"|"001000"|"011000"|"101000"|"111000"|"000010"|"010010"|"100010"|"110010"|"001001"|"011001"|"101001"|"111001"|"000110"|"010110"|"100110"|"110110", 
+      "11" when others;

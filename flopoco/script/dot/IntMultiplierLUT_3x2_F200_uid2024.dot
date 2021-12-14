@@ -1,0 +1,31 @@
+digraph IntMultiplierLUT_3x2_F200_uid2024
+{
+	//graph drawing options
+	label=IntMultiplierLUT_3x2_F200_uid2024;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator IntMultiplierLUT_3x2_F200_uid2024
+	X__IntMultiplierLUT_3x2_F200_uid2024 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__IntMultiplierLUT_3x2_F200_uid2024 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__IntMultiplierLUT_3x2_F200_uid2024 [ label="R\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__IntMultiplierLUT_3x2_F200_uid2024, Y__IntMultiplierLUT_3x2_F200_uid2024};
+	{rank=same R__IntMultiplierLUT_3x2_F200_uid2024};
+	//internal signals of operator IntMultiplierLUT_3x2_F200_uid2024
+	Xtable__IntMultiplierLUT_3x2_F200_uid2024 [ label="Xtable\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Y1__IntMultiplierLUT_3x2_F200_uid2024 [ label="Y1\ndT = 2.15e-10\n(0, 2.15e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Y1_copy2027__IntMultiplierLUT_3x2_F200_uid2024 [ label="Y1_copy2027\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator IntMultiplierLUT_3x2_F200_uid2024
+
+	//input and internal signal connections of operator IntMultiplierLUT_3x2_F200_uid2024
+	X__IntMultiplierLUT_3x2_F200_uid2024 -> Xtable__IntMultiplierLUT_3x2_F200_uid2024 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__IntMultiplierLUT_3x2_F200_uid2024 -> Xtable__IntMultiplierLUT_3x2_F200_uid2024 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Xtable__IntMultiplierLUT_3x2_F200_uid2024 -> Y1_copy2027__IntMultiplierLUT_3x2_F200_uid2024 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y1__IntMultiplierLUT_3x2_F200_uid2024 -> R__IntMultiplierLUT_3x2_F200_uid2024 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y1_copy2027__IntMultiplierLUT_3x2_F200_uid2024 -> Y1__IntMultiplierLUT_3x2_F200_uid2024 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

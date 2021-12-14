@@ -1,0 +1,49 @@
+digraph LeftShifter76_by_max_75_F400_uid8
+{
+	//graph drawing options
+	label=LeftShifter76_by_max_75_F400_uid8;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LeftShifter76_by_max_75_F400_uid8
+	X__LeftShifter76_by_max_75_F400_uid8 [ label="X\ndT = 0\n(1, 1.69885e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=2 ];
+	S__LeftShifter76_by_max_75_F400_uid8 [ label="S\ndT = 0\n(3, 2.18935e-09)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=2 ];
+	R__LeftShifter76_by_max_75_F400_uid8 [ label="R\ndT = 0\n(6, 1.72019e-09)", shape=box, color=black, style="bold, filled", fillcolor=chocolate, peripheries=3 ];
+	{rank=same X__LeftShifter76_by_max_75_F400_uid8, S__LeftShifter76_by_max_75_F400_uid8};
+	{rank=same R__LeftShifter76_by_max_75_F400_uid8};
+	//internal signals of operator LeftShifter76_by_max_75_F400_uid8
+	ps__LeftShifter76_by_max_75_F400_uid8 [ label="ps\ndT = 0\n(3, 2.18935e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level0__LeftShifter76_by_max_75_F400_uid8 [ label="level0\ndT = 0\n(1, 1.69885e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level1__LeftShifter76_by_max_75_F400_uid8 [ label="level1\ndT = 0\n(3, 2.18935e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level2__LeftShifter76_by_max_75_F400_uid8 [ label="level2\ndT = 1.75838e-09\n(4, 1.66373e-09)", shape=box, color=black, style=filled, fillcolor=cadetblue, peripheries=1 ];
+	level3__LeftShifter76_by_max_75_F400_uid8 [ label="level3\ndT = 0\n(4, 1.66373e-09)", shape=box, color=black, style=filled, fillcolor=cadetblue, peripheries=1 ];
+	level4__LeftShifter76_by_max_75_F400_uid8 [ label="level4\ndT = 1.943e-09\n(5, 1.32273e-09)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	level5__LeftShifter76_by_max_75_F400_uid8 [ label="level5\ndT = 0\n(5, 1.32273e-09)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	level6__LeftShifter76_by_max_75_F400_uid8 [ label="level6\ndT = 2.68146e-09\n(6, 1.72019e-09)", shape=box, color=black, style=filled, fillcolor=chocolate, peripheries=1 ];
+	level7__LeftShifter76_by_max_75_F400_uid8 [ label="level7\ndT = 0\n(6, 1.72019e-09)", shape=box, color=black, style=filled, fillcolor=chocolate, peripheries=1 ];
+
+	//subcomponents of operator LeftShifter76_by_max_75_F400_uid8
+
+	//input and internal signal connections of operator LeftShifter76_by_max_75_F400_uid8
+	X__LeftShifter76_by_max_75_F400_uid8 -> level0__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__LeftShifter76_by_max_75_F400_uid8 -> ps__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level1__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level2__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level3__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level4__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level5__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level6__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__LeftShifter76_by_max_75_F400_uid8 -> level7__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__LeftShifter76_by_max_75_F400_uid8 -> level1__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LeftShifter76_by_max_75_F400_uid8 -> level2__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LeftShifter76_by_max_75_F400_uid8 -> level3__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LeftShifter76_by_max_75_F400_uid8 -> level4__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LeftShifter76_by_max_75_F400_uid8 -> level5__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LeftShifter76_by_max_75_F400_uid8 -> level6__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LeftShifter76_by_max_75_F400_uid8 -> level7__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level7__LeftShifter76_by_max_75_F400_uid8 -> R__LeftShifter76_by_max_75_F400_uid8 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

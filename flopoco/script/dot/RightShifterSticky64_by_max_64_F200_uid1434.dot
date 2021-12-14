@@ -1,0 +1,86 @@
+digraph RightShifterSticky64_by_max_64_F200_uid1434
+{
+	//graph drawing options
+	label=RightShifterSticky64_by_max_64_F200_uid1434;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator RightShifterSticky64_by_max_64_F200_uid1434
+	X__RightShifterSticky64_by_max_64_F200_uid1434 [ label="X\ndT = 0\n(10, 7.67308e-12)", shape=box, color=black, style="bold, filled", fillcolor=sienna, peripheries=2 ];
+	S__RightShifterSticky64_by_max_64_F200_uid1434 [ label="S\ndT = 0\n(9, 4.64267e-09)", shape=box, color=black, style="bold, filled", fillcolor=slategray, peripheries=2 ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 [ label="padBit\ndT = 0\n(9, 4.64267e-09)", shape=box, color=black, style="bold, filled", fillcolor=slategray, peripheries=2 ];
+	R__RightShifterSticky64_by_max_64_F200_uid1434 [ label="R\ndT = 0\n(10, 6.52673e-10)", shape=box, color=black, style="bold, filled", fillcolor=sienna, peripheries=3 ];
+	Sticky__RightShifterSticky64_by_max_64_F200_uid1434 [ label="Sticky\ndT = 0\n(10, 3.06455e-09)", shape=box, color=black, style="bold, filled", fillcolor=sienna, peripheries=3 ];
+	{rank=same X__RightShifterSticky64_by_max_64_F200_uid1434, S__RightShifterSticky64_by_max_64_F200_uid1434, padBit__RightShifterSticky64_by_max_64_F200_uid1434};
+	{rank=same R__RightShifterSticky64_by_max_64_F200_uid1434, Sticky__RightShifterSticky64_by_max_64_F200_uid1434};
+	//internal signals of operator RightShifterSticky64_by_max_64_F200_uid1434
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 [ label="ps\ndT = 0\n(9, 4.64267e-09)", shape=box, color=black, style=filled, fillcolor=slategray, peripheries=1 ];
+	level7__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level7\ndT = 0\n(10, 7.67308e-12)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk6__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk6\ndT = 4.50625e-10\n(10, 4.58298e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level6__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level6\ndT = 0\n(10, 7.67308e-12)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk5__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk5\ndT = 4.4125e-10\n(10, 8.99548e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level5__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level5\ndT = 2.15e-10\n(10, 2.22673e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk4__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk4\ndT = 4.35625e-10\n(10, 1.33517e-09)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level4__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level4\ndT = 0\n(10, 2.22673e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk3__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk3\ndT = 4.3375e-10\n(10, 1.76892e-09)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level3__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level3\ndT = 2.15e-10\n(10, 4.37673e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk2__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk2\ndT = 4.31875e-10\n(10, 2.2008e-09)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level2__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level2\ndT = 0\n(10, 4.37673e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk1__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk1\ndT = 4.31875e-10\n(10, 2.63267e-09)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level1__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level1\ndT = 2.15e-10\n(10, 6.52673e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	stk0__RightShifterSticky64_by_max_64_F200_uid1434 [ label="stk0\ndT = 4.31875e-10\n(10, 3.06455e-09)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+	level0__RightShifterSticky64_by_max_64_F200_uid1434 [ label="level0\ndT = 0\n(10, 6.52673e-10)", shape=box, color=black, style=filled, fillcolor=sienna, peripheries=1 ];
+
+	//subcomponents of operator RightShifterSticky64_by_max_64_F200_uid1434
+
+	//input and internal signal connections of operator RightShifterSticky64_by_max_64_F200_uid1434
+	X__RightShifterSticky64_by_max_64_F200_uid1434 -> level7__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__RightShifterSticky64_by_max_64_F200_uid1434 -> ps__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level6__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level5__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level4__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level3__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level2__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level1__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky64_by_max_64_F200_uid1434 -> level0__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk6__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level6__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk5__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level5__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk4__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level4__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk3__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level3__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk2__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level2__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk1__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level1__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> stk0__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky64_by_max_64_F200_uid1434 -> level0__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level7__RightShifterSticky64_by_max_64_F200_uid1434 -> stk6__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level7__RightShifterSticky64_by_max_64_F200_uid1434 -> level6__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk6__RightShifterSticky64_by_max_64_F200_uid1434 -> stk5__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__RightShifterSticky64_by_max_64_F200_uid1434 -> stk5__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__RightShifterSticky64_by_max_64_F200_uid1434 -> level5__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk5__RightShifterSticky64_by_max_64_F200_uid1434 -> stk4__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__RightShifterSticky64_by_max_64_F200_uid1434 -> stk4__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__RightShifterSticky64_by_max_64_F200_uid1434 -> level4__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk4__RightShifterSticky64_by_max_64_F200_uid1434 -> stk3__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifterSticky64_by_max_64_F200_uid1434 -> stk3__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifterSticky64_by_max_64_F200_uid1434 -> level3__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk3__RightShifterSticky64_by_max_64_F200_uid1434 -> stk2__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky64_by_max_64_F200_uid1434 -> stk2__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky64_by_max_64_F200_uid1434 -> level2__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk2__RightShifterSticky64_by_max_64_F200_uid1434 -> stk1__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky64_by_max_64_F200_uid1434 -> stk1__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky64_by_max_64_F200_uid1434 -> level1__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk1__RightShifterSticky64_by_max_64_F200_uid1434 -> stk0__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky64_by_max_64_F200_uid1434 -> stk0__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky64_by_max_64_F200_uid1434 -> level0__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk0__RightShifterSticky64_by_max_64_F200_uid1434 -> Sticky__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__RightShifterSticky64_by_max_64_F200_uid1434 -> R__RightShifterSticky64_by_max_64_F200_uid1434 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

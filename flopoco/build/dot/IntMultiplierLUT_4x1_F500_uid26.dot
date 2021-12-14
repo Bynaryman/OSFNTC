@@ -1,0 +1,29 @@
+digraph IntMultiplierLUT_4x1_F500_uid26
+{
+	//graph drawing options
+	label=IntMultiplierLUT_4x1_F500_uid26;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator IntMultiplierLUT_4x1_F500_uid26
+	X__IntMultiplierLUT_4x1_F500_uid26 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__IntMultiplierLUT_4x1_F500_uid26 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__IntMultiplierLUT_4x1_F500_uid26 [ label="R\ndT = 0\n(0, 2.15e-10)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__IntMultiplierLUT_4x1_F500_uid26, Y__IntMultiplierLUT_4x1_F500_uid26};
+	{rank=same R__IntMultiplierLUT_4x1_F500_uid26};
+	//internal signals of operator IntMultiplierLUT_4x1_F500_uid26
+	replicated__IntMultiplierLUT_4x1_F500_uid26 [ label="replicated\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	prod__IntMultiplierLUT_4x1_F500_uid26 [ label="prod\ndT = 2.15e-10\n(0, 2.15e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator IntMultiplierLUT_4x1_F500_uid26
+
+	//input and internal signal connections of operator IntMultiplierLUT_4x1_F500_uid26
+	X__IntMultiplierLUT_4x1_F500_uid26 -> prod__IntMultiplierLUT_4x1_F500_uid26 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__IntMultiplierLUT_4x1_F500_uid26 -> replicated__IntMultiplierLUT_4x1_F500_uid26 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	replicated__IntMultiplierLUT_4x1_F500_uid26 -> prod__IntMultiplierLUT_4x1_F500_uid26 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	prod__IntMultiplierLUT_4x1_F500_uid26 -> R__IntMultiplierLUT_4x1_F500_uid26 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

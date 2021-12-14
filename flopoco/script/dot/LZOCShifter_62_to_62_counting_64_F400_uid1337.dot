@@ -1,0 +1,73 @@
+digraph LZOCShifter_62_to_62_counting_64_F400_uid1337
+{
+	//graph drawing options
+	label=LZOCShifter_62_to_62_counting_64_F400_uid1337;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LZOCShifter_62_to_62_counting_64_F400_uid1337
+	I__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="I\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	OZb__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="OZb\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Count__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="Count\ndT = 0\n(3, 1.76108e-09)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=3 ];
+	O__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="O\ndT = 0\n(3, 1.97608e-09)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=3 ];
+	{rank=same I__LZOCShifter_62_to_62_counting_64_F400_uid1337, OZb__LZOCShifter_62_to_62_counting_64_F400_uid1337};
+	{rank=same Count__LZOCShifter_62_to_62_counting_64_F400_uid1337, O__LZOCShifter_62_to_62_counting_64_F400_uid1337};
+	//internal signals of operator LZOCShifter_62_to_62_counting_64_F400_uid1337
+	level6__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level6\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="sozb\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count5__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="count5\ndT = 1.30247e-09\n(0, 1.30247e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level5__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level5\ndT = 2.15e-10\n(0, 1.51747e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count4__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="count4\ndT = 1.2931e-09\n(1, 4.60567e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level4__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level4\ndT = 2.15e-10\n(1, 6.75567e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	count3__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="count3\ndT = 1.28747e-09\n(1, 1.96304e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level3__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level3\ndT = 2.15e-10\n(1, 2.17804e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	count2__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="count2\ndT = 1.2856e-09\n(2, 1.11363e-09)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level2__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level2\ndT = 2.15e-10\n(2, 1.32863e-09)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	count1__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="count1\ndT = 1.28372e-09\n(3, 2.62356e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level1__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level1\ndT = 2.15e-10\n(3, 4.77356e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	count0__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="count0\ndT = 1.28372e-09\n(3, 1.76108e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level0__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="level0\ndT = 2.15e-10\n(3, 1.97608e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ label="sCount\ndT = 0\n(3, 1.76108e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+
+	//subcomponents of operator LZOCShifter_62_to_62_counting_64_F400_uid1337
+
+	//input and internal signal connections of operator LZOCShifter_62_to_62_counting_64_F400_uid1337
+	I__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level6__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	OZb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count5__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level5__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count5__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count4__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count3__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count2__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count1__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sozb__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count0__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count5__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level5__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count5__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count4__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level4__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count4__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level4__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count4__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count3__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level3__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count3__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level3__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count3__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count2__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level2__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count2__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level2__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count2__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count1__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level1__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count1__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level1__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count1__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> count0__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level0__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count0__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> level0__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count0__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> O__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sCount__LZOCShifter_62_to_62_counting_64_F400_uid1337 -> Count__LZOCShifter_62_to_62_counting_64_F400_uid1337 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

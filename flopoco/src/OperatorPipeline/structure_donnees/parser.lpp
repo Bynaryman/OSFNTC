@@ -1,0 +1,57 @@
+%option 8bit noyywrap
+
+%{
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "operator_pipeline.tab.hpp"
+
+//#define FLEXDEBUG
+
+#ifdef FLEXDEBUG
+#define dbg printf("[%s:%d] \"%s\"\n",__FILE__,__LINE__,operator_pipelinetext)
+#else
+#define dbg ((void)0)
+#endif
+
+%}
+
+nl				(\r\n|\r|\n)
+esp				[ \t]+
+blank			({nl}|{esp})*
+parenthopened	{blank}"("{blank}
+parenthclosed	{blank}")"{blank}
+comma			{blank}","{blank}
+semicolon		{blank}";"{blank}
+plus			{blank}"+"{blank}
+minus			{blank}"-"{blank}
+times			{blank}"*"{blank}
+over			{blank}"/"{blank}
+equal			{blank}"="{blank}
+return			{blank}return{blank}
+						
+function		(log|exp)
+type			(uint|sint|float|ufix|sfix)
+param			[0-9]+
+const			(\-[0-9]+|[0-9]+\.[0-9]+)
+var				[a-zA-Z]+[0-9]*
+
+%%
+
+{return}			{dbg; return RETURN;}
+{parenthopened}		{dbg; return PARENTHOPENED;}
+{parenthclosed}		{dbg; return PARENTHCLOSED;}
+{comma}				{dbg; return COMMA;}
+{semicolon}			{dbg; return SEMICOLON;}
+{plus}				{dbg; return PLUS;}
+{minus}				{dbg; return MINUS;}
+{times}				{dbg; return TIMES;}
+{over}				{dbg; return OVER;}
+{equal}				{dbg; return EQUAL;}
+{function}			{dbg; operator_pipelinelval.string = strdup(operator_pipelinetext); return FUNCTION;}
+{type}				{dbg; operator_pipelinelval.string = strdup(operator_pipelinetext); return TYPE;}
+{param}				{dbg; operator_pipelinelval.parameter = atoi(operator_pipelinetext); return PARAM;}
+{var}				{dbg; operator_pipelinelval.string = strdup(operator_pipelinetext); return VAR;}
+{const}				{dbg; operator_pipelinelval.string = strdup(operator_pipelinetext); return CONST;}
+
+%%

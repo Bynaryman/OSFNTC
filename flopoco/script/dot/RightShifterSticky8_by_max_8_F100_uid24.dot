@@ -1,0 +1,62 @@
+digraph RightShifterSticky8_by_max_8_F100_uid24
+{
+	//graph drawing options
+	label=RightShifterSticky8_by_max_8_F100_uid24;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator RightShifterSticky8_by_max_8_F100_uid24
+	X__RightShifterSticky8_by_max_8_F100_uid24 [ label="X\ndT = 0\n(0, 5.57462e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	S__RightShifterSticky8_by_max_8_F100_uid24 [ label="S\ndT = 0\n(0, 5.35962e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	padBit__RightShifterSticky8_by_max_8_F100_uid24 [ label="padBit\ndT = 0\n(0, 5.35962e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__RightShifterSticky8_by_max_8_F100_uid24 [ label="R\ndT = 0\n(0, 6.00462e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	Sticky__RightShifterSticky8_by_max_8_F100_uid24 [ label="Sticky\ndT = 0\n(0, 7.30399e-09)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__RightShifterSticky8_by_max_8_F100_uid24, S__RightShifterSticky8_by_max_8_F100_uid24, padBit__RightShifterSticky8_by_max_8_F100_uid24};
+	{rank=same R__RightShifterSticky8_by_max_8_F100_uid24, Sticky__RightShifterSticky8_by_max_8_F100_uid24};
+	//internal signals of operator RightShifterSticky8_by_max_8_F100_uid24
+	ps__RightShifterSticky8_by_max_8_F100_uid24 [ label="ps\ndT = 0\n(0, 5.35962e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level4__RightShifterSticky8_by_max_8_F100_uid24 [ label="level4\ndT = 0\n(0, 5.57462e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	stk3__RightShifterSticky8_by_max_8_F100_uid24 [ label="stk3\ndT = 4.3375e-10\n(0, 6.00837e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level3__RightShifterSticky8_by_max_8_F100_uid24 [ label="level3\ndT = 0\n(0, 5.57462e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	stk2__RightShifterSticky8_by_max_8_F100_uid24 [ label="stk2\ndT = 4.31875e-10\n(0, 6.44024e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level2__RightShifterSticky8_by_max_8_F100_uid24 [ label="level2\ndT = 2.15e-10\n(0, 5.78962e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	stk1__RightShifterSticky8_by_max_8_F100_uid24 [ label="stk1\ndT = 4.31875e-10\n(0, 6.87212e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level1__RightShifterSticky8_by_max_8_F100_uid24 [ label="level1\ndT = 0\n(0, 5.78962e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	stk0__RightShifterSticky8_by_max_8_F100_uid24 [ label="stk0\ndT = 4.31875e-10\n(0, 7.30399e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level0__RightShifterSticky8_by_max_8_F100_uid24 [ label="level0\ndT = 2.15e-10\n(0, 6.00462e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator RightShifterSticky8_by_max_8_F100_uid24
+
+	//input and internal signal connections of operator RightShifterSticky8_by_max_8_F100_uid24
+	X__RightShifterSticky8_by_max_8_F100_uid24 -> level4__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__RightShifterSticky8_by_max_8_F100_uid24 -> ps__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky8_by_max_8_F100_uid24 -> level3__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky8_by_max_8_F100_uid24 -> level2__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky8_by_max_8_F100_uid24 -> level1__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky8_by_max_8_F100_uid24 -> level0__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> stk3__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> level3__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> stk2__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> level2__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> stk1__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> level1__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> stk0__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky8_by_max_8_F100_uid24 -> level0__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifterSticky8_by_max_8_F100_uid24 -> stk3__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifterSticky8_by_max_8_F100_uid24 -> level3__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk3__RightShifterSticky8_by_max_8_F100_uid24 -> stk2__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky8_by_max_8_F100_uid24 -> stk2__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky8_by_max_8_F100_uid24 -> level2__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk2__RightShifterSticky8_by_max_8_F100_uid24 -> stk1__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky8_by_max_8_F100_uid24 -> stk1__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky8_by_max_8_F100_uid24 -> level1__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk1__RightShifterSticky8_by_max_8_F100_uid24 -> stk0__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky8_by_max_8_F100_uid24 -> stk0__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky8_by_max_8_F100_uid24 -> level0__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk0__RightShifterSticky8_by_max_8_F100_uid24 -> Sticky__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__RightShifterSticky8_by_max_8_F100_uid24 -> R__RightShifterSticky8_by_max_8_F100_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

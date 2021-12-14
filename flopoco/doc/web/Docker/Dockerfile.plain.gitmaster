@@ -1,0 +1,11 @@
+FROM ubuntu:bionic
+RUN apt-get update
+RUN yes | apt-get install wget sudo
+RUN wget flopoco.gforge.inria.fr/install_scripts/install-plain-gitmaster-on-bionic64.sh
+RUN yes | sh install-plain-gitmaster-on-bionic64.sh
+
+VOLUME ["/flopoco_workspace"]
+
+ENTRYPOINT ["/flopoco/build/flopoco"]
+
+WORKDIR /flopoco_workspace

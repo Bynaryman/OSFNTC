@@ -1,0 +1,49 @@
+digraph RightShifter24_by_max_76_F400_uid4
+{
+	//graph drawing options
+	label=RightShifter24_by_max_76_F400_uid4;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator RightShifter24_by_max_76_F400_uid4
+	X__RightShifter24_by_max_76_F400_uid4 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	S__RightShifter24_by_max_76_F400_uid4 [ label="S\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__RightShifter24_by_max_76_F400_uid4 [ label="R\ndT = 0\n(1, 1.69885e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+	{rank=same X__RightShifter24_by_max_76_F400_uid4, S__RightShifter24_by_max_76_F400_uid4};
+	{rank=same R__RightShifter24_by_max_76_F400_uid4};
+	//internal signals of operator RightShifter24_by_max_76_F400_uid4
+	ps__RightShifter24_by_max_76_F400_uid4 [ label="ps\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level0__RightShifter24_by_max_76_F400_uid4 [ label="level0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level1__RightShifter24_by_max_76_F400_uid4 [ label="level1\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level2__RightShifter24_by_max_76_F400_uid4 [ label="level2\ndT = 9.58385e-10\n(0, 9.58385e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level3__RightShifter24_by_max_76_F400_uid4 [ label="level3\ndT = 0\n(0, 9.58385e-10)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level4__RightShifter24_by_max_76_F400_uid4 [ label="level4\ndT = 1.143e-09\n(0, 2.10138e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level5__RightShifter24_by_max_76_F400_uid4 [ label="level5\ndT = 0\n(0, 2.10138e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	level6__RightShifter24_by_max_76_F400_uid4 [ label="level6\ndT = 1.88146e-09\n(1, 1.69885e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	level7__RightShifter24_by_max_76_F400_uid4 [ label="level7\ndT = 0\n(1, 1.69885e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+
+	//subcomponents of operator RightShifter24_by_max_76_F400_uid4
+
+	//input and internal signal connections of operator RightShifter24_by_max_76_F400_uid4
+	X__RightShifter24_by_max_76_F400_uid4 -> level0__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__RightShifter24_by_max_76_F400_uid4 -> ps__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level1__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level2__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level3__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level4__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level5__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level6__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifter24_by_max_76_F400_uid4 -> level7__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__RightShifter24_by_max_76_F400_uid4 -> level1__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifter24_by_max_76_F400_uid4 -> level2__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifter24_by_max_76_F400_uid4 -> level3__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifter24_by_max_76_F400_uid4 -> level4__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__RightShifter24_by_max_76_F400_uid4 -> level5__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__RightShifter24_by_max_76_F400_uid4 -> level6__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__RightShifter24_by_max_76_F400_uid4 -> level7__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level7__RightShifter24_by_max_76_F400_uid4 -> R__RightShifter24_by_max_76_F400_uid4 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

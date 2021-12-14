@@ -1,0 +1,31 @@
+digraph DSPBlock_10x24_F300_uid1559
+{
+	//graph drawing options
+	label=DSPBlock_10x24_F300_uid1559;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator DSPBlock_10x24_F300_uid1559
+	X__DSPBlock_10x24_F300_uid1559 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__DSPBlock_10x24_F300_uid1559 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__DSPBlock_10x24_F300_uid1559 [ label="R\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__DSPBlock_10x24_F300_uid1559, Y__DSPBlock_10x24_F300_uid1559};
+	{rank=same R__DSPBlock_10x24_F300_uid1559};
+	//internal signals of operator DSPBlock_10x24_F300_uid1559
+	Mint__DSPBlock_10x24_F300_uid1559 [ label="Mint\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	M__DSPBlock_10x24_F300_uid1559 [ label="M\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Rtmp__DSPBlock_10x24_F300_uid1559 [ label="Rtmp\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator DSPBlock_10x24_F300_uid1559
+
+	//input and internal signal connections of operator DSPBlock_10x24_F300_uid1559
+	X__DSPBlock_10x24_F300_uid1559 -> Mint__DSPBlock_10x24_F300_uid1559 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__DSPBlock_10x24_F300_uid1559 -> Mint__DSPBlock_10x24_F300_uid1559 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Mint__DSPBlock_10x24_F300_uid1559 -> M__DSPBlock_10x24_F300_uid1559 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	M__DSPBlock_10x24_F300_uid1559 -> Rtmp__DSPBlock_10x24_F300_uid1559 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Rtmp__DSPBlock_10x24_F300_uid1559 -> R__DSPBlock_10x24_F300_uid1559 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

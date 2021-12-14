@@ -1,0 +1,23 @@
+How to finetune a target with Vivado:
+1/ generate an operator with the following options:
+./flopoco dependencygraph=full frequency=2 target=zynq7000 verbose=3     LZOCShifterSticky wIn=63 wOut=63 wCount=6    Wrapper
+2/ xdot flopoco.dot: you see the critical path estimated by FloPoCo on the bottommost box.
+3/ cp flopoco.vhdl /tmp
+4/ In another terminal in the tmp, use vivado-runsyn with the option -i (implement) and -f400 (overriding the frequency of 2MHz in the vhdl file)
+Vivado won't be able to reach this frequency and will report the critical path of the operator from reg to reg
+5/ Analyze, and build your target model
+
+
+
+Estimated     vivado
+./flopoco dependencygraph=full frequency=2 target=zynq7000 verbose=3    LZOCShifterSticky wIn=63 wOut=63 wCount=6    Wrapper
+19.0e-9        15.4e-9
+./flopoco dependencygraph=full frequency=2 target=kintex7 verbose=3     LZOCShifterSticky wIn=63 wOut=63 wCount=6    Wrapper
+17.6e-9        
+
+
+./flopoco dependencygraph=full frequency=2 target=zynq7000 verbose=3  FPAdd we=8 wF=23  Wrapper
+25.1e-9    33.9e-9
+./flopoco dependencygraph=full frequency=2 target=kintex7 verbose=3   FPAdd we=8 wF=23  Wrapper
+15.2e-9    17.45e-9        
+

@@ -1,0 +1,39 @@
+This directory contains classes used for the implementation of multipliers by constants. Several variations are available, each was motivated by a given context. We probably do not cover all the possible needs, but you will find here a good base for further developments.
+
+
+There are two main algorithms. 
+The KCM algorithm (this stands for Ken Chapman Multipliers, long life to him) uses LUTs to store sub-products. 
+The Shift-and-add multipliers express an integer multiplier as a sequence of shift-and-add operations.
+The *KCM* classes implement the table-based KCM method while the *ConstMultShiftAdd* implement the shift-and-add methods.
+
+Their implementation is currently done in the following classes:
+
+KCM classes:
+
+The class FPConstDiv ...?
+The class FPRealKCM ...?
+The class FixRealKCM ...?
+The class IntConstDiv ...?
+The class IntConstMCM ...?
+The class IntIntKCM ...?
+The class KCMTable ...?
+
+Shift-and-add related classes:
+
+The class IntConstMultShiftAdd implements the operator that takes an adder graph as a string, it requires the paglib of PAGSuite (http://www.uni-kassel.de/go/pagsuite). For the adder graph string definition, see Appendix C of Konrads Moellers Phd thesis available at http://doi.org/10.19211/KUP9783737603772)
+The class IntConstMultShiftAddTypes is a helper class for IntConstMultShiftAdd
+The class IntConstMultShiftAddOpt is derived from IntConstMultShiftAdd and implements optimal (=minimal adder count) single constant multiplications up to 19 bit coefficients, it requires the oscmlib of PAGSuite
+The class IntConstMultShiftAddRPAG is derived from IntConstMultShiftAdd and implements a heuristc single constant multiplications using the RPAG algorithm, it requires the rpaglib of PAGSuite
+
+Other classes:
+
+The class CRFPConstMult ...?
+
+Obsolete classes:
+The class ShiftAddOp defines such an operation.
+The class ShiftAddDag defines a directed acyclic graph (DAG) of such operations.
+The class IntConstMult builds such a DAG for integer multiplication. It inherits Operator.
+The class FPConstMult builds an FP constant multiplier using an IntConstMult for the mantissas.
+
+Interface to IntConstMultShiftAdd
+./flopoco verbose=3 IntConstMultShiftAdd wIn=10 graph="{{'R',[1],1,[1],0},{'A',[5],1,[1],0,0,[1],0,2},{'A',[123],2,[1],1,7,[-5],1,0},{'O',[123],2,[123],2,0}}" truncations="5,1:2,2"

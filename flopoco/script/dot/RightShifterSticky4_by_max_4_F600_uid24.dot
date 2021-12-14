@@ -1,0 +1,54 @@
+digraph RightShifterSticky4_by_max_4_F600_uid24
+{
+	//graph drawing options
+	label=RightShifterSticky4_by_max_4_F600_uid24;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator RightShifterSticky4_by_max_4_F600_uid24
+	X__RightShifterSticky4_by_max_4_F600_uid24 [ label="X\ndT = 0\n(5, 4.21686e-10)", shape=box, color=black, style="bold, filled", fillcolor=orangered, peripheries=2 ];
+	S__RightShifterSticky4_by_max_4_F600_uid24 [ label="S\ndT = 0\n(5, 2.06686e-10)", shape=box, color=black, style="bold, filled", fillcolor=orangered, peripheries=2 ];
+	padBit__RightShifterSticky4_by_max_4_F600_uid24 [ label="padBit\ndT = 0\n(5, 2.06686e-10)", shape=box, color=black, style="bold, filled", fillcolor=orangered, peripheries=2 ];
+	R__RightShifterSticky4_by_max_4_F600_uid24 [ label="R\ndT = 0\n(5, 6.36686e-10)", shape=box, color=black, style="bold, filled", fillcolor=orangered, peripheries=3 ];
+	Sticky__RightShifterSticky4_by_max_4_F600_uid24 [ label="Sticky\ndT = 0\n(6, 2.00644e-10)", shape=box, color=black, style="bold, filled", fillcolor=chocolate, peripheries=3 ];
+	{rank=same X__RightShifterSticky4_by_max_4_F600_uid24, S__RightShifterSticky4_by_max_4_F600_uid24, padBit__RightShifterSticky4_by_max_4_F600_uid24};
+	{rank=same R__RightShifterSticky4_by_max_4_F600_uid24, Sticky__RightShifterSticky4_by_max_4_F600_uid24};
+	//internal signals of operator RightShifterSticky4_by_max_4_F600_uid24
+	ps__RightShifterSticky4_by_max_4_F600_uid24 [ label="ps\ndT = 0\n(5, 2.06686e-10)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	level3__RightShifterSticky4_by_max_4_F600_uid24 [ label="level3\ndT = 0\n(5, 4.21686e-10)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	stk2__RightShifterSticky4_by_max_4_F600_uid24 [ label="stk2\ndT = 4.31875e-10\n(5, 8.53561e-10)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	level2__RightShifterSticky4_by_max_4_F600_uid24 [ label="level2\ndT = 0\n(5, 4.21686e-10)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	stk1__RightShifterSticky4_by_max_4_F600_uid24 [ label="stk1\ndT = 4.31875e-10\n(5, 1.28544e-09)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	level1__RightShifterSticky4_by_max_4_F600_uid24 [ label="level1\ndT = 2.15e-10\n(5, 6.36686e-10)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+	stk0__RightShifterSticky4_by_max_4_F600_uid24 [ label="stk0\ndT = 4.31875e-10\n(6, 2.00644e-10)", shape=box, color=black, style=filled, fillcolor=chocolate, peripheries=1 ];
+	level0__RightShifterSticky4_by_max_4_F600_uid24 [ label="level0\ndT = 0\n(5, 6.36686e-10)", shape=box, color=black, style=filled, fillcolor=orangered, peripheries=1 ];
+
+	//subcomponents of operator RightShifterSticky4_by_max_4_F600_uid24
+
+	//input and internal signal connections of operator RightShifterSticky4_by_max_4_F600_uid24
+	X__RightShifterSticky4_by_max_4_F600_uid24 -> level3__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	S__RightShifterSticky4_by_max_4_F600_uid24 -> ps__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky4_by_max_4_F600_uid24 -> level2__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky4_by_max_4_F600_uid24 -> level1__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	padBit__RightShifterSticky4_by_max_4_F600_uid24 -> level0__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky4_by_max_4_F600_uid24 -> stk2__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky4_by_max_4_F600_uid24 -> level2__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky4_by_max_4_F600_uid24 -> stk1__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky4_by_max_4_F600_uid24 -> level1__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky4_by_max_4_F600_uid24 -> stk0__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	ps__RightShifterSticky4_by_max_4_F600_uid24 -> level0__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky4_by_max_4_F600_uid24 -> stk2__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__RightShifterSticky4_by_max_4_F600_uid24 -> level2__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk2__RightShifterSticky4_by_max_4_F600_uid24 -> stk1__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky4_by_max_4_F600_uid24 -> stk1__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__RightShifterSticky4_by_max_4_F600_uid24 -> level1__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk1__RightShifterSticky4_by_max_4_F600_uid24 -> stk0__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky4_by_max_4_F600_uid24 -> stk0__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level1__RightShifterSticky4_by_max_4_F600_uid24 -> level0__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	stk0__RightShifterSticky4_by_max_4_F600_uid24 -> Sticky__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level0__RightShifterSticky4_by_max_4_F600_uid24 -> R__RightShifterSticky4_by_max_4_F600_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

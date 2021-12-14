@@ -1,0 +1,174 @@
+%code requires
+{
+#include <vector>
+#include <map>
+#include <string>
+#include <sstream>
+	
+#include "OPExpression.hpp"
+#include "OPFunction.hpp"
+#include "OPOperation.hpp"
+#include "File.hpp"
+}
+
+%code top
+{
+#define YYERROR_VERBOSE
+
+#include <stdio.h>
+#include <string.h>
+#include <string>
+#include <sstream>
+
+#include "OPExpression.hpp"
+#include "OPFunction.hpp"
+#include "OPOperation.hpp"
+#include "File.hpp"
+	
+#define MAX_PARAM 2
+
+extern char operator_pipelinetext[];
+
+int operator_pipelinelex(void);
+
+void operator_pipelineerror(OperatorPipeline::File &file, const char * msg)
+{
+	printf("%s\n",msg);
+}
+}
+
+%parse-param {OperatorPipeline::File &file}
+
+%union
+{
+	OperatorPipeline::OPExpression*	expression;
+	OperatorPipeline::OPOperation*	operation;
+	OperatorPipeline::OPVariable*	variable;
+	char*							string;
+	int								parameter;
+	std::vector<int>*				parameters;
+	std::vector<std::string>*		variables;
+	OperatorPipeline::type_enum		type;
+	OperatorPipeline::operator_enum operateur;
+	OperatorPipeline::function_enum function;
+}
+
+%token PARENTHOPENED PARENTHCLOSED COMMA SEMICOLON RETURN
+%token <string> PLUS MINUS TIMES OVER EQUAL FUNCTION TYPE VAR CONST
+%token <parameter> PARAM
+%type <parameters> param paramlist
+%type <expression> expr operande
+%type <operation> operation
+%type <variables> varlist var
+%type <type> type
+%type <operateur> operateur
+%type <function> fonction
+%type <variable> cast
+						
+%%
+
+input : declarations instructions outputs {/* Empty */}
+
+declarations : declaration declarationlist {/* Empty */}
+declarationlist : declarations {/* Empty */}
+				| {/* Empty */}
+declaration : type PARENTHOPENED param PARENTHCLOSED var SEMICOLON {
+												   					for (int i=0; i<$5->size(); i++)
+												   					{
+												   						OperatorPipeline::OPVariable** variable = new OperatorPipeline::OPVariable*;
+												   						*variable = new OperatorPipeline::OPVariable((*$5)[i], $1, $3, NULL);
+												   						file.variables[(*$5)[i]] = variable;
+												   					}
+												   					}
+var : VAR varlist {$2->push_back(std::string($1)); $$ = $2;}
+varlist : COMMA var {$$ = $2;}
+		| {$$ = new std::vector<std::string>;}
+type : TYPE {
+		   	if (!strcmp("uint", $1))
+				$$ = OperatorPipeline::UINT;
+			else if (!strcmp("sint", $1))
+				$$ = OperatorPipeline::SINT;
+			else if (!strcmp("float", $1))
+				$$ = OperatorPipeline::FLOAT;
+		   	else
+			{
+				printf("Type %s is not yet recognized\n", $1);
+				exit(0);
+			}
+}
+param : PARAM paramlist {$2->push_back($1); $$ = $2;}
+paramlist : COMMA param {$$ = $2;}
+		  | {$$ = new std::vector<int>;}
+
+instructions : instruction instructionlist {/* Empty */}
+instructionlist : instructions {/* Empty */}
+				| {/* Empty */}
+instruction : VAR EQUAL cast SEMICOLON {
+											if (!file.variables.count($1)){printf("Variable %s isn't defined\n",$1); exit(0);}
+											/* OperatorPipeline::OPVariable** variable = new OperatorPipeline::OPVariable*; */
+											/* *variable = $3; */
+											*file.variables[$1] = $3;
+											$3->SetValue($1);
+											file.expressions.push_back($3);
+									   }
+cast : type PARENTHOPENED param PARENTHCLOSED PARENTHOPENED expr PARENTHCLOSED {$$ = new OperatorPipeline::OPVariable("", $1, $3, $6);}
+expr : operande operation {if ($2){$2->SetOpLeft($1); $$ = $2;}else{$$=$1;}}
+operande : VAR {
+					if (!file.variables.count($1))
+					{
+						printf("Variable %s isn't defined\n",$1);
+						exit(0);
+					}
+					$$ = *file.variables[$1];
+				}
+		 | CONST {
+					if (!strcmp(".",$1))
+				   	{
+				   		std::vector<int> *param = new std::vector<int>;
+				   		param->push_back(strlen($1)-1);
+					   	$$ = new OperatorPipeline::OPVariable($1, OperatorPipeline::FLOAT, NULL, NULL);
+				   	}
+				   	else if (!strcmp("-",$1))
+				   	{
+				   		std::vector<int> *param = new std::vector<int>;
+				   		param->push_back(strlen($1)-1);
+					   	$$ = new OperatorPipeline::OPVariable($1, OperatorPipeline::SINT, param, NULL);
+				   	}
+				 }
+		 | PARAM {
+				   	std::vector<int> *param = new std::vector<int>;
+				   	param->push_back($1);
+				   	std::stringstream ss;
+				   	ss << $1;
+					$$ = new OperatorPipeline::OPVariable(ss.str(), OperatorPipeline::UINT, param, NULL);
+				 }
+		 | PARENTHOPENED expr PARENTHCLOSED {$$ = $2;}
+		 | fonction PARENTHOPENED expr PARENTHCLOSED {$$ = new OperatorPipeline::OPFunction($1, $3);}
+		 | cast {$$ = $1;}
+operation : operateur operande {$$ = new OperatorPipeline::OPOperation(NULL, $2, $1);}
+		  | {$$ = NULL;}
+operateur : PLUS {$$ = OperatorPipeline::OP_PLUS;}
+		  | MINUS {$$ = OperatorPipeline::OP_MOINS;}
+		  | OVER {$$ = OperatorPipeline::OP_MUL;}
+		  | TIMES {$$ = OperatorPipeline::OP_DIV;}
+fonction : FUNCTION {
+					if (!strcmp("log",$1))
+						$$ = OperatorPipeline::LOG;
+					else if (!strcmp("exp",$1))
+						$$ = OperatorPipeline::EXP;
+					else
+					{
+						printf("Function %s is not yet recognized\n", $1);
+						exit(0);
+					}
+}
+
+outputs : RETURN var SEMICOLON {
+								for (int i=0; i<$2->size(); i++)
+								{
+									if (!file.variables.count((*$2)[i])){printf("Variable %s isn't defined\n",(*$2)[i].c_str()); exit(0);}
+									file.returns.push_back(*file.variables[(*$2)[i]]);
+								}
+								}
+
+%%

@@ -1,0 +1,6 @@
+		} catch (const std::exception &e) {
+			cerr << "Error while registering factories: " << e.what() <<endl;
+			exit(EXIT_FAILURE);
+		}
+	}
+}

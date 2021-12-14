@@ -1,0 +1,3 @@
+fake main (src file and lines in CMake)
+fftest in gitignore
+This File !

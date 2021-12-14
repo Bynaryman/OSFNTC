@@ -1,0 +1,5 @@
+cmake -DSCALP_PREFIX_DIR="/opt/scalp/trunk/" ..
+
+cd /var/cache/pacman/pkg/
+p -U fplll-VIEUX
+

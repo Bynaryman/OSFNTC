@@ -1,0 +1,25 @@
+\begin{picture}(0,0)%
+\includegraphics{flopocoLogo.pdf}%
+\end{picture}%
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(5826,3276)(5644,-7993)
+\put(8691,-5394){\rotatebox{22.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{34}{40.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{1,0,0}$e^{\frac{x}{\sqrt{x^2+y^2+z^2}}}$}%
+}}}}}
+\put(9743,-5641){\rotatebox{340.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{34}{40.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,1}$\pi{x}$}%
+}}}}}
+\put(7483,-5911){\rotatebox{295.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{34}{40.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{1,0,1}$\sin{e^{x+y}}$}%
+}}}}}
+\put(9003,-5844){\rotatebox{63.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{34}{40.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,.56,0}$\displaystyle \sum_{i=0}^n x_i$}%
+}}}}}
+\put(6938,-5281){\rotatebox{341.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{34}{40.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{1,0,0}$\sqrt{x}$}%
+}}}}}
+\put(9665,-5236){\makebox(0,0)[b]{\smash{{\SetFigFont{34}{40.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{.56,0,0}$\log{x}$}%
+}}}}
+\end{picture}%

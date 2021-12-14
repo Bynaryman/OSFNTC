@@ -1,0 +1,53 @@
+digraph LZC_52_F400_uid6
+{
+	//graph drawing options
+	label=LZC_52_F400_uid6;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator LZC_52_F400_uid6
+	I__LZC_52_F400_uid6 [ label="I\ndT = 0\n(1, 1.69885e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=2 ];
+	O__LZC_52_F400_uid6 [ label="O\ndT = 0\n(3, 2.18935e-09)", shape=box, color=black, style="bold, filled", fillcolor=orchid, peripheries=3 ];
+	{rank=same I__LZC_52_F400_uid6};
+	{rank=same O__LZC_52_F400_uid6};
+	//internal signals of operator LZC_52_F400_uid6
+	level6__LZC_52_F400_uid6 [ label="level6\ndT = 0\n(1, 1.69885e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	digit5__LZC_52_F400_uid6 [ label="digit5\ndT = 6.2875e-10\n(2, 4.35962e-11)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level5__LZC_52_F400_uid6 [ label="level5\ndT = 5.43e-10\n(2, 5.86596e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	digit4__LZC_52_F400_uid6 [ label="digit4\ndT = 5.92e-10\n(2, 1.1786e-09)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	level4__LZC_52_F400_uid6 [ label="level4\ndT = 5.43e-10\n(2, 1.7216e-09)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	digit3__LZC_52_F400_uid6 [ label="digit3\ndT = 5.675e-10\n(3, 5.09615e-12)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level3__LZC_52_F400_uid6 [ label="level3\ndT = 5.43e-10\n(3, 5.48096e-10)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	digit2__LZC_52_F400_uid6 [ label="digit2\ndT = 5.5525e-10\n(3, 1.10335e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	level2__LZC_52_F400_uid6 [ label="level2\ndT = 5.43e-10\n(3, 1.64635e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	lowBits__LZC_52_F400_uid6 [ label="lowBits\ndT = 5.43e-10\n(3, 2.18935e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+	outHighBits__LZC_52_F400_uid6 [ label="outHighBits\ndT = 0\n(3, 1.10335e-09)", shape=box, color=black, style=filled, fillcolor=orchid, peripheries=1 ];
+
+	//subcomponents of operator LZC_52_F400_uid6
+
+	//input and internal signal connections of operator LZC_52_F400_uid6
+	I__LZC_52_F400_uid6 -> level6__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LZC_52_F400_uid6 -> digit5__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level6__LZC_52_F400_uid6 -> level5__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit5__LZC_52_F400_uid6 -> level5__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit5__LZC_52_F400_uid6 -> outHighBits__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LZC_52_F400_uid6 -> digit4__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level5__LZC_52_F400_uid6 -> level4__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit4__LZC_52_F400_uid6 -> level4__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit4__LZC_52_F400_uid6 -> outHighBits__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LZC_52_F400_uid6 -> digit3__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level4__LZC_52_F400_uid6 -> level3__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit3__LZC_52_F400_uid6 -> level3__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit3__LZC_52_F400_uid6 -> outHighBits__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZC_52_F400_uid6 -> digit2__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level3__LZC_52_F400_uid6 -> level2__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit2__LZC_52_F400_uid6 -> level2__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	digit2__LZC_52_F400_uid6 -> outHighBits__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	level2__LZC_52_F400_uid6 -> lowBits__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	lowBits__LZC_52_F400_uid6 -> O__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	outHighBits__LZC_52_F400_uid6 -> O__LZC_52_F400_uid6 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

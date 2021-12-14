@@ -1,0 +1,2 @@
+These are install scripts for various versions of flopoco on various environments.
+They are intended to work as well in vagrant as in docker.
