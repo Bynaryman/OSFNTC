@@ -4,5 +4,6 @@ vhdl work  \
 "../../../actions/cgemm/hw/action_cgemm.vhd" \
 "../../../actions/cgemm/hw/action_types.vhd" \
 "../../../actions/cgemm/hw/action_wrapper.vhd" \
+"../../../actions/cgemm/hw/libs/systolic_array/flopoco.vhdl" \
 
 nosort

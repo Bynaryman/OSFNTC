@@ -1,13 +1,13 @@
 --------------------------------------------------------------------------------
 --                                Arith_to_S3
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: BSC / UPC - Ledoux Louis
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: arith_i
 -- Output signals: S3_o
 
@@ -45,15 +45,15 @@ begin
 end architecture;
 
 --------------------------------------------------------------------------------
---            LZOCShifterSticky_528_to_9_counting_1024_F250_uid20
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+--            LZOCShifterSticky_528_to_9_counting_1024_F200_uid20
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Florent de Dinechin, Bogdan Pasca (2007-2016)
 --------------------------------------------------------------------------------
--- Pipeline depth: 7 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Pipeline depth: 6 cycles
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: I OZb
 -- Output signals: Count O Sticky
 
@@ -65,7 +65,7 @@ library std;
 use std.textio.all;
 library work;
 
-entity LZOCShifterSticky_528_to_9_counting_1024_F250_uid20 is
+entity LZOCShifterSticky_528_to_9_counting_1024_F200_uid20 is
     port (clk : in std_logic;
           I : in  std_logic_vector(527 downto 0);
           OZb : in  std_logic;
@@ -74,19 +74,19 @@ entity LZOCShifterSticky_528_to_9_counting_1024_F250_uid20 is
           Sticky : out  std_logic   );
 end entity;
 
-architecture arch of LZOCShifterSticky_528_to_9_counting_1024_F250_uid20 is
-signal level10, level10_d1, level10_d2 :  std_logic_vector(527 downto 0);
-signal sozb, sozb_d1, sozb_d2, sozb_d3, sozb_d4, sozb_d5, sozb_d6, sozb_d7 :  std_logic;
-signal sticky10, sticky10_d1, sticky10_d2 :  std_logic;
+architecture arch of LZOCShifterSticky_528_to_9_counting_1024_F200_uid20 is
+signal level10, level10_d1 :  std_logic_vector(527 downto 0);
+signal sozb, sozb_d1, sozb_d2, sozb_d3, sozb_d4, sozb_d5, sozb_d6 :  std_logic;
+signal sticky10, sticky10_d1 :  std_logic;
 signal count9, count9_d1, count9_d2, count9_d3, count9_d4, count9_d5 :  std_logic;
 signal level9, level9_d1, level9_d2 :  std_logic_vector(527 downto 0);
-signal sticky_high_9, sticky_high_9_d1, sticky_high_9_d2 :  std_logic;
-signal sticky_low_9, sticky_low_9_d1, sticky_low_9_d2 :  std_logic;
+signal sticky_high_9, sticky_high_9_d1 :  std_logic;
+signal sticky_low_9, sticky_low_9_d1 :  std_logic;
 signal sticky9, sticky9_d1, sticky9_d2 :  std_logic;
 signal count8, count8_d1, count8_d2, count8_d3 :  std_logic;
 signal level8, level8_d1 :  std_logic_vector(510 downto 0);
 signal sticky_high_8, sticky_high_8_d1, sticky_high_8_d2 :  std_logic;
-signal sticky_low_8, sticky_low_8_d1, sticky_low_8_d2, sticky_low_8_d3, sticky_low_8_d4 :  std_logic;
+signal sticky_low_8, sticky_low_8_d1, sticky_low_8_d2, sticky_low_8_d3 :  std_logic;
 signal sticky8, sticky8_d1 :  std_logic;
 signal count7, count7_d1, count7_d2 :  std_logic;
 signal level7, level7_d1 :  std_logic_vector(254 downto 0);
@@ -99,34 +99,34 @@ signal sticky_high_6, sticky_high_6_d1 :  std_logic;
 signal sticky_low_6, sticky_low_6_d1 :  std_logic;
 signal sticky6 :  std_logic;
 signal count5, count5_d1 :  std_logic;
-signal level5, level5_d1 :  std_logic_vector(62 downto 0);
+signal level5 :  std_logic_vector(62 downto 0);
 signal sticky_high_5 :  std_logic;
 signal sticky_low_5 :  std_logic;
-signal sticky5, sticky5_d1 :  std_logic;
-signal count4 :  std_logic;
+signal sticky5 :  std_logic;
+signal count4, count4_d1 :  std_logic;
 signal level4 :  std_logic_vector(30 downto 0);
-signal sticky_high_4, sticky_high_4_d1 :  std_logic;
-signal sticky_low_4, sticky_low_4_d1 :  std_logic;
+signal sticky_high_4 :  std_logic;
+signal sticky_low_4 :  std_logic;
 signal sticky4 :  std_logic;
-signal count3 :  std_logic;
+signal count3, count3_d1 :  std_logic;
 signal level3 :  std_logic_vector(15 downto 0);
 signal sticky_high_3 :  std_logic;
 signal sticky_low_3 :  std_logic;
 signal sticky3 :  std_logic;
-signal count2 :  std_logic;
-signal level2 :  std_logic_vector(11 downto 0);
+signal count2, count2_d1 :  std_logic;
+signal level2, level2_d1 :  std_logic_vector(11 downto 0);
 signal sticky_high_2 :  std_logic;
-signal sticky_low_2, sticky_low_2_d1, sticky_low_2_d2, sticky_low_2_d3, sticky_low_2_d4, sticky_low_2_d5, sticky_low_2_d6, sticky_low_2_d7 :  std_logic;
-signal sticky2 :  std_logic;
+signal sticky_low_2, sticky_low_2_d1, sticky_low_2_d2, sticky_low_2_d3, sticky_low_2_d4, sticky_low_2_d5 :  std_logic;
+signal sticky2, sticky2_d1 :  std_logic;
 signal count1 :  std_logic;
 signal level1 :  std_logic_vector(9 downto 0);
-signal sticky_high_1 :  std_logic;
-signal sticky_low_1, sticky_low_1_d1, sticky_low_1_d2, sticky_low_1_d3, sticky_low_1_d4, sticky_low_1_d5, sticky_low_1_d6, sticky_low_1_d7 :  std_logic;
+signal sticky_high_1, sticky_high_1_d1 :  std_logic;
+signal sticky_low_1, sticky_low_1_d1, sticky_low_1_d2, sticky_low_1_d3, sticky_low_1_d4, sticky_low_1_d5, sticky_low_1_d6 :  std_logic;
 signal sticky1 :  std_logic;
 signal count0 :  std_logic;
 signal level0 :  std_logic_vector(8 downto 0);
 signal sticky_high_0 :  std_logic;
-signal sticky_low_0, sticky_low_0_d1, sticky_low_0_d2, sticky_low_0_d3, sticky_low_0_d4, sticky_low_0_d5, sticky_low_0_d6, sticky_low_0_d7 :  std_logic;
+signal sticky_low_0, sticky_low_0_d1, sticky_low_0_d2, sticky_low_0_d3, sticky_low_0_d4, sticky_low_0_d5, sticky_low_0_d6 :  std_logic;
 signal sticky0 :  std_logic;
 signal sCount :  std_logic_vector(9 downto 0);
 begin
@@ -134,16 +134,13 @@ begin
       begin
          if clk'event and clk = '1' then
             level10_d1 <=  level10;
-            level10_d2 <=  level10_d1;
             sozb_d1 <=  sozb;
             sozb_d2 <=  sozb_d1;
             sozb_d3 <=  sozb_d2;
             sozb_d4 <=  sozb_d3;
             sozb_d5 <=  sozb_d4;
             sozb_d6 <=  sozb_d5;
-            sozb_d7 <=  sozb_d6;
             sticky10_d1 <=  sticky10;
-            sticky10_d2 <=  sticky10_d1;
             count9_d1 <=  count9;
             count9_d2 <=  count9_d1;
             count9_d3 <=  count9_d2;
@@ -152,9 +149,7 @@ begin
             level9_d1 <=  level9;
             level9_d2 <=  level9_d1;
             sticky_high_9_d1 <=  sticky_high_9;
-            sticky_high_9_d2 <=  sticky_high_9_d1;
             sticky_low_9_d1 <=  sticky_low_9;
-            sticky_low_9_d2 <=  sticky_low_9_d1;
             sticky9_d1 <=  sticky9;
             sticky9_d2 <=  sticky9_d1;
             count8_d1 <=  count8;
@@ -166,7 +161,6 @@ begin
             sticky_low_8_d1 <=  sticky_low_8;
             sticky_low_8_d2 <=  sticky_low_8_d1;
             sticky_low_8_d3 <=  sticky_low_8_d2;
-            sticky_low_8_d4 <=  sticky_low_8_d3;
             sticky8_d1 <=  sticky8;
             count7_d1 <=  count7;
             count7_d2 <=  count7_d1;
@@ -178,112 +172,110 @@ begin
             sticky_high_6_d1 <=  sticky_high_6;
             sticky_low_6_d1 <=  sticky_low_6;
             count5_d1 <=  count5;
-            level5_d1 <=  level5;
-            sticky5_d1 <=  sticky5;
-            sticky_high_4_d1 <=  sticky_high_4;
-            sticky_low_4_d1 <=  sticky_low_4;
+            count4_d1 <=  count4;
+            count3_d1 <=  count3;
+            count2_d1 <=  count2;
+            level2_d1 <=  level2;
             sticky_low_2_d1 <=  sticky_low_2;
             sticky_low_2_d2 <=  sticky_low_2_d1;
             sticky_low_2_d3 <=  sticky_low_2_d2;
             sticky_low_2_d4 <=  sticky_low_2_d3;
             sticky_low_2_d5 <=  sticky_low_2_d4;
-            sticky_low_2_d6 <=  sticky_low_2_d5;
-            sticky_low_2_d7 <=  sticky_low_2_d6;
+            sticky2_d1 <=  sticky2;
+            sticky_high_1_d1 <=  sticky_high_1;
             sticky_low_1_d1 <=  sticky_low_1;
             sticky_low_1_d2 <=  sticky_low_1_d1;
             sticky_low_1_d3 <=  sticky_low_1_d2;
             sticky_low_1_d4 <=  sticky_low_1_d3;
             sticky_low_1_d5 <=  sticky_low_1_d4;
             sticky_low_1_d6 <=  sticky_low_1_d5;
-            sticky_low_1_d7 <=  sticky_low_1_d6;
             sticky_low_0_d1 <=  sticky_low_0;
             sticky_low_0_d2 <=  sticky_low_0_d1;
             sticky_low_0_d3 <=  sticky_low_0_d2;
             sticky_low_0_d4 <=  sticky_low_0_d3;
             sticky_low_0_d5 <=  sticky_low_0_d4;
             sticky_low_0_d6 <=  sticky_low_0_d5;
-            sticky_low_0_d7 <=  sticky_low_0_d6;
          end if;
       end process;
    level10 <= I ;
    sozb<= OZb;
    sticky10 <= '0' ;
-   count9<= '1' when level10_d2(527 downto 16) = (527 downto 16=>sozb_d2) else '0';
-   level9<= level10_d2(527 downto 0) when count9='0' else level10_d2(15 downto 0) & (511 downto 0 => '0');
+   count9<= '1' when level10_d1(527 downto 16) = (527 downto 16=>sozb_d1) else '0';
+   level9<= level10_d1(527 downto 0) when count9='0' else level10_d1(15 downto 0) & (511 downto 0 => '0');
    sticky_high_9<= '0';
    sticky_low_9<= '0';
-   sticky9<= sticky10_d2 or sticky_high_9_d2 when count9='0' else sticky10_d2 or sticky_low_9_d2;
+   sticky9<= sticky10_d1 or sticky_high_9_d1 when count9='0' else sticky10_d1 or sticky_low_9_d1;
 
-   count8<= '1' when level9_d2(527 downto 272) = (527 downto 272=>sozb_d4) else '0';
+   count8<= '1' when level9_d2(527 downto 272) = (527 downto 272=>sozb_d3) else '0';
    level8<= level9_d2(527 downto 17) when count8='0' else level9_d2(271 downto 0) & (238 downto 0 => '0');
    sticky_high_8<= '0'when level9(16 downto 0) = CONV_STD_LOGIC_VECTOR(0,17) else '1';
    sticky_low_8<= '0';
-   sticky8<= sticky9_d2 or sticky_high_8_d2 when count8='0' else sticky9_d2 or sticky_low_8_d4;
+   sticky8<= sticky9_d2 or sticky_high_8_d2 when count8='0' else sticky9_d2 or sticky_low_8_d3;
 
-   count7<= '1' when level8_d1(510 downto 383) = (510 downto 383=>sozb_d5) else '0';
+   count7<= '1' when level8_d1(510 downto 383) = (510 downto 383=>sozb_d4) else '0';
    level7<= level8_d1(510 downto 256) when count7='0' else level8_d1(382 downto 128);
    sticky_high_7<= '0'when level8(255 downto 0) = CONV_STD_LOGIC_VECTOR(0,256) else '1';
    sticky_low_7<= '0'when level8(127 downto 0) = CONV_STD_LOGIC_VECTOR(0,128) else '1';
    sticky7<= sticky8_d1 or sticky_high_7_d1 when count7='0' else sticky8_d1 or sticky_low_7_d1;
 
-   count6<= '1' when level7_d1(254 downto 191) = (254 downto 191=>sozb_d6) else '0';
+   count6<= '1' when level7_d1(254 downto 191) = (254 downto 191=>sozb_d5) else '0';
    level6<= level7_d1(254 downto 128) when count6='0' else level7_d1(190 downto 64);
    sticky_high_6<= '0'when level7(127 downto 0) = CONV_STD_LOGIC_VECTOR(0,128) else '1';
    sticky_low_6<= '0'when level7(63 downto 0) = CONV_STD_LOGIC_VECTOR(0,64) else '1';
    sticky6<= sticky7_d1 or sticky_high_6_d1 when count6='0' else sticky7_d1 or sticky_low_6_d1;
 
-   count5<= '1' when level6(126 downto 95) = (126 downto 95=>sozb_d6) else '0';
+   count5<= '1' when level6(126 downto 95) = (126 downto 95=>sozb_d5) else '0';
    level5<= level6(126 downto 64) when count5='0' else level6(94 downto 32);
    sticky_high_5<= '0'when level6(63 downto 0) = CONV_STD_LOGIC_VECTOR(0,64) else '1';
    sticky_low_5<= '0'when level6(31 downto 0) = CONV_STD_LOGIC_VECTOR(0,32) else '1';
    sticky5<= sticky6 or sticky_high_5 when count5='0' else sticky6 or sticky_low_5;
 
-   count4<= '1' when level5_d1(62 downto 47) = (62 downto 47=>sozb_d7) else '0';
-   level4<= level5_d1(62 downto 32) when count4='0' else level5_d1(46 downto 16);
+   count4<= '1' when level5(62 downto 47) = (62 downto 47=>sozb_d5) else '0';
+   level4<= level5(62 downto 32) when count4='0' else level5(46 downto 16);
    sticky_high_4<= '0'when level5(31 downto 0) = CONV_STD_LOGIC_VECTOR(0,32) else '1';
    sticky_low_4<= '0'when level5(15 downto 0) = CONV_STD_LOGIC_VECTOR(0,16) else '1';
-   sticky4<= sticky5_d1 or sticky_high_4_d1 when count4='0' else sticky5_d1 or sticky_low_4_d1;
+   sticky4<= sticky5 or sticky_high_4 when count4='0' else sticky5 or sticky_low_4;
 
-   count3<= '1' when level4(30 downto 23) = (30 downto 23=>sozb_d7) else '0';
+   count3<= '1' when level4(30 downto 23) = (30 downto 23=>sozb_d5) else '0';
    level3<= level4(30 downto 15) when count3='0' else level4(22 downto 7);
    sticky_high_3<= '0'when level4(14 downto 0) = CONV_STD_LOGIC_VECTOR(0,15) else '1';
    sticky_low_3<= '0'when level4(6 downto 0) = CONV_STD_LOGIC_VECTOR(0,7) else '1';
    sticky3<= sticky4 or sticky_high_3 when count3='0' else sticky4 or sticky_low_3;
 
-   count2<= '1' when level3(15 downto 12) = (15 downto 12=>sozb_d7) else '0';
+   count2<= '1' when level3(15 downto 12) = (15 downto 12=>sozb_d5) else '0';
    level2<= level3(15 downto 4) when count2='0' else level3(11 downto 0);
    sticky_high_2<= '0'when level3(3 downto 0) = CONV_STD_LOGIC_VECTOR(0,4) else '1';
    sticky_low_2<= '0';
-   sticky2<= sticky3 or sticky_high_2 when count2='0' else sticky3 or sticky_low_2_d7;
+   sticky2<= sticky3 or sticky_high_2 when count2='0' else sticky3 or sticky_low_2_d5;
 
-   count1<= '1' when level2(11 downto 10) = (11 downto 10=>sozb_d7) else '0';
-   level1<= level2(11 downto 2) when count1='0' else level2(9 downto 0);
+   count1<= '1' when level2_d1(11 downto 10) = (11 downto 10=>sozb_d6) else '0';
+   level1<= level2_d1(11 downto 2) when count1='0' else level2_d1(9 downto 0);
    sticky_high_1<= '0'when level2(1 downto 0) = CONV_STD_LOGIC_VECTOR(0,2) else '1';
    sticky_low_1<= '0';
-   sticky1<= sticky2 or sticky_high_1 when count1='0' else sticky2 or sticky_low_1_d7;
+   sticky1<= sticky2_d1 or sticky_high_1_d1 when count1='0' else sticky2_d1 or sticky_low_1_d6;
 
-   count0<= '1' when level1(9 downto 9) = (9 downto 9=>sozb_d7) else '0';
+   count0<= '1' when level1(9 downto 9) = (9 downto 9=>sozb_d6) else '0';
    level0<= level1(9 downto 1) when count0='0' else level1(8 downto 0);
    sticky_high_0<= '0'when level1(0 downto 0) = CONV_STD_LOGIC_VECTOR(0,1) else '1';
    sticky_low_0<= '0';
-   sticky0<= sticky1 or sticky_high_0 when count0='0' else sticky1 or sticky_low_0_d7;
+   sticky0<= sticky1 or sticky_high_0 when count0='0' else sticky1 or sticky_low_0_d6;
 
    O <= level0;
-   sCount <= count9_d5 & count8_d3 & count7_d2 & count6_d1 & count5_d1 & count4 & count3 & count2 & count1 & count0;
+   sCount <= count9_d5 & count8_d3 & count7_d2 & count6_d1 & count5_d1 & count4_d1 & count3_d1 & count2_d1 & count1 & count0;
    Count <= sCount;
    Sticky <= sticky0;
 end architecture;
 
 --------------------------------------------------------------------------------
---                     RightShifter9_by_max_9_F250_uid22
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+--                     RightShifter9_by_max_9_F200_uid22
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Bogdan Pasca (2008-2011), Florent de Dinechin (2008-2019)
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: X S padBit
 -- Output signals: R
 
@@ -295,7 +287,7 @@ library std;
 use std.textio.all;
 library work;
 
-entity RightShifter9_by_max_9_F250_uid22 is
+entity RightShifter9_by_max_9_F200_uid22 is
     port (clk : in std_logic;
           X : in  std_logic_vector(8 downto 0);
           S : in  std_logic_vector(3 downto 0);
@@ -303,51 +295,48 @@ entity RightShifter9_by_max_9_F250_uid22 is
           R : out  std_logic_vector(17 downto 0)   );
 end entity;
 
-architecture arch of RightShifter9_by_max_9_F250_uid22 is
+architecture arch of RightShifter9_by_max_9_F200_uid22 is
 signal ps :  std_logic_vector(3 downto 0);
-signal level0, level0_d1 :  std_logic_vector(8 downto 0);
+signal level0 :  std_logic_vector(8 downto 0);
 signal level1 :  std_logic_vector(9 downto 0);
 signal level2 :  std_logic_vector(11 downto 0);
 signal level3 :  std_logic_vector(15 downto 0);
 signal level4 :  std_logic_vector(23 downto 0);
-signal padBit_d1, padBit_d2, padBit_d3, padBit_d4, padBit_d5, padBit_d6, padBit_d7, padBit_d8 :  std_logic;
+signal padBit_d1, padBit_d2, padBit_d3, padBit_d4, padBit_d5, padBit_d6 :  std_logic;
 begin
    process(clk)
       begin
          if clk'event and clk = '1' then
-            level0_d1 <=  level0;
             padBit_d1 <=  padBit;
             padBit_d2 <=  padBit_d1;
             padBit_d3 <=  padBit_d2;
             padBit_d4 <=  padBit_d3;
             padBit_d5 <=  padBit_d4;
             padBit_d6 <=  padBit_d5;
-            padBit_d7 <=  padBit_d6;
-            padBit_d8 <=  padBit_d7;
          end if;
       end process;
    ps<= S;
    level0<= X;
-   level1 <=  (0 downto 0 => padBit_d8) & level0_d1 when ps(0) = '1' else    level0_d1 & (0 downto 0 => '0');
+   level1 <=  (0 downto 0 => padBit_d6) & level0 when ps(0) = '1' else    level0 & (0 downto 0 => '0');
    R <= level4(23 downto 6);
-   level2 <=  (1 downto 0 => padBit_d8) & level1 when ps(1) = '1' else    level1 & (1 downto 0 => '0');
+   level2 <=  (1 downto 0 => padBit_d6) & level1 when ps(1) = '1' else    level1 & (1 downto 0 => '0');
    R <= level4(23 downto 6);
-   level3 <=  (3 downto 0 => padBit_d8) & level2 when ps(2) = '1' else    level2 & (3 downto 0 => '0');
+   level3 <=  (3 downto 0 => padBit_d6) & level2 when ps(2) = '1' else    level2 & (3 downto 0 => '0');
    R <= level4(23 downto 6);
-   level4 <=  (7 downto 0 => padBit_d8) & level3 when ps(3) = '1' else    level3 & (7 downto 0 => '0');
+   level4 <=  (7 downto 0 => padBit_d6) & level3 when ps(3) = '1' else    level3 & (7 downto 0 => '0');
    R <= level4(23 downto 6);
 end architecture;
 
 --------------------------------------------------------------------------------
 --                                    l2a
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Ledoux Louis - BSC / UPC
 --------------------------------------------------------------------------------
--- Pipeline depth: 8 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Pipeline depth: 7 cycles
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: A isNaN
 -- Output signals: arith_o
 
@@ -367,7 +356,7 @@ entity l2a is
 end entity;
 
 architecture arch of l2a is
-   component LZOCShifterSticky_528_to_9_counting_1024_F250_uid20 is
+   component LZOCShifterSticky_528_to_9_counting_1024_F200_uid20 is
       port ( clk : in std_logic;
              I : in  std_logic_vector(527 downto 0);
              OZb : in  std_logic;
@@ -376,7 +365,7 @@ architecture arch of l2a is
              Sticky : out  std_logic   );
    end component;
 
-   component RightShifter9_by_max_9_F250_uid22 is
+   component RightShifter9_by_max_9_F200_uid22 is
       port ( clk : in std_logic;
              X : in  std_logic_vector(8 downto 0);
              S : in  std_logic_vector(3 downto 0);
@@ -384,35 +373,35 @@ architecture arch of l2a is
              R : out  std_logic_vector(17 downto 0)   );
    end component;
 
-signal rippled_carry, rippled_carry_d1, rippled_carry_d2, rippled_carry_d3, rippled_carry_d4, rippled_carry_d5, rippled_carry_d6, rippled_carry_d7, rippled_carry_d8 :  std_logic_vector(527 downto 0);
+signal rippled_carry, rippled_carry_d1, rippled_carry_d2, rippled_carry_d3, rippled_carry_d4, rippled_carry_d5, rippled_carry_d6, rippled_carry_d7 :  std_logic_vector(527 downto 0);
 signal count_bit :  std_logic;
-signal count_lzoc_o, count_lzoc_o_d1 :  std_logic_vector(9 downto 0);
+signal count_lzoc_o :  std_logic_vector(9 downto 0);
 signal frac_lzoc_o :  std_logic_vector(8 downto 0);
 signal sticky_lzoc_o :  std_logic;
-signal unbiased_exp, unbiased_exp_d1 :  std_logic_vector(9 downto 0);
-signal bias, bias_d1, bias_d2, bias_d3, bias_d4, bias_d5, bias_d6, bias_d7, bias_d8 :  std_logic_vector(9 downto 0);
+signal unbiased_exp :  std_logic_vector(9 downto 0);
+signal bias, bias_d1, bias_d2, bias_d3, bias_d4, bias_d5, bias_d6 :  std_logic_vector(9 downto 0);
 signal exp_ext :  std_logic_vector(9 downto 0);
 signal sign_exp_ext :  std_logic;
-signal exp_ovf :  std_logic;
+signal exp_ovf, exp_ovf_d1 :  std_logic;
 signal pre_sub_exp_udf :  std_logic;
 signal pad :  std_logic;
 signal shift_amount :  std_logic_vector(3 downto 0);
 signal shifted_mantissa :  std_logic_vector(17 downto 0);
-signal exp_udf :  std_logic;
+signal exp_udf, exp_udf_d1 :  std_logic;
 signal biased_exp :  std_logic_vector(7 downto 0);
 signal not_frac_lzoc :  std_logic_vector(8 downto 0);
 signal unrounded_frac :  std_logic_vector(8 downto 0);
 signal G :  std_logic;
 signal R :  std_logic;
-signal S, S_d1 :  std_logic;
+signal S :  std_logic;
 signal round_up :  std_logic;
-signal rounded_frac :  std_logic_vector(8 downto 0);
+signal rounded_frac, rounded_frac_d1 :  std_logic_vector(8 downto 0);
 signal post_round_ovf :  std_logic;
-signal post_rounding_exp :  std_logic_vector(8 downto 0);
+signal post_rounding_exp, post_rounding_exp_d1 :  std_logic_vector(8 downto 0);
 signal nan_out :  std_logic;
-signal is_zero :  std_logic;
+signal is_zero, is_zero_d1 :  std_logic;
 signal final_exp :  std_logic_vector(7 downto 0);
-signal isNaN_d1, isNaN_d2, isNaN_d3, isNaN_d4, isNaN_d5, isNaN_d6, isNaN_d7, isNaN_d8 :  std_logic;
+signal isNaN_d1, isNaN_d2, isNaN_d3, isNaN_d4, isNaN_d5, isNaN_d6, isNaN_d7 :  std_logic;
 begin
    process(clk)
       begin
@@ -424,18 +413,17 @@ begin
             rippled_carry_d5 <=  rippled_carry_d4;
             rippled_carry_d6 <=  rippled_carry_d5;
             rippled_carry_d7 <=  rippled_carry_d6;
-            rippled_carry_d8 <=  rippled_carry_d7;
-            count_lzoc_o_d1 <=  count_lzoc_o;
-            unbiased_exp_d1 <=  unbiased_exp;
             bias_d1 <=  bias;
             bias_d2 <=  bias_d1;
             bias_d3 <=  bias_d2;
             bias_d4 <=  bias_d3;
             bias_d5 <=  bias_d4;
             bias_d6 <=  bias_d5;
-            bias_d7 <=  bias_d6;
-            bias_d8 <=  bias_d7;
-            S_d1 <=  S;
+            exp_ovf_d1 <=  exp_ovf;
+            exp_udf_d1 <=  exp_udf;
+            rounded_frac_d1 <=  rounded_frac;
+            post_rounding_exp_d1 <=  post_rounding_exp;
+            is_zero_d1 <=  is_zero;
             isNaN_d1 <=  isNaN;
             isNaN_d2 <=  isNaN_d1;
             isNaN_d3 <=  isNaN_d2;
@@ -443,7 +431,6 @@ begin
             isNaN_d5 <=  isNaN_d4;
             isNaN_d6 <=  isNaN_d5;
             isNaN_d7 <=  isNaN_d6;
-            isNaN_d8 <=  isNaN_d7;
          end if;
       end process;
 
@@ -451,7 +438,7 @@ begin
 
 --------------- Count 0/1 while shifting and sticky computation ---------------
    count_bit <= rippled_carry(527);
-   lzoc_inst: LZOCShifterSticky_528_to_9_counting_1024_F250_uid20
+   lzoc_inst: LZOCShifterSticky_528_to_9_counting_1024_F200_uid20
       port map ( clk  => clk,
                  I => rippled_carry,
                  OZb => count_bit,
@@ -462,7 +449,7 @@ begin
 ----------- Compute unbiased exponent from msb weigth and lzoc count -----------
    unbiased_exp <= CONV_STD_LOGIC_VECTOR(261,10) - (count_lzoc_o);
    bias <= CONV_STD_LOGIC_VECTOR(127,10);
-   exp_ext <= bias_d8 + unbiased_exp_d1;
+   exp_ext <= bias_d6 + unbiased_exp;
    sign_exp_ext <= exp_ext(9);
    exp_ovf <= '1' when ( exp_ext(8 downto 8)>"0" and sign_exp_ext='0') else '0';
 
@@ -470,7 +457,7 @@ begin
    pre_sub_exp_udf <= sign_exp_ext;
    pad <= not(rippled_carry(527));
    shift_amount <= "0000" when pre_sub_exp_udf='1' else CONV_STD_LOGIC_VECTOR(-signed(exp_ext),4);
-   rshift_mantissa_inst: RightShifter9_by_max_9_F250_uid22
+   rshift_mantissa_inst: RightShifter9_by_max_9_F200_uid22
       port map ( clk  => clk,
                  S => shift_amount,
                  X => frac_lzoc_o,
@@ -481,36 +468,36 @@ begin
    biased_exp <= exp_ext(7 downto 0);
 
 -------------------------- Convert in sign magnitude --------------------------
-   not_frac_lzoc <=  shifted_mantissa(17 downto 9) xor (8 downto 0 => rippled_carry_d8(527));
-   unrounded_frac <= "0" & not_frac_lzoc(7 downto 0) + rippled_carry_d8(527);
+   not_frac_lzoc <=  shifted_mantissa(17 downto 9) xor (8 downto 0 => rippled_carry_d6(527));
+   unrounded_frac <= "0" & not_frac_lzoc(7 downto 0) + rippled_carry_d6(527);
 
 ---- G and R should be taken from lzoc adding one size more frac lzoc width ----
 ------------------------------- GRS rounding up -------------------------------
    G <= unrounded_frac(1);
    R <= unrounded_frac(0);
    S <= sticky_lzoc_o;
-   round_up <= G and (R or S_d1);
+   round_up <= G and (R or S);
    rounded_frac <= unrounded_frac + round_up;
    post_round_ovf <= rounded_frac(8);
 
 ------------------------- post rounding scale handling -------------------------
    post_rounding_exp <= ("0" & biased_exp) + (rounded_frac(8));
-   nan_out <= post_rounding_exp(8) or isNaN_d8 or exp_udf or exp_ovf;
-is_zero <= count_lzoc_o_d1(9) when rounded_frac="000000000" else '0';
-   final_exp <= post_rounding_exp(7 downto 0) when nan_out = '0' else "11111111";
-   arith_o <= (rippled_carry_d8(527) & final_exp(7 downto 0) & rounded_frac(7 downto 1)) when is_zero = '0' else "0000000000000000";
+   nan_out <= post_rounding_exp_d1(8) or isNaN_d7 or exp_udf_d1 or exp_ovf_d1;
+is_zero <= count_lzoc_o(9) when rounded_frac="000000000" else '0';
+   final_exp <= post_rounding_exp_d1(7 downto 0) when nan_out = '0' else "11111111";
+   arith_o <= (rippled_carry_d7(527) & final_exp(7 downto 0) & rounded_frac_d1(7 downto 1)) when is_zero_d1 = '0' else "0000000000000000";
 end architecture;
 
 --------------------------------------------------------------------------------
---                          DSPBlock_8x8_F250_uid33
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+--                          DSPBlock_8x8_F200_uid33
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: 
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: X Y
 -- Output signals: R
 
@@ -521,14 +508,14 @@ library std;
 use std.textio.all;
 library work;
 
-entity DSPBlock_8x8_F250_uid33 is
+entity DSPBlock_8x8_F200_uid33 is
     port (clk : in std_logic;
           X : in  std_logic_vector(7 downto 0);
           Y : in  std_logic_vector(7 downto 0);
           R : out  std_logic_vector(15 downto 0)   );
 end entity;
 
-architecture arch of DSPBlock_8x8_F250_uid33 is
+architecture arch of DSPBlock_8x8_F200_uid33 is
 signal Mint :  std_logic_vector(15 downto 0);
 signal M :  std_logic_vector(15 downto 0);
 signal Rtmp :  std_logic_vector(15 downto 0);
@@ -540,15 +527,15 @@ begin
 end architecture;
 
 --------------------------------------------------------------------------------
---                          IntMultiplier_F250_uid29
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+--                          IntMultiplier_F200_uid29
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Martin Kumm, Florent de Dinechin, Kinga Illyes, Bogdan Popa, Bogdan Pasca, 2012
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: X Y
 -- Output signals: R
 
@@ -559,15 +546,15 @@ library std;
 use std.textio.all;
 library work;
 
-entity IntMultiplier_F250_uid29 is
+entity IntMultiplier_F200_uid29 is
     port (clk : in std_logic;
           X : in  std_logic_vector(7 downto 0);
           Y : in  std_logic_vector(7 downto 0);
           R : out  std_logic_vector(15 downto 0)   );
 end entity;
 
-architecture arch of IntMultiplier_F250_uid29 is
-   component DSPBlock_8x8_F250_uid33 is
+architecture arch of IntMultiplier_F200_uid29 is
+   component DSPBlock_8x8_F200_uid33 is
       port ( clk : in std_logic;
              X : in  std_logic_vector(7 downto 0);
              Y : in  std_logic_vector(7 downto 0);
@@ -603,7 +590,7 @@ begin
    YY_m30 <= Y ;
    tile_0_X <= X(7 downto 0);
    tile_0_Y <= Y(7 downto 0);
-   tile_0_mult: DSPBlock_8x8_F250_uid33
+   tile_0_mult: DSPBlock_8x8_F200_uid33
       port map ( clk  => clk,
                  X => tile_0_X,
                  Y => tile_0_Y,
@@ -636,15 +623,15 @@ tile_0_filtered_output <= tile_0_output(15 downto 0);
 end architecture;
 
 --------------------------------------------------------------------------------
---                    LeftShifter16_by_max_511_F250_uid36
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+--                    LeftShifter16_by_max_511_F200_uid36
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Bogdan Pasca (2008-2011), Florent de Dinechin (2008-2019)
 --------------------------------------------------------------------------------
--- Pipeline depth: 2 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Pipeline depth: 1 cycles
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: X S padBit
 -- Output signals: R
 
@@ -656,7 +643,7 @@ library std;
 use std.textio.all;
 library work;
 
-entity LeftShifter16_by_max_511_F250_uid36 is
+entity LeftShifter16_by_max_511_F200_uid36 is
     port (clk : in std_logic;
           X : in  std_logic_vector(15 downto 0);
           S : in  std_logic_vector(8 downto 0);
@@ -664,8 +651,8 @@ entity LeftShifter16_by_max_511_F250_uid36 is
           R : out  std_logic_vector(526 downto 0)   );
 end entity;
 
-architecture arch of LeftShifter16_by_max_511_F250_uid36 is
-signal ps, ps_d1, ps_d2 :  std_logic_vector(8 downto 0);
+architecture arch of LeftShifter16_by_max_511_F200_uid36 is
+signal ps, ps_d1 :  std_logic_vector(8 downto 0);
 signal level0 :  std_logic_vector(15 downto 0);
 signal level1 :  std_logic_vector(16 downto 0);
 signal level2 :  std_logic_vector(18 downto 0);
@@ -673,20 +660,17 @@ signal level3 :  std_logic_vector(22 downto 0);
 signal level4 :  std_logic_vector(30 downto 0);
 signal level5 :  std_logic_vector(46 downto 0);
 signal level6 :  std_logic_vector(78 downto 0);
-signal level7, level7_d1, level7_d2 :  std_logic_vector(142 downto 0);
+signal level7, level7_d1 :  std_logic_vector(142 downto 0);
 signal level8 :  std_logic_vector(270 downto 0);
 signal level9 :  std_logic_vector(526 downto 0);
-signal padBit_d1, padBit_d2 :  std_logic;
+signal padBit_d1 :  std_logic;
 begin
    process(clk)
       begin
          if clk'event and clk = '1' then
             ps_d1 <=  ps;
-            ps_d2 <=  ps_d1;
             level7_d1 <=  level7;
-            level7_d2 <=  level7_d1;
             padBit_d1 <=  padBit;
-            padBit_d2 <=  padBit_d1;
          end if;
       end process;
    ps<= S;
@@ -705,22 +689,22 @@ begin
    R <= level9(526 downto 0);
    level7<= level6 & (63 downto 0 => '0') when ps(6)= '1' else     (63 downto 0 => padBit) & level6;
    R <= level9(526 downto 0);
-   level8<= level7_d2 & (127 downto 0 => '0') when ps_d2(7)= '1' else     (127 downto 0 => padBit_d2) & level7_d2;
+   level8<= level7_d1 & (127 downto 0 => '0') when ps_d1(7)= '1' else     (127 downto 0 => padBit_d1) & level7_d1;
    R <= level9(526 downto 0);
-   level9<= level8 & (255 downto 0 => '0') when ps_d2(8)= '1' else     (255 downto 0 => padBit_d2) & level8;
+   level9<= level8 & (255 downto 0 => '0') when ps_d1(8)= '1' else     (255 downto 0 => padBit_d1) & level8;
    R <= level9(526 downto 0);
 end architecture;
 
 --------------------------------------------------------------------------------
 --                                   s3fdp
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Ledoux Louis - BSC / UPC
 --------------------------------------------------------------------------------
--- Pipeline depth: 3 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Pipeline depth: 2 cycles
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: S3_x S3_y FTZ EOB
 -- Output signals: A EOB_Q isNaN
 
@@ -744,14 +728,14 @@ entity s3fdp is
 end entity;
 
 architecture arch of s3fdp is
-   component IntMultiplier_F250_uid29 is
+   component IntMultiplier_F200_uid29 is
       port ( clk : in std_logic;
              X : in  std_logic_vector(7 downto 0);
              Y : in  std_logic_vector(7 downto 0);
              R : out  std_logic_vector(15 downto 0)   );
    end component;
 
-   component LeftShifter16_by_max_511_F250_uid36 is
+   component LeftShifter16_by_max_511_F200_uid36 is
       port ( clk : in std_logic;
              X : in  std_logic_vector(15 downto 0);
              S : in  std_logic_vector(8 downto 0);
@@ -761,10 +745,10 @@ architecture arch of s3fdp is
 
 signal sign_X :  std_logic;
 signal sign_Y :  std_logic;
-signal sign_M, sign_M_d1, sign_M_d2 :  std_logic;
+signal sign_M, sign_M_d1 :  std_logic;
 signal isNaN_X :  std_logic;
 signal isNaN_Y :  std_logic;
-signal isNaN_M, isNaN_M_d1, isNaN_M_d2 :  std_logic;
+signal isNaN_M, isNaN_M_d1 :  std_logic;
 signal significand_X :  std_logic_vector(7 downto 0);
 signal significand_Y :  std_logic_vector(7 downto 0);
 signal significand_product :  std_logic_vector(15 downto 0);
@@ -774,12 +758,12 @@ signal scale_product_twice_biased :  std_logic_vector(8 downto 0);
 signal significand_product_cpt1 :  std_logic_vector(15 downto 0);
 signal shift_value :  std_logic_vector(8 downto 0);
 signal shifted_significand :  std_logic_vector(526 downto 0);
-signal too_small, too_small_d1, too_small_d2 :  std_logic;
-signal too_big, too_big_d1, too_big_d2 :  std_logic;
+signal too_small, too_small_d1 :  std_logic;
+signal too_big, too_big_d1 :  std_logic;
 signal summand1c :  std_logic_vector(511 downto 0);
 signal ext_summand1c :  std_logic_vector(527 downto 0);
-signal not_ftz, not_ftz_d1, not_ftz_d2 :  std_logic;
-signal EOB_internal, EOB_internal_d1, EOB_internal_d2, EOB_internal_d3 :  std_logic;
+signal not_ftz, not_ftz_d1 :  std_logic;
+signal EOB_internal, EOB_internal_d1, EOB_internal_d2 :  std_logic;
 signal not_ftz_sync :  std_logic;
 signal carry_0_sync :  std_logic;
 signal EOB_internal_delayed :  std_logic;
@@ -797,18 +781,12 @@ begin
       begin
          if clk'event and clk = '1' then
             sign_M_d1 <=  sign_M;
-            sign_M_d2 <=  sign_M_d1;
             isNaN_M_d1 <=  isNaN_M;
-            isNaN_M_d2 <=  isNaN_M_d1;
             too_small_d1 <=  too_small;
-            too_small_d2 <=  too_small_d1;
             too_big_d1 <=  too_big;
-            too_big_d2 <=  too_big_d1;
             not_ftz_d1 <=  not_ftz;
-            not_ftz_d2 <=  not_ftz_d1;
             EOB_internal_d1 <=  EOB_internal;
             EOB_internal_d2 <=  EOB_internal_d1;
-            EOB_internal_d3 <=  EOB_internal_d2;
          end if;
       end process;
    process(clk, rst)
@@ -834,7 +812,7 @@ begin
 ---------------------------- significand processing ----------------------------
    significand_X <= S3_x(15 downto 8);
    significand_Y <= S3_y(15 downto 8);
-   significand_product_inst: IntMultiplier_F250_uid29
+   significand_product_inst: IntMultiplier_F200_uid29
       port map ( clk  => clk,
                  X => significand_X,
                  Y => significand_Y,
@@ -850,7 +828,7 @@ begin
 
 ------------------------- significand product shifting -------------------------
    shift_value <= (scale_product_twice_biased) - (-13);
-   significand_product_shifter_inst: LeftShifter16_by_max_511_F250_uid36
+   significand_product_shifter_inst: LeftShifter16_by_max_511_F200_uid36
       port map ( clk  => clk,
                  S => shift_value,
                  X => significand_product_cpt1,
@@ -865,16 +843,16 @@ begin
 
 --------------- shifted significand part select to form summand ---------------
    summand1c <= shifted_significand(526 downto 15);
-   ext_summand1c <= "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" when too_small_d2='1' else ((527 downto 512 => sign_M_d2) & summand1c);
+   ext_summand1c <= "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" when too_small_d1='1' else ((527 downto 512 => sign_M_d1) & summand1c);
 
 ----------------------------- Syncing some signals -----------------------------
    not_ftz <= not FTZ;
    EOB_internal <= EOB;
-   not_ftz_sync <= not_ftz_d2;
-   carry_0_sync <= sign_M_d2;
-   EOB_internal_delayed <= EOB_internal_d3;
-   isNaN_M_sync <= isNaN_M_d2;
-   too_big_sync <= too_big_d2;
+   not_ftz_sync <= not_ftz_d1;
+   carry_0_sync <= sign_M_d1;
+   EOB_internal_delayed <= EOB_internal_d2;
+   isNaN_M_sync <= isNaN_M_d1;
+   too_big_sync <= too_big_d1;
 
 ------------------------------ Output isNaN latch ------------------------------
    isNaN_o <= (too_big_sync or isNaN_M_sync or isNaN_delayed) when not_ftz_sync='1' else '0';
@@ -900,14 +878,14 @@ end architecture;
 
 --------------------------------------------------------------------------------
 --                                   PE_S3
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Ledoux Louis - BSC / UPC
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: s3_row_i_A s3_col_j_B C_out SOB EOB
 -- Output signals: s3_row_im1_A s3_col_jm1_B SOB_Q EOB_Q C_out_Q
 
@@ -1006,14 +984,14 @@ end architecture;
 
 --------------------------------------------------------------------------------
 --                            SystolicArrayKernel
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Ledoux Louis - BSC / UPC
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: rowsA colsB SOB EOB
 -- Output signals: colsC EOB_Q_o
 
@@ -1119,15 +1097,15 @@ end architecture;
 
 --------------------------------------------------------------------------------
 --                               SystolicArray
---                (SA_orthogonal_8w7h_ieee_8_7_HSSD_F250_uid2)
--- VHDL generated for VirtexUltrascalePlus @ 250MHz
+--                (SA_orthogonal_8w7h_ieee_8_7_HSSD_F200_uid2)
+-- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Ledoux Louis - BSC / UPC
 --------------------------------------------------------------------------------
 -- Pipeline depth: 0 cycles
--- Clock period (ns): 4
--- Target frequency (MHz): 250
+-- Clock period (ns): 5
+-- Target frequency (MHz): 200
 -- Input signals: rowsA colsB SOB EOB
 -- Output signals: colsC EOB_Q_o
 

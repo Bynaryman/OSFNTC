@@ -140,7 +140,7 @@ architecture action_cgemm of action_cgemm is
 
     component my_sv_wrapper
     generic (
-        DATA_WIDTH : INTEGER := 1024
+        DATA_WIDTH : INTEGER := C_AXI_HOST_MEM_DATA_WIDTH
     );
     port (
         --  System signals
@@ -190,7 +190,7 @@ architecture action_cgemm of action_cgemm is
         signal dma_rd_req_ack     : std_logic;
         signal rd_addr            : std_logic_vector( 63 downto 0);
         signal rd_len             : std_logic_vector(  7 downto 0);
-        signal dma_rd_data        : std_logic_vector(511 downto 0);
+        signal dma_rd_data        : std_logic_vector(C_AXI_HOST_MEM_DATA_WIDTH-1 downto 0);
         signal dma_rd_data_valid  : std_logic;
         signal dma_rd_data_last   : std_logic;
         signal dma_rd_data_taken  : std_logic;
@@ -199,8 +199,8 @@ architecture action_cgemm of action_cgemm is
         signal dma_wr_req_ack     : std_logic;
         signal wr_addr            : std_logic_vector( 63 downto 0);
         signal wr_len             : std_logic_vector(  7 downto 0);
-        signal wr_data            : std_logic_vector(511 downto 0);
-        signal dma_wr_data_strobe : std_logic_vector( 63  downto 0);
+        signal wr_data            : std_logic_vector(C_AXI_HOST_MEM_DATA_WIDTH-1 downto 0);
+        signal dma_wr_data_strobe : std_logic_vector(C_AXI_HOST_MEM_DATA_WIDTH/8-1  downto 0);
         signal dma_wr_data_valid  : std_logic;
         signal dma_wr_data_last   : std_logic;
         signal dma_wr_ready       : std_logic;
@@ -261,7 +261,7 @@ architecture action_cgemm of action_cgemm is
 begin
 
     int_ctx <= s_Context_ID(CONTEXT_BITS - 1 downto 0);
-    int_src <= "00";
+    int_src <= "0000000000000000000000000000000000000000000000000000000000000000";
     int_req <= '0'; -- no interuption for the moment
 
 -- Instantiation of Axi Bus Interface AXI_CTRL_REG
@@ -320,14 +320,14 @@ action_axi_slave_inst : entity work.action_axi_slave
 action_dma_axi_master_inst : entity work.action_axi_master
     generic map (
 
-        C_M_AXI_ID_WIDTH    => C_AXI_HOST_MEM_ID_WIDTH,
-        C_M_AXI_ADDR_WIDTH  => C_AXI_HOST_MEM_ADDR_WIDTH,
-        C_M_AXI_DATA_WIDTH  => C_AXI_HOST_MEM_DATA_WIDTH,
-        C_M_AXI_AWUSER_WIDTH    => C_AXI_HOST_MEM_AWUSER_WIDTH,
-        C_M_AXI_ARUSER_WIDTH    => C_AXI_HOST_MEM_ARUSER_WIDTH,
-        C_M_AXI_WUSER_WIDTH => C_AXI_HOST_MEM_WUSER_WIDTH,
-        C_M_AXI_RUSER_WIDTH => C_AXI_HOST_MEM_RUSER_WIDTH,
-        C_M_AXI_BUSER_WIDTH => C_AXI_HOST_MEM_BUSER_WIDTH
+        C_M_AXI_ID_WIDTH     => C_AXI_HOST_MEM_ID_WIDTH,
+        C_M_AXI_ADDR_WIDTH   => C_AXI_HOST_MEM_ADDR_WIDTH,
+        C_M_AXI_DATA_WIDTH   => C_AXI_HOST_MEM_DATA_WIDTH,
+        C_M_AXI_AWUSER_WIDTH => C_AXI_HOST_MEM_AWUSER_WIDTH,
+        C_M_AXI_ARUSER_WIDTH => C_AXI_HOST_MEM_ARUSER_WIDTH,
+        C_M_AXI_WUSER_WIDTH  => C_AXI_HOST_MEM_WUSER_WIDTH,
+        C_M_AXI_RUSER_WIDTH  => C_AXI_HOST_MEM_RUSER_WIDTH,
+        C_M_AXI_BUSER_WIDTH  => C_AXI_HOST_MEM_BUSER_WIDTH
     )
     port map (
 
@@ -660,9 +660,9 @@ write_data_process:
 
 wr_strobes: process(dma_wr_data_valid, memcopy )
   begin
-    dma_wr_data_strobe <= (63 downto 0 => '0');
+    dma_wr_data_strobe <= ((C_AXI_HOST_MEM_DATA_WIDTH/8-1) downto 0 => '0');
     if (dma_wr_data_valid = '1' and memcopy) then
-        dma_wr_data_strobe <= (63 downto 0 => '1');
+        dma_wr_data_strobe <= ((C_AXI_HOST_MEM_DATA_WIDTH/8-1) downto 0 => '1');
     end if;
 
   end process;

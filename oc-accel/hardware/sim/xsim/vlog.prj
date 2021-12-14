@@ -35,6 +35,10 @@ verilog work --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx
 "../../hdl/oc/tlx_mmio_converter.v" \
 
 sv work --include "../../oc-bip/board_support_packages/ad9v3/verilog/xilinx/encrypted_buffer_bypass" --include "../../hdl/core" --include "../../oc-bip/config_subsystem" \
+"../../../actions/cgemm/hw/libs/fifo/fifo.sv" \
+"../../../actions/cgemm/hw/my_sv_wrapper.sv" \
+"../../../actions/cgemm/hw/libs/fifo/scsdpram.sv" \
+"../../../actions/cgemm/hw/libs/fifo/shiftreg.sv" \
 "../../oc-bip/sim/src/top.sv" \
 
 verilog work "glbl.v"
