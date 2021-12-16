@@ -1,4 +1,8 @@
 Cython==0.29.25
 numpy==1.23.0.dev0+114.g7ca1d1ad0
+PySigmoid==0.3
+PySigmoid.Math==0.3
 PyYAML==6.0
+spfpm==1.4
+torch==1.11.0a0+git2a38e1a
 typing_extensions==4.0.1

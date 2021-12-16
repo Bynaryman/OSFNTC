@@ -25,5 +25,9 @@ git submodule update --init
 embeds all the code to generate systolic arrays with automated pipelining
 specific command to make it work are located in a .txt file in flopoco/
 
+# PySigmoid
+our modified PySigmoid to handle any kind of accumulators.
+Among other things, we use  the library to generate input matrices
+
 # misc
 some pre-made configuration files for installation of other repositories
