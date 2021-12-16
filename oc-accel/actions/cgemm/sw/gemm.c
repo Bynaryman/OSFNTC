@@ -38,8 +38,8 @@ int main (int argc, char* argv[])
     uint64_t addr_in = 0x0ull;
     uint8_t  type_out = SNAP_ADDRTYPE_HOST_DRAM;
     uint64_t addr_out = 0x0ull;
-    uint32_t read_burst_num = 64; // fpga has logic only for 64 arlen/awlen
-    uint32_t write_burst_num = 64;
+    uint32_t read_burst_num = 128; // fpga has logic only for 64 arlen/awlen
+    uint32_t write_burst_num = 128;
     uint32_t transfer_type = 4; // host to host
 
     int rc = 0;
@@ -114,7 +114,7 @@ int main (int argc, char* argv[])
     // so, the output file is half size and contains 1 result matrix
     Data_Size_in  = mem_init_from_file(path_in, &mem_in, 4096);
     //double inverse_ratio_out_occupancy = 512.0f/((double)M*(double)posit_width);
-    Data_Size_out = N*64*B;  // if OpenCAPI replace 64 by 128
+    Data_Size_out = N*128*B;  // if OpenCAPI replace 64 by 128
     //Data_Size_out = Data_Size_in;
     //Data_Size_out = ((N*M*posit_width)*inverse_ratio_out_occupancy)/8;
     //VERBOSE2(stdout, "ratio occupancy: %f\n", inverse_ratio_out_occupancy);

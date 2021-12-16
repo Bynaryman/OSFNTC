@@ -23,3 +23,5 @@ A BLAS call basically performs:
   * send start to HW
   * synchronally pull done register in FPGA or wait for timeout
   * print or write to file classifications
+
+Contains a script "create_input.py" that takes a config in json and will create the raw input matrices with SOB and EOB bits

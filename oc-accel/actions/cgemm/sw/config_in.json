@@ -1,0 +1,24 @@
+{
+	"HW_config": {
+		"SA_height" : 32,
+		"SA_width" : 31,
+		"SA_reuse_width" : -1,
+		"SA_reuse_height" : -1,
+		"SA_arithmetic" : {
+			"name" : "posit",
+			"param1" : 16,
+			"param2" : 0
+		},
+		"CAPI" : 3
+	},
+
+	"data_in": {
+		"type": "batched",
+		"stream_type": "ALL",
+		"number_problems": 1,
+		"values": "linpack_m1_to_p1",
+		"encoding" : "ieee",
+		"bit_width" : 32,
+		"exponent" : 8
+	}
+}

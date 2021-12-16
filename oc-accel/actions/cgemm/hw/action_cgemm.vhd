@@ -460,7 +460,8 @@ action_dma_axi_master_inst : entity work.action_axi_master
     -- decrease the dma block to read, active high when is 0 and lst of chunk
     eow_dma <= '1' when ((dma_rd_data_last = '1') and (unsigned(dma_blocks_to_read) = 0)) else '0';
 
-    block_diff <= "000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 6)) - (s_src_addr_h & s_src_addr_l(31 downto 6)));
+    -- block_diff <= "000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 6)) - (s_src_addr_h & s_src_addr_l(31 downto 6)));
+    block_diff <= "0000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 7)) - (s_src_addr_h & s_src_addr_l(31 downto 7)));
 
     process(action_clk ) is
      variable temp64 : std_logic_vector(63 downto 0);
@@ -480,10 +481,11 @@ action_dma_axi_master_inst : entity work.action_axi_master
                   wr_req_count       <= 0;
                   wr_done_count      <= 0;
                   wr_gate            <= '0';
-                  blocks_to_read     <= "000000"   & s_src_data_size(31 downto 6);
-                  dma_blocks_to_read <= "000000"   & s_src_data_size(31 downto 6);
-                  blocks_to_write    <= "000000"   & s_dst_data_size(31 downto 6);
-                  blocks_expected    <= "000000"   & s_dst_data_size(31 downto 6);
+                  -- blocks_to_read     <= "000000"   & s_src_data_size(31 downto 6);
+                  blocks_to_read     <= "0000000"   & s_src_data_size(31 downto 7);
+                  dma_blocks_to_read <= "0000000"   & s_src_data_size(31 downto 7);
+                  blocks_to_write    <= "0000000"   & s_dst_data_size(31 downto 7);
+                  blocks_expected    <= "0000000"   & s_dst_data_size(31 downto 7);
                   first_max_blk_w    <= x"0000_00" & (x"40" - s_dst_addr_l(11 downto 6));
                   first_max_blk_r    <= x"0000_00" & (x"40" - s_src_addr_l(11 downto 6));
 
