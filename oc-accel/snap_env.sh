@@ -1,3 +1,4 @@
-export ACTION_ROOT=${SNAP_ROOT}/actions/hdl_example
-export TIMING_LABLIMIT="-200"
-export OCSE_ROOT=/users/lledoux/Documents/high_end/ocse
+export ACTION_ROOT=${SNAP_ROOT}/actions/cgemm
+export TIMING_LABLIMIT="-500"
+#export OCSE_ROOT=/home/binaryman/Documents/PhD/high_end/ocse
+export OCSE_ROOT=${SNAP_ROOT}/../ocse
