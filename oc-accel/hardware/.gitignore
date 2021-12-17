@@ -5,7 +5,6 @@ hdl/nvme/xgui
 build/
 logs/*
 viv_project*/
-ip/
 sim/*.log
 sim/20*
 .bitstream_name.txt

@@ -1,0 +1,1 @@
+vio_soft_reset.vhd,vhdl,xil_defaultlib,../../../../vio_soft_reset/sim/vio_soft_reset.vhd,incdir="../../../../vio_soft_reset/hdl/verilog"incdir="../../../../vio_soft_reset/hdl"
