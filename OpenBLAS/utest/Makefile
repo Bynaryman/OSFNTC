@@ -42,6 +42,10 @@ ifeq ($(OSNAME), AIX)
 OBJS = utest_main2.o
 endif
 
+ifeq ($(USE_OCAPI),1)
+CFLAGS += -DUSE_OCAPI=0
+endif
+
 all : run_test
 
 $(UTESTBIN): $(OBJS)

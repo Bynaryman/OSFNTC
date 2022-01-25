@@ -39,6 +39,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
+
+#if USE_OCAPI == 1
+#include "../backend/sw/gemm_backend.h"
+#endif
+
 #ifdef FUNCTION_PROFILE
 #include "functable.h"
 #endif
@@ -288,7 +293,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
   FLOAT *beta  = (FLOAT*) vbeta;
   FLOAT *a = (FLOAT*) va;
   FLOAT *b = (FLOAT*) vb;
-  FLOAT *c = (FLOAT*) vc;	   
+  FLOAT *c = (FLOAT*) vc;
 #endif
 
   blas_arg_t args;
@@ -330,7 +335,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 #if !defined(COMPLEX) && !defined(DOUBLE) && !defined(BFLOAT16) && defined(USE_SGEMM_KERNEL_DIRECT)
 #ifdef DYNAMIC_ARCH
  if (support_avx512() )
-#endif  
+#endif
   if (beta == 0 && alpha == 1.0 && order == CblasRowMajor && TransA == CblasNoTrans && TransB == CblasNoTrans && SGEMM_DIRECT_PERFORMANT(m,n,k)) {
 	SGEMM_DIRECT(m, n, k, a, lda, b, ldb, c, ldc);
 	return;
@@ -467,6 +472,13 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
   FUNCTION_PROFILE_START();
 
+#if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
+	printf("OCAPI DEFINED\n");
+	printf("modified blas\n");
+	int adasd = gemm_backend_test();
+	printf("value from backend: %d", adasd);
+#else // we fall back on all other backends
+
 #if USE_SMALL_MATRIX_OPT
 #if !defined(COMPLEX)
   if(GEMM_SMALL_MATRIX_PERMIT(transa, transb, args.m, args.n, args.k, *(FLOAT *)(args.alpha), *(FLOAT *)(args.beta))){
@@ -510,7 +522,16 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
  if (args.nthreads == 1) {
 #endif
 
-    printf("INTERFACE, NO SMP, 1 THREAD\n");
+     //printf("INTERFACE, NO SMP, 1 THREAD\n");
+     //printf("sa: %d\n", sa[0]);
+     //printf("sb: %d\n", sb[0]);
+     //printf("m: %d\n", args.m);
+     //printf("n: %d\n", args.n);
+     //printf("k: %d\n", args.k);
+     //printf("GEMM_P: %d\n", GEMM_P);
+     //printf("GEMM_Q: %d\n", GEMM_Q);
+     //printf("transA: %d\n", transa);
+     //printf("transB: %d\n", transb);
     (gemm[(transb << 2) | transa])(&args, NULL, NULL, sa, sb, 0);
 
 #ifdef SMP
@@ -532,7 +553,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
       } else {
 #endif
 
-    printf("modified blas\n");
 	(gemm[16 | (transb << 2) | transa])(&args, NULL, NULL, sa, sb, 0);
 
 #else
@@ -555,6 +575,8 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 #endif
 
  blas_memory_free(buffer);
+
+#endif // end non OCAPI code
 
   FUNCTION_PROFILE_END(COMPSIZE * COMPSIZE, args.m * args.k + args.k * args.n + args.m * args.n, 2 * args.m * args.n * args.k);
 

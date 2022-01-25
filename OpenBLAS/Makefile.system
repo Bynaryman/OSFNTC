@@ -6,7 +6,7 @@
 INCLUDED = 1
 
 ifndef TOPDIR
-TOPDIR = . 
+TOPDIR = .
 endif
 
 # we need to use the host system's architecture for getarch compile options even especially when cross-compiling
@@ -322,7 +322,7 @@ endif
 endif
 
 ifeq ($(SMP), 1)
-USE_LOCKING = 
+USE_LOCKING =
 endif
 
 ifndef NEED_PIC
@@ -344,7 +344,7 @@ OBJCONV = $(CROSS_SUFFIX)objconv
 # When fortran support was either not detected or actively deselected, only build BLAS.
 ifeq ($(NOFORTRAN), 1)
 NO_LAPACK = 1
-override FEXTRALIB = 
+override FEXTRALIB =
 endif
 
 ifeq ($(C_COMPILER), GCC)
@@ -605,15 +605,15 @@ DYNAMIC_CORE = KATMAI COPPERMINE NORTHWOOD PRESCOTT BANIAS \
 endif
 
 ifeq ($(ARCH), x86_64)
-DYNAMIC_CORE = PRESCOTT CORE2 
+DYNAMIC_CORE = PRESCOTT CORE2
 ifeq ($(DYNAMIC_OLDER), 1)
-DYNAMIC_CORE += PENRYN DUNNINGTON 
+DYNAMIC_CORE += PENRYN DUNNINGTON
 endif
-DYNAMIC_CORE += NEHALEM 
+DYNAMIC_CORE += NEHALEM
 ifeq ($(DYNAMIC_OLDER), 1)
-DYNAMIC_CORE += OPTERON OPTERON_SSE3 
+DYNAMIC_CORE += OPTERON OPTERON_SSE3
 endif
-DYNAMIC_CORE += BARCELONA 
+DYNAMIC_CORE += BARCELONA
 ifeq ($(DYNAMIC_OLDER), 1)
 DYNAMIC_CORE += BOBCAT ATOM NANO
 endif
@@ -1148,7 +1148,7 @@ FCOMMON_OPT += -i8
 endif
 endif
 endif
- 
+
 ifeq ($(USE_OPENMP), 1)
 FCOMMON_OPT += -mp
 endif
@@ -1324,6 +1324,23 @@ ifeq ($(USE_OPENMP), 1)
 # USE_SIMPLE_THREADED_LEVEL3 = 1
 # NO_AFFINITY = 1
 CCOMMON_OPT	+= -DUSE_OPENMP
+endif
+
+ifeq ($(USE_OCAPI), 1)
+CFLAGS += -DUSE_OCAPI=1
+$(info $(SNAP_ROOT))
+$(info $(OCSE_ROOT))
+LDFLAGS += -L$(SNAP_ROOT)/software/lib
+ifndef OCSE_ROOT
+OCSE_ROOT=$(abspath $(TOPDIR)/../ocse)
+endif
+#LDFLAGS += -L$(OCSE_ROOT)/libocxl
+#EXTRALIB += -losnap -locxl -lpthread
+#EXTRALIB += -losnap -lpthread
+CFLAGS += -D_SIM_
+LDFLAGS += -L$(OCSE_ROOT)/libocxl -Wl,-rpath,$(OCSE_ROOT)/libocxl
+EXTRALIB += $(OCSE_ROOT)/libocxl/libocxl.so
+EXTRALIB += $(SNAP_ROOT)/software/lib/libosnap.so
 endif
 
 ifeq ($(BIGNUMA), 1)

@@ -1,4 +1,5 @@
 TOPDIR	= ..
+$(info IN EXPORTS)
 
 include ../Makefile.system
 
@@ -69,6 +70,19 @@ endif
 
 ifeq ($(C_COMPILER), PGI)
 EXTRALIB += -pgf90libs
+endif
+
+ifeq ($(USE_OCAPI), 1)
+$(info USE CAPI LINKER)
+$(info $(SNAP_ROOT))
+LDFLAGS += -L$(SNAP_ROOT)/software/lib
+ifndef OCSE_ROOT
+OCSE_ROOT=$(abspath $(TOPDIR)/../ocse)
+endif
+LDFLAGS += -L$(OCSE_ROOT)/libocxl -Wl,-rpath,$(OCSE_ROOT)/libocxl
+EXTRALIB += $(OCSE_ROOT)/libocxl/libocxl.so
+EXTRALIB += $(SNAP_ROOT)/software/lib/libosnap.so
+EXTRALIB += -lpthread
 endif
 
 ifneq (,$(filter 1 2,$(NOFORTRAN)))

@@ -4,6 +4,11 @@ ifeq ($(F_COMPILER),GFORTRAN)
         override FFLAGS += -fno-tree-vectorize
 endif
 
+ifeq ($(USE_OCAPI),1)
+FFLAGS += -DUSE_OCAPI=0
+endif
+
+
 ifeq ($(NOFORTRAN),1)
 all ::
 else

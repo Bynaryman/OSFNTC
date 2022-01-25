@@ -16,6 +16,16 @@ ifneq ($(NO_LAPACK), 1)
 SUBDIRS	+= lapack
 endif
 
+ifeq ($(USE_OCAPI), 1)
+export SNAP_ROOT=$(abspath ../oc-accel)
+$(info $(SNAP_ROOT))
+define USE_OCAPI
+1
+endef
+export USE_OCAPI
+endif
+
+
 RELA =
 ifeq ($(BUILD_RELAPACK), 1)
 RELA = re_lapack
@@ -156,6 +166,9 @@ endif
 endif
 
 libs :
+ifeq ($(USE_OCAPI), 1)
+	make -C backend/sw/ gemm_backend.o
+endif
 ifeq ($(CORE), UNKNOWN)
 	$(error OpenBLAS: Detecting CPU failed. Please set TARGET explicitly, e.g. make TARGET=your_cpu_target. Please read README for the detail.)
 endif
@@ -190,7 +203,7 @@ ifeq ($(DYNAMIC_ARCH), 1)
 	@echo DYNAMIC_ARCH=1 >> Makefile.conf_last
 ifeq ($(DYNAMIC_OLDER), 1)
 	@echo DYNAMIC_OLDER=1 >> Makefile.conf_last
-endif	
+endif
 endif
 ifdef USE_THREAD
 	@echo USE_THREAD=$(USE_THREAD) >>  Makefile.conf_last
@@ -352,7 +365,7 @@ endif
 
 lapack-test :
 	(cd $(NETLIB_LAPACK_DIR)/TESTING && rm -f x* *.out)
-	$(MAKE) -j 1 -C $(NETLIB_LAPACK_DIR)/TESTING/EIG xeigtstc  xeigtstd  xeigtsts  xeigtstz 
+	$(MAKE) -j 1 -C $(NETLIB_LAPACK_DIR)/TESTING/EIG xeigtstc  xeigtstd  xeigtsts  xeigtstz
 	$(MAKE) -j 1 -C $(NETLIB_LAPACK_DIR)/TESTING/LIN xlintstc  xlintstd  xlintstds  xlintstrfd  xlintstrfz  xlintsts  xlintstz  xlintstzc xlintstrfs xlintstrfc
 ifneq ($(CROSS), 1)
 	( cd $(NETLIB_LAPACK_DIR)/INSTALL; $(MAKE) all; ./testlsame; ./testslamch; ./testdlamch; \

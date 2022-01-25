@@ -1,0 +1,5 @@
+gcc -I/opt/OpenBLAS/include time_dgemm.c /opt/OpenBLAS/lib/libopenblas_haswellp-r0.3.18.dev.a -fopenmp -o time_dgemm
+
+the good one with shared object:
+gcc -I/opt/OpenBLAS/include time_dgemm.c ../../libopenblas.so -fopenmp -o time_dgemm
+gcc -I/opt/OpenBLAS/include time_dgemm.c /opt/OpenBLAS/lib/libopenblas.so -fopenmp -o time_dgemm

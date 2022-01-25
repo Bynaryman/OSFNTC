@@ -1,0 +1,1 @@
+gcc -I/opt/OpenBLAS/include time_dgemm.c ../../libopenblas.so -fopenmp -o time_dgemm

@@ -1,6 +1,7 @@
 TOPDIR	= ..
 include $(TOPDIR)/Makefile.system
 
+
 SUPPORT_GEMM3M = 0
 
 ifeq ($(ARCH), x86)
@@ -76,7 +77,7 @@ DBLAS3OBJS    = \
 		dgemm.$(SUFFIX) dsymm.$(SUFFIX) dtrmm.$(SUFFIX) \
 		dtrsm.$(SUFFIX) dsyrk.$(SUFFIX) dsyr2k.$(SUFFIX) \
 		domatcopy.$(SUFFIX) dimatcopy.$(SUFFIX)\
-		dgeadd.$(SUFFIX) 
+		dgeadd.$(SUFFIX)
 
 CBLAS1OBJS    = \
 		caxpy.$(SUFFIX) caxpyc.$(SUFFIX) cswap.$(SUFFIX) \
@@ -105,7 +106,7 @@ CBLAS3OBJS    = \
 		ctrsm.$(SUFFIX) csyrk.$(SUFFIX) csyr2k.$(SUFFIX) \
 	       	chemm.$(SUFFIX) cherk.$(SUFFIX) cher2k.$(SUFFIX) \
 		comatcopy.$(SUFFIX) cimatcopy.$(SUFFIX)\
-		cgeadd.$(SUFFIX) 
+		cgeadd.$(SUFFIX)
 
 ZBLAS1OBJS    = \
 		zaxpy.$(SUFFIX) zaxpyc.$(SUFFIX) zswap.$(SUFFIX) \
@@ -134,7 +135,7 @@ ZBLAS3OBJS    = \
 		ztrsm.$(SUFFIX) zsyrk.$(SUFFIX) zsyr2k.$(SUFFIX) \
 	       	zhemm.$(SUFFIX) zherk.$(SUFFIX) zher2k.$(SUFFIX) \
 		zomatcopy.$(SUFFIX) zimatcopy.$(SUFFIX)\
-		zgeadd.$(SUFFIX) 
+		zgeadd.$(SUFFIX)
 
 ifeq ($(SUPPORT_GEMM3M), 1)
 
@@ -306,7 +307,7 @@ CDBLAS2OBJS   = \
 CDBLAS3OBJS   += \
 	cblas_dgemm.$(SUFFIX) cblas_dsymm.$(SUFFIX) cblas_dtrmm.$(SUFFIX) cblas_dtrsm.$(SUFFIX) \
 	cblas_dsyrk.$(SUFFIX) cblas_dsyr2k.$(SUFFIX) cblas_domatcopy.$(SUFFIX)  cblas_dimatcopy.$(SUFFIX) \
-        cblas_dgeadd.$(SUFFIX) 
+        cblas_dgeadd.$(SUFFIX)
 
 CCBLAS1OBJS   = \
 	cblas_icamax.$(SUFFIX) cblas_icamin.$(SUFFIX) cblas_scasum.$(SUFFIX)  cblas_caxpy.$(SUFFIX) \
@@ -332,7 +333,7 @@ CCBLAS3OBJS   = \
 	cblas_chemm.$(SUFFIX) cblas_cherk.$(SUFFIX) cblas_cher2k.$(SUFFIX) \
 	cblas_comatcopy.$(SUFFIX) cblas_cimatcopy.$(SUFFIX)\
 	cblas_cgeadd.$(SUFFIX)
-	
+
 CXERBLAOBJ = \
 	cblas_xerbla.$(SUFFIX)
 
@@ -502,7 +503,7 @@ ifneq ($(BUILD_COMPLEX),1)
 	CBLASOBJS=
 ifeq ($(BUILD_COMPLEX16),1)
 	CBLASOBJS = cgetrs.$(SUFFIX) cblas_cdotu_sub.$(SUFFIX) cgetrf.$(SUFFIX) \
-	 cpotrf.$(SUFFIX) ctrsm.$(SUFFIX) cblas_cdotc_sub.$(SUFFIX) 
+	 cpotrf.$(SUFFIX) ctrsm.$(SUFFIX) cblas_cdotc_sub.$(SUFFIX)
 endif
 endif
 ifneq ($(BUILD_COMPLEX16),1)
@@ -544,7 +545,7 @@ level1 : $(SBEXTOBJS) $(SBBLAS1OBJS) $(SBLAS1OBJS) $(DBLAS1OBJS) $(QBLAS1OBJS) $
 level2 : $(SBBLAS2OBJS) $(SBLAS2OBJS) $(DBLAS2OBJS) $(QBLAS2OBJS) $(CBLAS2OBJS) $(ZBLAS2OBJS) $(XBLAS2OBJS)
 	$(AR) $(ARFLAGS) -ru $(TOPDIR)/$(LIBNAME) $^
 
-level3 : $(SBBLAS3OBJS) $(SBLAS3OBJS) $(DBLAS3OBJS) $(QBLAS3OBJS) $(CBLAS3OBJS) $(ZBLAS3OBJS) $(XBLAS3OBJS) 
+level3 : $(SBBLAS3OBJS) $(SBLAS3OBJS) $(DBLAS3OBJS) $(QBLAS3OBJS) $(CBLAS3OBJS) $(ZBLAS3OBJS) $(XBLAS3OBJS)
 	$(AR) $(ARFLAGS) -ru $(TOPDIR)/$(LIBNAME) $^
 
 aux :	$(CBAUXOBJS)
@@ -552,6 +553,8 @@ aux :	$(CBAUXOBJS)
 
 $(CSBBLASOBJS) $(CSBBLASOBJS_P) $(CSBLASOBJS) $(CSBLASOBJS_P) $(CDBLASOBJS) $(CDBLASOBJS_P) $(CQBLASOBJS) $(CQBLASOBJS_P) \
 $(CCBLASOBJS) $(CCBLASOBJS_P) $(CZBLASOBJS) $(CZBLASOBJS_P) $(CXBLASOBJS) $(CXBLASOBJS_P) $(CBAUXOBJS_P) : override CFLAGS += -DCBLAS
+
+$(info $(CFLAGS))
 
 srot.$(SUFFIX) srot.$(PSUFFIX) : rot.c
 	$(CC) $(CFLAGS) -c $< -o $(@F)
@@ -2264,7 +2267,7 @@ domatcopy.$(SUFFIX) domatcopy.$(PSUFFIX) : omatcopy.c
 	$(CC) -c $(CFLAGS) $< -o $(@F)
 
 cblas_domatcopy.$(SUFFIX) cblas_domatcopy.$(PSUFFIX) : omatcopy.c
-	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F) 
+	$(CC) -c $(CFLAGS) -DCBLAS $< -o $(@F)
 
 somatcopy.$(SUFFIX) somatcopy.$(PSUFFIX) : omatcopy.c
 	$(CC) -c $(CFLAGS) $< -o $(@F)
