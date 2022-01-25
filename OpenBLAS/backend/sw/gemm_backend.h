@@ -15,20 +15,20 @@
 #include <getopt.h>
 #include <ctype.h>
 
-#include <osnap_tools.h>
-#include <osnap_hls_if.h>
-#include <libosnap.h>
-#include <osnap_types.h>
+// #include <osnap_tools.h>
+// #include <osnap_hls_if.h>
+// #include <libosnap.h>
+// #include <osnap_types.h>
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// #include "../../../oc-accel/software/include/osnap_tools.h"
-// #include "../../../oc-accel/software/include/osnap_hls_if.h"
-// #include "../../../oc-accel/software/include/libosnap.h"
-// #include "../../../oc-accel/software/include/osnap_types.h"
+#include "../../../oc-accel/software/include/osnap_tools.h"
+#include "../../../oc-accel/software/include/osnap_hls_if.h"
+#include "../../../oc-accel/software/include/libosnap.h"
+#include "../../../oc-accel/software/include/osnap_types.h"
 
 /**
 	@brief performs gemm blas3 routine

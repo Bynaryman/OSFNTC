@@ -1430,6 +1430,11 @@ else
 LIBPREFIX = lib$(LIBNAMEBASE)
 endif
 
+ifeq ($(USE_OCAPI), 1)
+LIBPREFIX := $(addsuffix _ocapi,$(LIBPREFIX))
+endif
+
+
 KERNELDIR	= $(TOPDIR)/kernel/$(ARCH)
 
 include $(TOPDIR)/Makefile.$(ARCH)

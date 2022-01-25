@@ -412,4 +412,5 @@ endif
 	@$(MAKE) -C relapack clean
 	@rm -f *.grd Makefile.conf_last config_last.h
 	@(cd $(NETLIB_LAPACK_DIR)/TESTING && rm -f x* *.out testing_results.txt)
+	@rm -f backend/sw/gemm_backend.o
 	@echo Done.
