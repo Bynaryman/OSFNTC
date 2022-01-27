@@ -24,6 +24,11 @@ NPY_RELAXED_STRIDES_CHECKING = (os.environ.get('NPY_RELAXED_STRIDES_CHECKING', "
 NPY_RELAXED_STRIDES_DEBUG = (os.environ.get('NPY_RELAXED_STRIDES_DEBUG', "0") != "0")
 NPY_RELAXED_STRIDES_DEBUG = NPY_RELAXED_STRIDES_DEBUG and NPY_RELAXED_STRIDES_CHECKING
 
+# Set NPY_DISABLE_SVML=1 in the environment to disable the vendored SVML
+# library. This option only has significance on a Linux x86_64 host and is most
+# useful to avoid improperly requiring SVML when cross compiling.
+NPY_DISABLE_SVML = (os.environ.get('NPY_DISABLE_SVML', "0") == "1")
+
 # XXX: ugly, we use a class to avoid calling twice some expensive functions in
 # config.h/numpyconfig.h. I don't see a better way because distutils force
 # config.h generation inside an Extension class, and as such sharing
@@ -68,6 +73,8 @@ def can_link_svml():
     """SVML library is supported only on x86_64 architecture and currently
     only on linux
     """
+    if NPY_DISABLE_SVML:
+        return False
     machine = platform.machine()
     system = platform.system()
     return "x86_64" in machine and system == "Linux"
@@ -411,7 +418,8 @@ def visibility_define(config):
         return ''
 
 def configuration(parent_package='',top_path=None):
-    from numpy.distutils.misc_util import Configuration, dot_join
+    from numpy.distutils.misc_util import (Configuration, dot_join,
+                                           exec_mod_from_location)
     from numpy.distutils.system_info import (get_info, blas_opt_info,
                                              lapack_opt_info)
 
@@ -428,8 +436,8 @@ def configuration(parent_package='',top_path=None):
 
     generate_umath_py = join(codegen_dir, 'generate_umath.py')
     n = dot_join(config.name, 'generate_umath')
-    generate_umath = npy_load_module('_'.join(n.split('.')),
-                                     generate_umath_py, ('.py', 'U', 1))
+    generate_umath = exec_mod_from_location('_'.join(n.split('.')),
+                                            generate_umath_py)
 
     header_dir = 'include/numpy'  # this is relative to config.path_in_package
 
@@ -939,14 +947,14 @@ def configuration(parent_package='',top_path=None):
             join('src', 'multiarray', 'vdot.c'),
             join('src', 'common', 'npy_sort.h.src'),
             join('src', 'npysort', 'quicksort.c.src'),
-            join('src', 'npysort', 'mergesort.c.src'),
-            join('src', 'npysort', 'timsort.c.src'),
-            join('src', 'npysort', 'heapsort.c.src'),
+            join('src', 'npysort', 'mergesort.cpp'),
+            join('src', 'npysort', 'timsort.cpp'),
+            join('src', 'npysort', 'heapsort.cpp'),
             join('src', 'npysort', 'radixsort.cpp'),
             join('src', 'common', 'npy_partition.h.src'),
-            join('src', 'npysort', 'selection.c.src'),
-            join('src', 'common', 'npy_binsearch.h.src'),
-            join('src', 'npysort', 'binsearch.c.src'),
+            join('src', 'npysort', 'selection.cpp'),
+            join('src', 'common', 'npy_binsearch.h'),
+            join('src', 'npysort', 'binsearch.cpp'),
             ]
 
     #######################################################################
@@ -965,6 +973,21 @@ def configuration(parent_package='',top_path=None):
                                                  generate_umath.__file__))
         return []
 
+    def generate_umath_doc_header(ext, build_dir):
+        from numpy.distutils.misc_util import exec_mod_from_location
+
+        target = join(build_dir, header_dir, '_umath_doc_generated.h')
+        dir = os.path.dirname(target)
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+
+        generate_umath_doc_py = join(codegen_dir, 'generate_umath_doc.py')
+        if newer(generate_umath_doc_py, target):
+            n = dot_join(config.name, 'generate_umath_doc')
+            generate_umath_doc = exec_mod_from_location(
+                '_'.join(n.split('.')), generate_umath_doc_py)
+            generate_umath_doc.write_code(target)
+
     umath_src = [
             join('src', 'umath', 'umathmodule.c'),
             join('src', 'umath', 'reduction.c'),
@@ -976,6 +999,7 @@ def configuration(parent_package='',top_path=None):
             join('src', 'umath', 'loops_unary_fp.dispatch.c.src'),
             join('src', 'umath', 'loops_arithm_fp.dispatch.c.src'),
             join('src', 'umath', 'loops_arithmetic.dispatch.c.src'),
+            join('src', 'umath', 'loops_minmax.dispatch.c.src'),
             join('src', 'umath', 'loops_trigonometric.dispatch.c.src'),
             join('src', 'umath', 'loops_umath_fp.dispatch.c.src'),
             join('src', 'umath', 'loops_exponent_log.dispatch.c.src'),
@@ -1004,6 +1028,7 @@ def configuration(parent_package='',top_path=None):
             join('src', 'umath', 'simd.inc.src'),
             join('src', 'umath', 'override.h'),
             join(codegen_dir, 'generate_ufunc_api.py'),
+            join(codegen_dir, 'ufunc_docstrings.py'),
             ]
 
     svml_path = join('numpy', 'core', 'src', 'umath', 'svml')
@@ -1023,6 +1048,7 @@ def configuration(parent_package='',top_path=None):
                                   join(codegen_dir, 'generate_numpy_api.py'),
                                   join('*.py'),
                                   generate_umath_c,
+                                  generate_umath_doc_header,
                                   generate_ufunc_api,
                                  ],
                          depends=deps + multiarray_deps + umath_deps +

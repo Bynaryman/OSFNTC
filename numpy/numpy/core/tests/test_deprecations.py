@@ -257,20 +257,6 @@ class TestDatetime64Timezone(_DeprecationTestCase):
         self.assert_deprecated(np.datetime64, args=(dt,))
 
 
-class TestNonCContiguousViewDeprecation(_DeprecationTestCase):
-    """View of non-C-contiguous arrays deprecated in 1.11.0.
-
-    The deprecation will not be raised for arrays that are both C and F
-    contiguous, as C contiguous is dominant. There are more such arrays
-    with relaxed stride checking than without so the deprecation is not
-    as visible with relaxed stride checking in force.
-    """
-
-    def test_fortran_contiguous(self):
-        self.assert_deprecated(np.ones((2,2)).T.view, args=(complex,))
-        self.assert_deprecated(np.ones((2,2)).T.view, args=(np.int8,))
-
-
 class TestArrayDataAttributeAssignmentDeprecation(_DeprecationTestCase):
     """Assigning the 'data' attribute of an ndarray is unsafe as pointed
      out in gh-7093. Eventually, such assignment should NOT be allowed, but
@@ -378,18 +364,6 @@ class TestPyArray_AS2D(_DeprecationTestCase):
     def test_npy_pyarrayas2d_deprecation(self):
         from numpy.core._multiarray_tests import npy_pyarrayas2d_deprecation
         assert_raises(NotImplementedError, npy_pyarrayas2d_deprecation)
-
-
-class Test_UPDATEIFCOPY(_DeprecationTestCase):
-    """
-    v1.14 deprecates creating an array with the UPDATEIFCOPY flag, use
-    WRITEBACKIFCOPY instead
-    """
-    def test_npy_updateifcopy_deprecation(self):
-        from numpy.core._multiarray_tests import npy_updateifcopy_deprecation
-        arr = np.arange(9).reshape(3, 3)
-        v = arr.T
-        self.assert_deprecated(npy_updateifcopy_deprecation, args=(v,))
 
 
 class TestDatetimeEvent(_DeprecationTestCase):
@@ -1265,3 +1239,14 @@ class TestMemEventHook(_DeprecationTestCase):
         with pytest.warns(DeprecationWarning,
                           match='PyDataMem_SetEventHook is deprecated'):
             ma_tests.test_pydatamem_seteventhook_end()
+
+
+class TestArrayFinalizeNone(_DeprecationTestCase):
+    message = "Setting __array_finalize__ = None"
+
+    def test_use_none_is_deprecated(self):
+        # Deprecated way that ndarray itself showed nothing needs finalizing.
+        class NoFinalize(np.ndarray):
+            __array_finalize__ = None
+
+        self.assert_deprecated(lambda: np.array(1).view(NoFinalize))

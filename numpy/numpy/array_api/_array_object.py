@@ -30,9 +30,11 @@ from ._dtypes import (
 )
 
 from typing import TYPE_CHECKING, Optional, Tuple, Union, Any
+import types
 
 if TYPE_CHECKING:
     from ._typing import Any, PyCapsule, Device, Dtype
+    import numpy.typing as npt
 
 import numpy as np
 
@@ -54,6 +56,7 @@ class Array:
     functions, such as asarray().
 
     """
+    _array: np.ndarray
 
     # Use a custom constructor instead of __init__, as manually initializing
     # this class is not supported API.
@@ -108,11 +111,22 @@ class Array:
             mid = np.array2string(self._array, separator=', ', prefix=prefix, suffix=suffix)
         return prefix + mid + suffix
 
+    # This function is not required by the spec, but we implement it here for
+    # convenience so that np.asarray(np.array_api.Array) will work.
+    def __array__(self, dtype: None | np.dtype[Any] = None) -> npt.NDArray[Any]:
+        """
+        Warning: this method is NOT part of the array API spec. Implementers
+        of other libraries need not include it, and users should not assume it
+        will be present in other implementations.
+
+        """
+        return np.asarray(self._array, dtype=dtype)
+
     # These are various helper functions to make the array behavior match the
     # spec in places where it either deviates from or is more strict than
     # NumPy behavior
 
-    def _check_allowed_dtypes(self, other, dtype_category, op):
+    def _check_allowed_dtypes(self, other: bool | int | float | Array, dtype_category: str, op: str) -> Array:
         """
         Helper function for operators to only allow specific input dtypes
 
@@ -188,7 +202,7 @@ class Array:
         return Array._new(np.array(scalar, self.dtype))
 
     @staticmethod
-    def _normalize_two_args(x1, x2):
+    def _normalize_two_args(x1, x2) -> Tuple[Array, Array]:
         """
         Normalize inputs to two arg functions to fix type promotion rules
 
@@ -403,7 +417,7 @@ class Array:
 
     def __array_namespace__(
         self: Array, /, *, api_version: Optional[str] = None
-    ) -> Any:
+    ) -> types.ModuleType:
         if api_version is not None and not api_version.startswith("2021."):
             raise ValueError(f"Unrecognized array API version: {api_version!r}")
         return array_api
@@ -642,15 +656,13 @@ class Array:
         res = self._array.__pos__()
         return self.__class__._new(res)
 
-    # PEP 484 requires int to be a subtype of float, but __pow__ should not
-    # accept int.
-    def __pow__(self: Array, other: Union[float, Array], /) -> Array:
+    def __pow__(self: Array, other: Union[int, float, Array], /) -> Array:
         """
         Performs the operation __pow__.
         """
         from ._elementwise_functions import pow
 
-        other = self._check_allowed_dtypes(other, "floating-point", "__pow__")
+        other = self._check_allowed_dtypes(other, "numeric", "__pow__")
         if other is NotImplemented:
             return other
         # Note: NumPy's __pow__ does not follow type promotion rules for 0-d
@@ -900,23 +912,23 @@ class Array:
         res = self._array.__ror__(other._array)
         return self.__class__._new(res)
 
-    def __ipow__(self: Array, other: Union[float, Array], /) -> Array:
+    def __ipow__(self: Array, other: Union[int, float, Array], /) -> Array:
         """
         Performs the operation __ipow__.
         """
-        other = self._check_allowed_dtypes(other, "floating-point", "__ipow__")
+        other = self._check_allowed_dtypes(other, "numeric", "__ipow__")
         if other is NotImplemented:
             return other
         self._array.__ipow__(other._array)
         return self
 
-    def __rpow__(self: Array, other: Union[float, Array], /) -> Array:
+    def __rpow__(self: Array, other: Union[int, float, Array], /) -> Array:
         """
         Performs the operation __rpow__.
         """
         from ._elementwise_functions import pow
 
-        other = self._check_allowed_dtypes(other, "floating-point", "__rpow__")
+        other = self._check_allowed_dtypes(other, "numeric", "__rpow__")
         if other is NotImplemented:
             return other
         # Note: NumPy's __pow__ does not follow the spec type promotion rules

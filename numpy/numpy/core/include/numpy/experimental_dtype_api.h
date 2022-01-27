@@ -82,6 +82,15 @@
  * The new DType API is designed in a way to make it potentially useful for
  * alternative "array-like" implementations.  This will require careful
  * exposure of details and functions and is not part of this experimental API.
+ *
+ * Brief (incompatibility) changelog
+ * =================================
+ *
+ * 2. None (only additions).
+ * 3. New `npy_intp *view_offset` argument for `resolve_descriptors`.
+ *    This replaces the `NPY_CAST_IS_VIEW` flag.  It can be set to 0 if the
+ *    operation is a view, and is pre-initialized to `NPY_MIN_INTP` indicating
+ *    that the operation is not a view.
  */
 
 #ifndef NUMPY_CORE_INCLUDE_NUMPY_EXPERIMENTAL_DTYPE_API_H_
@@ -132,7 +141,7 @@ typedef struct {
  * NOTE: Expected changes:
  *       * invert logic of floating point error flag
  *       * probably split runtime and general flags into two
- *       * should possibly not use an enum for typdef for more stable ABI?
+ *       * should possibly not use an enum for typedef for more stable ABI?
  */
 typedef enum {
     /* Flag for whether the GIL is required */
@@ -181,6 +190,12 @@ typedef PyObject *_ufunc_addloop_fromspec_func(
 /*
  * Type of the C promoter function, which must be wrapped into a
  * PyCapsule with name "numpy._ufunc_promoter".
+ *
+ * Note that currently the output dtypes are always NULL unless they are
+ * also part of the signature.  This is an implementation detail and could
+ * change in the future.  However, in general promoters should not have a
+ * need for output dtypes.
+ * (There are potential use-cases, these are currently unsupported.)
  */
 typedef int promoter_function(PyObject *ufunc,
         PyArray_DTypeMeta *op_dtypes[], PyArray_DTypeMeta *signature[],
@@ -200,16 +215,6 @@ typedef int _ufunc_addpromoter_func(
 #define PyUFunc_AddPromoter \
     (*(_ufunc_addpromoter_func *)(__experimental_dtype_api_table[1]))
 
-/*
- * In addition to the normal casting levels, NPY_CAST_IS_VIEW indicates
- * that no cast operation is necessary at all (although a copy usually will be)
- *
- * NOTE: The most likely modification here is to add an additional
- *       `view_offset` output to resolve_descriptors.  If set, it would
- *       indicate both that it is a view and what offset to use.  This means that
- *       e.g. `arr.imag` could be implemented by an ArrayMethod.
- */
-#define NPY_CAST_IS_VIEW _NPY_CAST_IS_VIEW
 
 /*
  * The resolve descriptors function, must be able to handle NULL values for
@@ -230,7 +235,8 @@ typedef NPY_CASTING (resolve_descriptors_function)(
         /* Input descriptors (instances).  Outputs may be NULL. */
         PyArray_Descr **given_descrs,
         /* Exact loop descriptors to use, must not hold references on error */
-        PyArray_Descr **loop_descrs);
+        PyArray_Descr **loop_descrs,
+        npy_intp *view_offset);
 
 /* NOT public yet: Signature needs adapting as external API. */
 #define _NPY_METH_get_loop 2

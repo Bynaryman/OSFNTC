@@ -740,7 +740,6 @@ PyArray_NewFromDescr_int(
     }
     else {
         fa->flags = (flags & ~NPY_ARRAY_WRITEBACKIFCOPY);
-        fa->flags &= ~NPY_ARRAY_UPDATEIFCOPY;
     }
     fa->descr = descr;
     fa->base = (PyObject *)NULL;
@@ -754,14 +753,20 @@ PyArray_NewFromDescr_int(
         }
         fa->strides = fa->dimensions + nd;
 
-        /* Copy dimensions, check them, and find total array size `nbytes` */
+        /*
+         * Copy dimensions, check them, and find total array size `nbytes`
+         *
+         * Note that we ignore 0-length dimensions, to match this in the `free`
+         * calls, `PyArray_NBYTES_ALLOCATED` is a private helper matching this
+         * behaviour, but without overflow checking.
+         */
         for (int i = 0; i < nd; i++) {
             fa->dimensions[i] = dims[i];
 
             if (fa->dimensions[i] == 0) {
                 /*
                  * Compare to PyArray_OverflowMultiplyList that
-                 * returns 0 in this case.
+                 * returns 0 in this case. See also `PyArray_NBYTES_ALLOCATED`.
                  */
                 continue;
             }
@@ -870,16 +875,39 @@ PyArray_NewFromDescr_int(
     /*
      * call the __array_finalize__ method if a subtype was requested.
      * If obj is NULL use Py_None for the Python callback.
+     * For speed, we skip if __array_finalize__ is inherited from ndarray
+     * (since that function does nothing), or, for backward compatibility,
+     * if it is None.
      */
     if (subtype != &PyArray_Type) {
         PyObject *res, *func;
-
-        func = PyObject_GetAttr((PyObject *)fa, npy_ma_str_array_finalize);
+        static PyObject *ndarray_array_finalize = NULL;
+        /* First time, cache ndarray's __array_finalize__ */
+        if (ndarray_array_finalize == NULL) {
+            ndarray_array_finalize = PyObject_GetAttr(
+                (PyObject *)&PyArray_Type, npy_ma_str_array_finalize);
+        }
+        func = PyObject_GetAttr((PyObject *)subtype, npy_ma_str_array_finalize);
         if (func == NULL) {
             goto fail;
         }
+        else if (func == ndarray_array_finalize) {
+            Py_DECREF(func);
+        }
         else if (func == Py_None) {
             Py_DECREF(func);
+            /*
+             * 2022-01-08, NumPy 1.23; when deprecation period is over, remove this
+             * whole stanza so one gets a "NoneType object is not callable" TypeError.
+             */
+            if (DEPRECATE(
+                    "Setting __array_finalize__ = None to indicate no finalization"
+                    "should be done is deprecated.  Instead, just inherit from "
+                    "ndarray or, if that is not possible, explicitly set to "
+                    "ndarray.__array_function__; this will raise a TypeError "
+                    "in the future. (Deprecated since NumPy 1.23)") < 0) {
+                goto fail;
+            }
         }
         else {
             if (PyCapsule_CheckExact(func)) {
@@ -898,7 +926,7 @@ PyArray_NewFromDescr_int(
                 if (obj == NULL) {
                     obj = Py_None;
                 }
-                res = PyObject_CallFunctionObjArgs(func, obj, NULL);
+                res = PyObject_CallFunctionObjArgs(func, (PyObject *)fa, obj, NULL);
                 Py_DECREF(func);
                 if (res == NULL) {
                     goto fail;
@@ -1152,6 +1180,16 @@ _array_from_buffer_3118(PyObject *memoryview)
     npy_intp shape[NPY_MAXDIMS], strides[NPY_MAXDIMS];
 
     view = PyMemoryView_GET_BUFFER(memoryview);
+
+    if (view->suboffsets != NULL) {
+        PyErr_SetString(PyExc_BufferError,
+                "NumPy currently does not support importing buffers which "
+                "include suboffsets as they are not compatible with the NumPy"
+                "memory layout without a copy.  Consider copying the original "
+                "before trying to convert it to a NumPy array.");
+        return NULL;
+    }
+
     nd = view->ndim;
     descr = _dtype_from_buffer_3118(memoryview);
 
@@ -1301,9 +1339,10 @@ _array_from_array_like(PyObject *op,
      * We skip bytes and unicode since they are considered scalars. Unicode
      * would fail but bytes would be incorrectly converted to a uint8 array.
      */
-    if (!PyBytes_Check(op) && !PyUnicode_Check(op)) {
+    if (PyObject_CheckBuffer(op) && !PyBytes_Check(op) && !PyUnicode_Check(op)) {
         PyObject *memoryview = PyMemoryView_FromObject(op);
         if (memoryview == NULL) {
+            /* TODO: Should probably not blanket ignore errors. */
             PyErr_Clear();
         }
         else {
@@ -1598,8 +1637,8 @@ PyArray_FromAny(PyObject *op, PyArray_Descr *newtype, int min_depth,
          * Thus, we check if there is an array included, in that case we
          * give a FutureWarning.
          * When the warning is removed, PyArray_Pack will have to ensure
-         * that that it does not append the dimensions when creating the
-         * subarrays to assign `arr[0] = obj[0]`.
+         * that it does not append the dimensions when creating the subarrays
+         * to assign `arr[0] = obj[0]`.
          */
         int includes_array = 0;
         if (cache != NULL) {
@@ -1710,10 +1749,12 @@ PyArray_FromAny(PyObject *op, PyArray_Descr *newtype, int min_depth,
     if (flags & NPY_ARRAY_ENSURENOCOPY ) {
         PyErr_SetString(PyExc_ValueError,
                 "Unable to avoid copy while creating an array.");
+        Py_DECREF(dtype);
+        npy_free_coercion_cache(cache);
         return NULL;
     }
 
-    if (cache == 0 && newtype != NULL &&
+    if (cache == NULL && newtype != NULL &&
             PyDataType_ISSIGNED(newtype) && PyArray_IsScalar(op, Generic)) {
         assert(ndim == 0);
         /*
@@ -1740,8 +1781,7 @@ PyArray_FromAny(PyObject *op, PyArray_Descr *newtype, int min_depth,
     }
 
     /* There was no array (or array-like) passed in directly. */
-    if ((flags & NPY_ARRAY_WRITEBACKIFCOPY) ||
-            (flags & NPY_ARRAY_UPDATEIFCOPY)) {
+    if (flags & NPY_ARRAY_WRITEBACKIFCOPY) {
         PyErr_SetString(PyExc_TypeError,
                         "WRITEBACKIFCOPY used for non-array input.");
         Py_DECREF(dtype);
@@ -1810,7 +1850,6 @@ PyArray_FromAny(PyObject *op, PyArray_Descr *newtype, int min_depth,
  * NPY_ARRAY_WRITEABLE,
  * NPY_ARRAY_NOTSWAPPED,
  * NPY_ARRAY_ENSURECOPY,
- * NPY_ARRAY_UPDATEIFCOPY,
  * NPY_ARRAY_WRITEBACKIFCOPY,
  * NPY_ARRAY_FORCECAST,
  * NPY_ARRAY_ENSUREARRAY,
@@ -1837,9 +1876,6 @@ PyArray_FromAny(PyObject *op, PyArray_Descr *newtype, int min_depth,
  * Fortran arrays are always behaved (aligned,
  * notswapped, and writeable) and not (C) CONTIGUOUS (if > 1d).
  *
- * NPY_ARRAY_UPDATEIFCOPY is deprecated in favor of
- * NPY_ARRAY_WRITEBACKIFCOPY in 1.14
-
  * NPY_ARRAY_WRITEBACKIFCOPY flag sets this flag in the returned
  * array if a copy is made and the base argument points to the (possibly)
  * misbehaved array. Before returning to python, PyArray_ResolveWritebackIfCopy
@@ -1962,6 +1998,7 @@ PyArray_FromArray(PyArrayObject *arr, PyArray_Descr *newtype, int flags)
         if (flags & NPY_ARRAY_ENSURENOCOPY ) {
             PyErr_SetString(PyExc_ValueError,
                     "Unable to avoid copy while creating an array from given array.");
+            Py_DECREF(newtype);
             return NULL;
         }
 
@@ -1990,31 +2027,8 @@ PyArray_FromArray(PyArrayObject *arr, PyArray_Descr *newtype, int flags)
             return NULL;
         }
 
-        if (flags & NPY_ARRAY_UPDATEIFCOPY) {
-            /* This is the ONLY place the NPY_ARRAY_UPDATEIFCOPY flag
-             * is still used.
-             * Can be deleted once the flag itself is removed
-             */
 
-            /* 2017-Nov-10 1.14 */
-            if (DEPRECATE(
-                    "NPY_ARRAY_UPDATEIFCOPY, NPY_ARRAY_INOUT_ARRAY, and "
-                    "NPY_ARRAY_INOUT_FARRAY are deprecated, use NPY_WRITEBACKIFCOPY, "
-                    "NPY_ARRAY_INOUT_ARRAY2, or NPY_ARRAY_INOUT_FARRAY2 respectively "
-                    "instead, and call PyArray_ResolveWritebackIfCopy before the "
-                    "array is deallocated, i.e. before the last call to Py_DECREF.") < 0) {
-                Py_DECREF(ret);
-                return NULL;
-            }
-            Py_INCREF(arr);
-            if (PyArray_SetWritebackIfCopyBase(ret, arr) < 0) {
-                Py_DECREF(ret);
-                return NULL;
-            }
-            PyArray_ENABLEFLAGS(ret, NPY_ARRAY_UPDATEIFCOPY);
-            PyArray_CLEARFLAGS(ret, NPY_ARRAY_WRITEBACKIFCOPY);
-        }
-        else if (flags & NPY_ARRAY_WRITEBACKIFCOPY) {
+        if (flags & NPY_ARRAY_WRITEBACKIFCOPY) {
             Py_INCREF(arr);
             if (PyArray_SetWritebackIfCopyBase(ret, arr) < 0) {
                 Py_DECREF(ret);
@@ -2114,11 +2128,31 @@ PyArray_FromStructInterface(PyObject *input)
         }
     }
 
+    /* a tuple to hold references */
+    PyObject *refs = PyTuple_New(2);
+    if (!refs) {
+        Py_DECREF(attr);
+        return NULL;
+    }
+
+    /* add a reference to the object sharing the data */
+    Py_INCREF(input);
+    PyTuple_SET_ITEM(refs, 0, input);
+
+    /* take a reference to the PyCapsule containing the PyArrayInterface
+     * structure. When the PyCapsule reference is released the PyCapsule
+     * destructor will free any resources that need to persist while numpy has
+     * access to the data. */
+    PyTuple_SET_ITEM(refs, 1,  attr);
+
+    /* create the numpy array, this call adds a reference to refs */
     PyObject *ret = PyArray_NewFromDescrAndBase(
             &PyArray_Type, thetype,
             inter->nd, inter->shape, inter->strides, inter->data,
-            inter->flags, NULL, input);
-    Py_DECREF(attr);
+            inter->flags, NULL, refs);
+
+    Py_DECREF(refs);
+
     return ret;
 
  fail:

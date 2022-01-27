@@ -52,9 +52,9 @@ $(UTESTBIN): $(OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ ../$(LIBNAME) $(EXTRALIB) $(FEXTRALIB)
 
 run_test: $(UTESTBIN)
-ifneq ($(CROSS), 1)
-	./$(UTESTBIN)
-endif
+# ifneq ($(CROSS), 1)
+# 	./$(UTESTBIN)
+# endif
 
 clean:
 	-rm -f *.o $(UTESTBIN)

@@ -103,7 +103,8 @@ NPY_NO_EXPORT NPY_CASTING
 wrapped_legacy_resolve_descriptors(PyArrayMethodObject *NPY_UNUSED(self),
         PyArray_DTypeMeta *NPY_UNUSED(dtypes[]),
         PyArray_Descr *NPY_UNUSED(given_descrs[]),
-        PyArray_Descr *NPY_UNUSED(loop_descrs[]))
+        PyArray_Descr *NPY_UNUSED(loop_descrs[]),
+        npy_intp *NPY_UNUSED(view_offset))
 {
     PyErr_SetString(PyExc_RuntimeError,
             "cannot use legacy wrapping ArrayMethod without calling the ufunc "
@@ -121,12 +122,43 @@ simple_legacy_resolve_descriptors(
         PyArrayMethodObject *method,
         PyArray_DTypeMeta **dtypes,
         PyArray_Descr **given_descrs,
-        PyArray_Descr **output_descrs)
+        PyArray_Descr **output_descrs,
+        npy_intp *NPY_UNUSED(view_offset))
 {
+    int i = 0;
     int nin = method->nin;
     int nout = method->nout;
 
-    for (int i = 0; i < nin + nout; i++) {
+    if (nin == 2 && nout == 1 && given_descrs[2] != NULL
+            && dtypes[0] == dtypes[2]) {
+        /*
+         * Could be a reduction, which requires `descr[0] is descr[2]`
+         * (identity) at least currently. This is because `op[0] is op[2]`.
+         * (If the output descriptor is not passed, the below works.)
+         */
+        output_descrs[2] = ensure_dtype_nbo(given_descrs[2]);
+        if (output_descrs[2] == NULL) {
+            Py_CLEAR(output_descrs[2]);
+            return -1;
+        }
+        Py_INCREF(output_descrs[2]);
+        output_descrs[0] = output_descrs[2];
+        if (dtypes[1] == dtypes[2]) {
+            /* Same for the second one (accumulation is stricter) */
+            Py_INCREF(output_descrs[2]);
+            output_descrs[1] = output_descrs[2];
+        }
+        else {
+            output_descrs[1] = ensure_dtype_nbo(given_descrs[1]);
+            if (output_descrs[1] == NULL) {
+                i = 2;
+                goto fail;
+            }
+        }
+        return NPY_NO_CASTING;
+    }
+
+    for (; i < nin + nout; i++) {
         if (given_descrs[i] != NULL) {
             output_descrs[i] = ensure_dtype_nbo(given_descrs[i]);
         }
@@ -146,7 +178,7 @@ simple_legacy_resolve_descriptors(
     return NPY_NO_CASTING;
 
   fail:
-    for (int i = 0; i < nin + nout; i++) {
+    for (; i >= 0; i--) {
         Py_CLEAR(output_descrs[i]);
     }
     return -1;
@@ -194,6 +226,10 @@ get_wrapped_legacy_ufunc_loop(PyArrayMethod_Context *context,
     *out_loop = &generic_wrapped_legacy_loop;
     *out_transferdata = get_new_loop_data(
             loop, user_data, (*flags & NPY_METH_REQUIRES_PYAPI) != 0);
+    if (*out_transferdata == NULL) {
+        PyErr_NoMemory();
+        return -1;
+    }
     return 0;
 }
 

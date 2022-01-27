@@ -1,5 +1,4 @@
 Cython==0.29.25
-numpy==1.23.0.dev0+114.g7ca1d1ad0
 PySigmoid==0.3
 PySigmoid.Math==0.3
 PyYAML==6.0

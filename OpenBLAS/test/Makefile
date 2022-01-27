@@ -8,11 +8,18 @@ ifeq ($(USE_OCAPI),1)
 FFLAGS += -DUSE_OCAPI=0
 endif
 
+# original code
+# ifeq ($(NOFORTRAN),1)
+# all ::
+# else
+# all :: level1 level2 level3
+# endif
 
+# modified, lets remove level 3 test to keep using fortran
 ifeq ($(NOFORTRAN),1)
 all ::
 else
-all :: level1 level2 level3
+all :: level1 level2
 endif
 
 ifeq ($(BUILD_SINGLE),1)

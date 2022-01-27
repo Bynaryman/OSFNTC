@@ -234,11 +234,6 @@ class TestFlags:
         assert_equal(self.a.flags.owndata, True)
         assert_equal(self.a.flags.writeable, True)
         assert_equal(self.a.flags.aligned, True)
-        with assert_warns(DeprecationWarning):
-            assert_equal(self.a.flags.updateifcopy, False)
-        with assert_warns(DeprecationWarning):
-            assert_equal(self.a.flags['U'], False)
-            assert_equal(self.a.flags['UPDATEIFCOPY'], False)
         assert_equal(self.a.flags.writebackifcopy, False)
         assert_equal(self.a.flags['X'], False)
         assert_equal(self.a.flags['WRITEBACKIFCOPY'], False)
@@ -5381,19 +5376,8 @@ class TestFlat:
 
         assert_(c.flags.writeable is False)
         assert_(d.flags.writeable is False)
-        # for 1.14 all are set to non-writeable on the way to replacing the
-        # UPDATEIFCOPY array returned for non-contiguous arrays.
         assert_(e.flags.writeable is True)
         assert_(f.flags.writeable is False)
-        with assert_warns(DeprecationWarning):
-            assert_(c.flags.updateifcopy is False)
-        with assert_warns(DeprecationWarning):
-            assert_(d.flags.updateifcopy is False)
-        with assert_warns(DeprecationWarning):
-            assert_(e.flags.updateifcopy is False)
-        with assert_warns(DeprecationWarning):
-            # UPDATEIFCOPY is removed.
-            assert_(f.flags.updateifcopy is False)
         assert_(c.flags.writebackifcopy is False)
         assert_(d.flags.writebackifcopy is False)
         assert_(e.flags.writebackifcopy is False)
@@ -7793,6 +7777,26 @@ class TestNewBufferProtocol:
         # Fix buffer info again before we delete (or we lose the memory)
         _multiarray_tests.corrupt_or_fix_bufferinfo(obj)
 
+    def test_no_suboffsets(self):
+        try:
+            import _testbuffer
+        except ImportError:
+            raise pytest.skip("_testbuffer is not available")
+
+        for shape in [(2, 3), (2, 3, 4)]:
+            data = list(range(np.prod(shape)))
+            buffer = _testbuffer.ndarray(data, shape, format='i',
+                                         flags=_testbuffer.ND_PIL)
+            msg = "NumPy currently does not support.*suboffsets"
+            with pytest.raises(BufferError, match=msg):
+                np.asarray(buffer)
+            with pytest.raises(BufferError, match=msg):
+                np.asarray([buffer])
+
+            # Also check (unrelated and more limited but similar) frombuffer:
+            with pytest.raises(BufferError):
+                np.frombuffer(buffer)
+
 
 class TestArrayCreationCopyArgument(object):
 
@@ -8950,10 +8954,26 @@ class TestArrayFinalize:
         a = np.array(1).view(SavesBase)
         assert_(a.saved_base is a.base)
 
-    def test_bad_finalize(self):
+    def test_bad_finalize1(self):
         class BadAttributeArray(np.ndarray):
             @property
             def __array_finalize__(self):
+                raise RuntimeError("boohoo!")
+
+        with pytest.raises(TypeError, match="not callable"):
+            np.arange(10).view(BadAttributeArray)
+
+    def test_bad_finalize2(self):
+        class BadAttributeArray(np.ndarray):
+            def __array_finalize__(self):
+                raise RuntimeError("boohoo!")
+
+        with pytest.raises(TypeError, match="takes 1 positional"):
+            np.arange(10).view(BadAttributeArray)
+
+    def test_bad_finalize3(self):
+        class BadAttributeArray(np.ndarray):
+            def __array_finalize__(self, obj):
                 raise RuntimeError("boohoo!")
 
         with pytest.raises(RuntimeError, match="boohoo!"):
@@ -8992,6 +9012,14 @@ class TestArrayFinalize:
         del obj_subarray
         break_cycles()
         assert_(obj_ref() is None, "no references should remain")
+
+    def test_can_use_super(self):
+        class SuperFinalize(np.ndarray):
+            def __array_finalize__(self, obj):
+                self.saved_result = super().__array_finalize__(obj)
+
+        a = np.array(1).view(SuperFinalize)
+        assert_(a.saved_result is None)
 
 
 def test_orderconverter_with_nonASCII_unicode_ordering():
@@ -9187,3 +9215,66 @@ def test_getfield():
     pytest.raises(ValueError, a.getfield, 'uint8', -1)
     pytest.raises(ValueError, a.getfield, 'uint8', 16)
     pytest.raises(ValueError, a.getfield, 'uint64', 0)
+
+
+class TestViewDtype:
+    """
+    Verify that making a view of a non-contiguous array works as expected.
+    """
+    def test_smaller_dtype_multiple(self):
+        # x is non-contiguous
+        x = np.arange(10, dtype='<i4')[::2]
+        with pytest.raises(ValueError,
+                           match='the last axis must be contiguous'):
+            x.view('<i2')
+        expected = [[0, 0], [2, 0], [4, 0], [6, 0], [8, 0]]
+        assert_array_equal(x[:, np.newaxis].view('<i2'), expected)
+
+    def test_smaller_dtype_not_multiple(self):
+        # x is non-contiguous
+        x = np.arange(5, dtype='<i4')[::2]
+
+        with pytest.raises(ValueError,
+                           match='the last axis must be contiguous'):
+            x.view('S3')
+        with pytest.raises(ValueError,
+                           match='When changing to a smaller dtype'):
+            x[:, np.newaxis].view('S3')
+
+        # Make sure the problem is because of the dtype size
+        expected = [[b''], [b'\x02'], [b'\x04']]
+        assert_array_equal(x[:, np.newaxis].view('S4'), expected)
+
+    def test_larger_dtype_multiple(self):
+        # x is non-contiguous in the first dimension, contiguous in the last
+        x = np.arange(20, dtype='<i2').reshape(10, 2)[::2, :]
+        expected = np.array([[65536], [327684], [589832],
+                             [851980], [1114128]], dtype='<i4')
+        assert_array_equal(x.view('<i4'), expected)
+
+    def test_larger_dtype_not_multiple(self):
+        # x is non-contiguous in the first dimension, contiguous in the last
+        x = np.arange(20, dtype='<i2').reshape(10, 2)[::2, :]
+        with pytest.raises(ValueError,
+                           match='When changing to a larger dtype'):
+            x.view('S3')
+        # Make sure the problem is because of the dtype size
+        expected = [[b'\x00\x00\x01'], [b'\x04\x00\x05'], [b'\x08\x00\t'],
+                    [b'\x0c\x00\r'], [b'\x10\x00\x11']]
+        assert_array_equal(x.view('S4'), expected)
+
+    def test_f_contiguous(self):
+        # x is F-contiguous
+        x = np.arange(4 * 3, dtype='<i4').reshape(4, 3).T
+        with pytest.raises(ValueError,
+                           match='the last axis must be contiguous'):
+            x.view('<i2')
+
+    def test_non_c_contiguous(self):
+        # x is contiguous in axis=-1, but not C-contiguous in other axes
+        x = np.arange(2 * 3 * 4, dtype='i1').\
+                    reshape(2, 3, 4).transpose(1, 0, 2)
+        expected = [[[256, 770], [3340, 3854]],
+                    [[1284, 1798], [4368, 4882]],
+                    [[2312, 2826], [5396, 5910]]]
+        assert_array_equal(x.view('<i2'), expected)

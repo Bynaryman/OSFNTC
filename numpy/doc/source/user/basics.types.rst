@@ -143,15 +143,15 @@ backward compatibility with older packages such as Numeric.  Some
 documentation may still refer to these, for example::
 
   >>> np.array([1, 2, 3], dtype='f')
-  array([ 1.,  2.,  3.], dtype=float32)
+  array([1.,  2.,  3.], dtype=float32)
 
 We recommend using dtype objects instead.
 
 To convert the type of an array, use the .astype() method (preferred) or
 the type itself as a function. For example: ::
 
-    >>> z.astype(float)                 #doctest: +NORMALIZE_WHITESPACE
-    array([  0.,  1.,  2.])
+    >>> z.astype(float)
+    array([0.,  1.,  2.])
     >>> np.int8(z)
     array([0, 1, 2], dtype=int8)
 
@@ -170,7 +170,7 @@ and its byte-order.  The data type can also be used indirectly to query
 properties of the type, such as whether it is an integer::
 
     >>> d = np.dtype(int)
-    >>> d
+    >>> d #doctest: +SKIP
     dtype('int32')
 
     >>> np.issubdtype(d, np.integer)
@@ -258,8 +258,8 @@ compiler's ``long double`` available as ``np.longdouble`` (and
 numpy provides with ``np.finfo(np.longdouble)``.
 
 NumPy does not provide a dtype with more precision than C's
-``long double``\\; in particular, the 128-bit IEEE quad precision
-data type (FORTRAN's ``REAL*16``\\) is not available.
+``long double``; in particular, the 128-bit IEEE quad precision
+data type (FORTRAN's ``REAL*16``) is not available.
 
 For efficient memory alignment, ``np.longdouble`` is usually stored
 padded with zero bits, either to 96 or 128 bits. Which is more efficient

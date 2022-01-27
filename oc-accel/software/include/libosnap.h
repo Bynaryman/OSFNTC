@@ -34,7 +34,8 @@
  */
 
 #include <stdint.h>
-#include <osnap_types.h>
+// #include <osnap_types.h>
+#include "osnap_types.h"
 
 /**
  * During the workshop we discovered that there are two potential

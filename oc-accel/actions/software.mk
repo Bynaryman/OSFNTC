@@ -15,13 +15,12 @@
 #
 
 include $(SNAP_ROOT)/software/config.mk
-
 # Environment variable OCSE_ROOT defined by hardware setup scripts. Use default path if OCSE_ROOT is not defined.
 ifndef OCSE_ROOT
 OCSE_ROOT=$(abspath ../../ocse)
 endif
 
-CFLAGS += -std=c99
+CFLAGS += -std=c99 -fPIC
 
 LDLIBS += -losnap -locxl -lpthread
 

@@ -1430,9 +1430,10 @@ else
 LIBPREFIX = lib$(LIBNAMEBASE)
 endif
 
-ifeq ($(USE_OCAPI), 1)
-LIBPREFIX := $(addsuffix _ocapi,$(LIBPREFIX))
-endif
+# does not work
+# ifeq ($(USE_OCAPI), 1)
+# LIBPREFIX := $(addsuffix _ocapi,$(LIBPREFIX))
+# endif
 
 
 KERNELDIR	= $(TOPDIR)/kernel/$(ARCH)

@@ -1,1 +1,1 @@
-xsim {top} -autoloadwcfg -tclbatch {./20211217_100504/xsrun.tcl}
+xsim {top} -autoloadwcfg -tclbatch {./20220126_191635/xsrun.tcl}

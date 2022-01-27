@@ -43,10 +43,18 @@ ztestl3o = c_zblas3.o c_z3chke.o auxiliary.o c_xerbla.o constant.o
 ztestl3o_3m = c_zblas3_3m.o c_z3chke_3m.o auxiliary.o c_xerbla.o constant.o
 
 
+# original code
+# ifeq ($(NOFORTRAN),1)
+# all ::
+# else
+# all :: all1 all2 all3
+# endif
+
+# modified, lets remove all 3 test to keep using fortran
 ifeq ($(NOFORTRAN),1)
 all ::
 else
-all :: all1 all2 all3
+all :: all1 all2
 endif
 
 ifeq ($(BUILD_SINGLE),1)
@@ -71,7 +79,7 @@ ifeq ($(BUILD_SINGLE),1)
 endif
 ifeq ($(BUILD_DOUBLE),1)
 	OMP_NUM_THREADS=2 ./xdcblat1
-endif	
+endif
 ifeq ($(BUILD_COMPLEX),1)
 	OMP_NUM_THREADS=2 ./xccblat1
 endif

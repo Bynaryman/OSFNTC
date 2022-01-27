@@ -56,7 +56,7 @@ object_ufunc_loop_selector(PyUFuncObject *ufunc,
                             int *out_needs_api)
 {
     *out_innerloop = ufunc->functions[0];
-    *out_innerloopdata = ufunc->data[0];
+    *out_innerloopdata = (ufunc->data == NULL) ? NULL : ufunc->data[0];
     *out_needs_api = 1;
 
     return 0;
@@ -288,8 +288,8 @@ int initumath(PyObject *m)
     PyModule_AddObject(m, "NZERO", PyFloat_FromDouble(NPY_NZERO));
     PyModule_AddObject(m, "NAN", PyFloat_FromDouble(NPY_NAN));
 
-    s = PyDict_GetItemString(d, "true_divide");
-    PyDict_SetItemString(d, "divide", s);
+    s = PyDict_GetItemString(d, "divide");
+    PyDict_SetItemString(d, "true_divide", s);
 
     s = PyDict_GetItemString(d, "conjugate");
     s2 = PyDict_GetItemString(d, "remainder");
