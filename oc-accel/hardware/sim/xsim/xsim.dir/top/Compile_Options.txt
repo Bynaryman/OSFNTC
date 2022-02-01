@@ -1,1 +1,0 @@
---relax --debug "typical" --mt "auto" -L "work" -L "unisims_ver" -L "unimacro_ver" -L "secureip" -L "xpm" --snapshot "top" "work.top" "work.glbl" -log "elaborate.log" -sv_lib "libdpi" -sv_root "." 
