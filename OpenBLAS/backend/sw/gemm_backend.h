@@ -217,17 +217,32 @@ static void save_file_from_memory(const char *filename, char **output_data, size
     fclose(FD_dst);
 }
 
+/**
+  @param void *a
+  @param void *b
+  @param void *c
+  @param void *alpha
+  @param void *beta
+  @param BLASLONG m
+  @param BLASLONG n
+  @param BLASLONG k
+  @param BLASLONG lda
+  @param BLASLONG ldb
+  @param BLASLONG ldc
 
-static int gemm_backend_test () {
+**/
+
+static int gemm_backend_test (unsigned int N, unsigned int M, unsigned int P) {
     size_t Data_Size_in = 0;
     size_t Data_Size_out = 0;
     char * mem_in = NULL;
     char * mem_out = NULL;
     char path_in[1000];
     char path_out[1000];
-    unsigned int N=0;
-    unsigned int M=0;
-    unsigned int P=0;
+    printf("printing from backend, receiving N=%d;M=%d;P=%d from python\n", N,M,P);
+    // unsigned int N=0;
+    // unsigned int M=0;
+    // unsigned int P=0;
     unsigned int B=0;
    // unsigned int posit_width=0;
 

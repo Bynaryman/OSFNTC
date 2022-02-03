@@ -473,9 +473,9 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
   FUNCTION_PROFILE_START();
 
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
-	printf("OCAPI DEFINED\n");
-	printf("modified blas\n");
-	int adasd = gemm_backend_test();
+	// printf("OCAPI DEFINED\n");
+	// printf("modified blas\n");
+	int adasd = gemm_backend_test(args.m, args.n,args.k);
 	printf("value from backend: %d", adasd);
 #else // we fall back on all other backends
 
