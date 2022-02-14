@@ -16,3 +16,5 @@ export USE_NUMPY=0
 export USE_FBGEMM=0
 export USE_CUDNN=0
 export USE_CUDA=0
+export USE_KINETO=1
+export USE_BREAKPAD=0

@@ -322,7 +322,8 @@ static int gemm_backend_test (unsigned int N, unsigned int M, unsigned int P) {
     M = 31;
     P = 32;
     B = 1;
-   strcpy(path_in, "/home/binaryman/Documents/PhD/fpga/P9_OPC/snap/actions/SA_s3/sw/in_float_batched.raw");
+   strcpy(path_in, "/home/lledoux/Documents/high_end/oc-accel/actions/cgemm/sw/in_float_batched.raw");
+   //strcpy(path_in, "/home/binaryman/Documents/PhD/fpga/P9_OPC/snap/actions/SA_s3/sw/in_float_batched.raw");
    strcpy(path_out, "/tmp/tmp.txt");
 
     // Allocation of memories (in and out)

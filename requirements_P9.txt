@@ -1,0 +1,17 @@
+astunparse==1.6.3
+certifi==2021.10.8
+charset-normalizer==2.0.12
+Cython==0.29.24
+future==0.18.2
+idna==3.3
+numpy==1.23.0.dev0+596.g8840d950e
+Pillow==6.2.2
+pkg-resources==0.0.0
+psutil==5.9.0
+PyYAML==6.0
+requests==2.27.1
+six==1.16.0
+torch==1.9.0a0+gitd69c22d
+torchvision==0.2.2.post3
+typing-extensions==3.10.0.2
+urllib3==1.26.8
