@@ -1,7 +1,7 @@
 #!/bin/bash
 N=32
 M=31
-arithmetic_in="posit:16:0"
+arithmetic_in="ieee:8:7"
 arithmetic_out="same"
 # msb="254"
 # lsb="-298"

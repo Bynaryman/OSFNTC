@@ -1,65 +1,4 @@
 --------------------------------------------------------------------------------
---                LZOCShifter_14_to_14_counting_16_F200_uid18
--- VHDL generated for VirtexUltrascalePlus @ 200MHz
--- This operator is part of the Infinite Virtual Library FloPoCoLib
--- All rights reserved 
--- Authors: Florent de Dinechin, Bogdan Pasca (2007-2016)
---------------------------------------------------------------------------------
--- Pipeline depth: 0 cycles
--- Clock period (ns): 5
--- Target frequency (MHz): 200
--- Input signals: I OZb
--- Output signals: Count O
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
-library std;
-use std.textio.all;
-library work;
-
-entity LZOCShifter_14_to_14_counting_16_F200_uid18 is
-    port (clk : in std_logic;
-          I : in  std_logic_vector(13 downto 0);
-          OZb : in  std_logic;
-          Count : out  std_logic_vector(3 downto 0);
-          O : out  std_logic_vector(13 downto 0)   );
-end entity;
-
-architecture arch of LZOCShifter_14_to_14_counting_16_F200_uid18 is
-signal level4 :  std_logic_vector(13 downto 0);
-signal sozb :  std_logic;
-signal count3 :  std_logic;
-signal level3 :  std_logic_vector(13 downto 0);
-signal count2 :  std_logic;
-signal level2 :  std_logic_vector(13 downto 0);
-signal count1 :  std_logic;
-signal level1 :  std_logic_vector(13 downto 0);
-signal count0 :  std_logic;
-signal level0 :  std_logic_vector(13 downto 0);
-signal sCount :  std_logic_vector(3 downto 0);
-begin
-   level4 <= I ;
-   sozb<= OZb;
-   count3<= '1' when level4(13 downto 6) = (13 downto 6=>sozb) else '0';
-   level3<= level4(13 downto 0) when count3='0' else level4(5 downto 0) & (7 downto 0 => '0');
-
-   count2<= '1' when level3(13 downto 10) = (13 downto 10=>sozb) else '0';
-   level2<= level3(13 downto 0) when count2='0' else level3(9 downto 0) & (3 downto 0 => '0');
-
-   count1<= '1' when level2(13 downto 12) = (13 downto 12=>sozb) else '0';
-   level1<= level2(13 downto 0) when count1='0' else level2(11 downto 0) & (1 downto 0 => '0');
-
-   count0<= '1' when level1(13 downto 13) = (13 downto 13=>sozb) else '0';
-   level0<= level1(13 downto 0) when count0='0' else level1(12 downto 0) & (0 downto 0 => '0');
-
-   O <= level0;
-   sCount <= count3 & count2 & count1 & count0;
-   Count <= sCount;
-end architecture;
-
---------------------------------------------------------------------------------
 --                                Arith_to_S3
 -- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
@@ -83,60 +22,30 @@ library work;
 entity Arith_to_S3 is
     port (clk : in std_logic;
           arith_i : in  std_logic_vector(15 downto 0);
-          S3_o : out  std_logic_vector(20 downto 0)   );
+          S3_o : out  std_logic_vector(17 downto 0)   );
 end entity;
 
 architecture arch of Arith_to_S3 is
-   component LZOCShifter_14_to_14_counting_16_F200_uid18 is
-      port ( clk : in std_logic;
-             I : in  std_logic_vector(13 downto 0);
-             OZb : in  std_logic;
-             Count : out  std_logic_vector(3 downto 0);
-             O : out  std_logic_vector(13 downto 0)   );
-   end component;
-
 signal sign :  std_logic;
-signal regime_check :  std_logic;
-signal remainder :  std_logic_vector(13 downto 0);
-signal not_s :  std_logic;
-signal zero_NAR :  std_logic;
-signal is_NAR :  std_logic;
+signal exponent :  std_logic_vector(7 downto 0);
+signal fraction :  std_logic_vector(6 downto 0);
+signal isNaN :  std_logic;
+signal isExpSubnormalZero :  std_logic;
 signal implicit :  std_logic;
-signal neg_count :  std_logic;
-signal lzCount :  std_logic_vector(3 downto 0);
-signal usefulBits :  std_logic_vector(13 downto 0);
-signal extended_neg_count :  std_logic_vector(4 downto 0);
-signal comp2_range_count :  std_logic_vector(4 downto 0);
-signal fraction :  std_logic_vector(12 downto 0);
-signal exponent :  std_logic_vector(4 downto 0);
-signal biased_exponent :  std_logic_vector(4 downto 0);
+signal final_scale :  std_logic_vector(7 downto 0);
 begin
-sign <= arith_i(15);
-regime_check <= arith_i(14);
-remainder <= arith_i(13 downto 0);
-not_s <= not sign;
-zero_NAR <= not regime_check when remainder="00000000000000" else '0';
-is_NAR <= zero_NAR and sign;
-implicit <= not(zero_NAR and not_s);
-neg_count <= not (sign xor regime_check);
-   lzoc: LZOCShifter_14_to_14_counting_16_F200_uid18
-      port map ( clk  => clk,
-                 I => remainder,
-                 OZb => regime_check,
-                 Count => lzCount,
-                 O => usefulBits);
-with neg_count  select  extended_neg_count <= 
-   "11111" when '1', 
-   "00000" when others;
-comp2_range_count <= extended_neg_count xor ("0" & lzCount);
-fraction <= usefulBits(12 downto 0);
-exponent <= comp2_range_count;
-biased_exponent <= exponent + 14;
-S3_o <= is_NAR & sign & implicit & fraction & biased_exponent;
+   sign <= arith_i(15);
+   exponent <= arith_i(14 downto 7);
+   fraction <= arith_i(6 downto 0);
+   isNaN <= '1' when exponent="11111111" else '0';
+   isExpSubnormalZero <= '1' when exponent="00000000" else '0';
+   implicit <= not(isExpSubnormalZero);
+   final_scale<= "00000001" when isExpSubnormalZero= '1' else  exponent;
+   S3_o <= isNaN & sign & implicit & fraction & final_scale;
 end architecture;
 
 --------------------------------------------------------------------------------
---             LZOCShifterSticky_32_to_15_counting_64_F200_uid22
+--              LZOCShifterSticky_32_to_9_counting_64_F200_uid20
 -- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
@@ -156,46 +65,46 @@ library std;
 use std.textio.all;
 library work;
 
-entity LZOCShifterSticky_32_to_15_counting_64_F200_uid22 is
+entity LZOCShifterSticky_32_to_9_counting_64_F200_uid20 is
     port (clk : in std_logic;
           I : in  std_logic_vector(31 downto 0);
           OZb : in  std_logic;
           Count : out  std_logic_vector(5 downto 0);
-          O : out  std_logic_vector(14 downto 0);
+          O : out  std_logic_vector(8 downto 0);
           Sticky : out  std_logic   );
 end entity;
 
-architecture arch of LZOCShifterSticky_32_to_15_counting_64_F200_uid22 is
+architecture arch of LZOCShifterSticky_32_to_9_counting_64_F200_uid20 is
 signal level6 :  std_logic_vector(31 downto 0);
-signal sozb, sozb_d1 :  std_logic;
+signal sozb :  std_logic;
 signal sticky6 :  std_logic;
-signal count5, count5_d1 :  std_logic;
+signal count5 :  std_logic;
 signal level5 :  std_logic_vector(31 downto 0);
 signal sticky_high_5 :  std_logic;
 signal sticky_low_5 :  std_logic;
 signal sticky5 :  std_logic;
-signal count4, count4_d1 :  std_logic;
+signal count4 :  std_logic;
 signal level4 :  std_logic_vector(30 downto 0);
 signal sticky_high_4 :  std_logic;
 signal sticky_low_4 :  std_logic;
 signal sticky4 :  std_logic;
-signal count3, count3_d1 :  std_logic;
-signal level3 :  std_logic_vector(21 downto 0);
+signal count3 :  std_logic;
+signal level3 :  std_logic_vector(15 downto 0);
 signal sticky_high_3 :  std_logic;
 signal sticky_low_3 :  std_logic;
 signal sticky3 :  std_logic;
-signal count2, count2_d1 :  std_logic;
-signal level2 :  std_logic_vector(17 downto 0);
+signal count2 :  std_logic;
+signal level2 :  std_logic_vector(11 downto 0);
 signal sticky_high_2 :  std_logic;
 signal sticky_low_2 :  std_logic;
 signal sticky2 :  std_logic;
-signal count1, count1_d1 :  std_logic;
-signal level1, level1_d1 :  std_logic_vector(15 downto 0);
+signal count1 :  std_logic;
+signal level1, level1_d1 :  std_logic_vector(9 downto 0);
 signal sticky_high_1 :  std_logic;
 signal sticky_low_1 :  std_logic;
 signal sticky1, sticky1_d1 :  std_logic;
-signal count0 :  std_logic;
-signal level0 :  std_logic_vector(14 downto 0);
+signal count0, count0_d1 :  std_logic;
+signal level0 :  std_logic_vector(8 downto 0);
 signal sticky_high_0, sticky_high_0_d1 :  std_logic;
 signal sticky_low_0, sticky_low_0_d1 :  std_logic;
 signal sticky0 :  std_logic;
@@ -204,14 +113,9 @@ begin
    process(clk)
       begin
          if clk'event and clk = '1' then
-            sozb_d1 <=  sozb;
-            count5_d1 <=  count5;
-            count4_d1 <=  count4;
-            count3_d1 <=  count3;
-            count2_d1 <=  count2;
-            count1_d1 <=  count1;
             level1_d1 <=  level1;
             sticky1_d1 <=  sticky1;
+            count0_d1 <=  count0;
             sticky_high_0_d1 <=  sticky_high_0;
             sticky_low_0_d1 <=  sticky_low_0;
          end if;
@@ -232,93 +136,33 @@ begin
    sticky4<= sticky5 or sticky_high_4 when count4='0' else sticky5 or sticky_low_4;
 
    count3<= '1' when level4(30 downto 23) = (30 downto 23=>sozb) else '0';
-   level3<= level4(30 downto 9) when count3='0' else level4(22 downto 1);
-   sticky_high_3<= '0'when level4(8 downto 0) = CONV_STD_LOGIC_VECTOR(0,9) else '1';
-   sticky_low_3<= '0'when level4(0 downto 0) = CONV_STD_LOGIC_VECTOR(0,1) else '1';
+   level3<= level4(30 downto 15) when count3='0' else level4(22 downto 7);
+   sticky_high_3<= '0'when level4(14 downto 0) = CONV_STD_LOGIC_VECTOR(0,15) else '1';
+   sticky_low_3<= '0'when level4(6 downto 0) = CONV_STD_LOGIC_VECTOR(0,7) else '1';
    sticky3<= sticky4 or sticky_high_3 when count3='0' else sticky4 or sticky_low_3;
 
-   count2<= '1' when level3(21 downto 18) = (21 downto 18=>sozb) else '0';
-   level2<= level3(21 downto 4) when count2='0' else level3(17 downto 0);
+   count2<= '1' when level3(15 downto 12) = (15 downto 12=>sozb) else '0';
+   level2<= level3(15 downto 4) when count2='0' else level3(11 downto 0);
    sticky_high_2<= '0'when level3(3 downto 0) = CONV_STD_LOGIC_VECTOR(0,4) else '1';
    sticky_low_2<= '0';
    sticky2<= sticky3 or sticky_high_2 when count2='0' else sticky3 or sticky_low_2;
 
-   count1<= '1' when level2(17 downto 16) = (17 downto 16=>sozb) else '0';
-   level1<= level2(17 downto 2) when count1='0' else level2(15 downto 0);
+   count1<= '1' when level2(11 downto 10) = (11 downto 10=>sozb) else '0';
+   level1<= level2(11 downto 2) when count1='0' else level2(9 downto 0);
    sticky_high_1<= '0'when level2(1 downto 0) = CONV_STD_LOGIC_VECTOR(0,2) else '1';
    sticky_low_1<= '0';
    sticky1<= sticky2 or sticky_high_1 when count1='0' else sticky2 or sticky_low_1;
 
-   count0<= '1' when level1_d1(15 downto 15) = (15 downto 15=>sozb_d1) else '0';
-   level0<= level1_d1(15 downto 1) when count0='0' else level1_d1(14 downto 0);
+   count0<= '1' when level1(9 downto 9) = (9 downto 9=>sozb) else '0';
+   level0<= level1_d1(9 downto 1) when count0_d1='0' else level1_d1(8 downto 0);
    sticky_high_0<= '0'when level1(0 downto 0) = CONV_STD_LOGIC_VECTOR(0,1) else '1';
    sticky_low_0<= '0';
-   sticky0<= sticky1_d1 or sticky_high_0_d1 when count0='0' else sticky1_d1 or sticky_low_0_d1;
+   sticky0<= sticky1_d1 or sticky_high_0_d1 when count0_d1='0' else sticky1_d1 or sticky_low_0_d1;
 
    O <= level0;
-   sCount <= count5_d1 & count4_d1 & count3_d1 & count2_d1 & count1_d1 & count0;
+   sCount <= count5 & count4 & count3 & count2 & count1 & count0;
    Count <= sCount;
    Sticky <= sticky0;
-end architecture;
-
---------------------------------------------------------------------------------
---                 RightShifterSticky16_by_max_16_F200_uid24
--- VHDL generated for VirtexUltrascalePlus @ 200MHz
--- This operator is part of the Infinite Virtual Library FloPoCoLib
--- All rights reserved 
--- Authors: Bogdan Pasca (2008-2011), Florent de Dinechin (2008-2019)
---------------------------------------------------------------------------------
--- Pipeline depth: 0 cycles
--- Clock period (ns): 5
--- Target frequency (MHz): 200
--- Input signals: X S padBit
--- Output signals: R Sticky
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
-library std;
-use std.textio.all;
-library work;
-
-entity RightShifterSticky16_by_max_16_F200_uid24 is
-    port (clk : in std_logic;
-          X : in  std_logic_vector(15 downto 0);
-          S : in  std_logic_vector(4 downto 0);
-          padBit : in  std_logic;
-          R : out  std_logic_vector(15 downto 0);
-          Sticky : out  std_logic   );
-end entity;
-
-architecture arch of RightShifterSticky16_by_max_16_F200_uid24 is
-signal ps :  std_logic_vector(4 downto 0);
-signal level5 :  std_logic_vector(15 downto 0);
-signal stk4 :  std_logic;
-signal level4 :  std_logic_vector(15 downto 0);
-signal stk3 :  std_logic;
-signal level3 :  std_logic_vector(15 downto 0);
-signal stk2 :  std_logic;
-signal level2 :  std_logic_vector(15 downto 0);
-signal stk1 :  std_logic;
-signal level1 :  std_logic_vector(15 downto 0);
-signal stk0 :  std_logic;
-signal level0 :  std_logic_vector(15 downto 0);
-begin
-   ps<= S;
-   level5<= X;
-   stk4 <= '1' when (level5(15 downto 0)/="0000000000000000" and ps(4)='1')   else '0';
-   level4 <=  level5 when  ps(4)='0'    else (15 downto 0 => padBit) ;
-   stk3 <= '1' when (level4(7 downto 0)/="00000000" and ps(3)='1') or stk4 ='1'   else '0';
-   level3 <=  level4 when  ps(3)='0'    else (7 downto 0 => padBit) & level4(15 downto 8);
-   stk2 <= '1' when (level3(3 downto 0)/="0000" and ps(2)='1') or stk3 ='1'   else '0';
-   level2 <=  level3 when  ps(2)='0'    else (3 downto 0 => padBit) & level3(15 downto 4);
-   stk1 <= '1' when (level2(1 downto 0)/="00" and ps(1)='1') or stk2 ='1'   else '0';
-   level1 <=  level2 when  ps(1)='0'    else (1 downto 0 => padBit) & level2(15 downto 2);
-   stk0 <= '1' when (level1(0 downto 0)/="0" and ps(0)='1') or stk1 ='1'   else '0';
-   level0 <=  level1 when  ps(0)='0'    else (0 downto 0 => padBit) & level1(15 downto 1);
-   R <= level0;
-   Sticky <= stk0;
 end architecture;
 
 --------------------------------------------------------------------------------
@@ -350,55 +194,44 @@ entity l2a is
 end entity;
 
 architecture arch of l2a is
-   component LZOCShifterSticky_32_to_15_counting_64_F200_uid22 is
+   component LZOCShifterSticky_32_to_9_counting_64_F200_uid20 is
       port ( clk : in std_logic;
              I : in  std_logic_vector(31 downto 0);
              OZb : in  std_logic;
              Count : out  std_logic_vector(5 downto 0);
-             O : out  std_logic_vector(14 downto 0);
+             O : out  std_logic_vector(8 downto 0);
              Sticky : out  std_logic   );
    end component;
 
-   component RightShifterSticky16_by_max_16_F200_uid24 is
-      port ( clk : in std_logic;
-             X : in  std_logic_vector(15 downto 0);
-             S : in  std_logic_vector(4 downto 0);
-             padBit : in  std_logic;
-             R : out  std_logic_vector(15 downto 0);
-             Sticky : out  std_logic   );
-   end component;
-
-signal rippled_carry :  std_logic_vector(31 downto 0);
-signal count_bit, count_bit_d1 :  std_logic;
-signal count_lzoc_o :  std_logic_vector(5 downto 0);
-signal frac_lzoc_o :  std_logic_vector(14 downto 0);
+signal rippled_carry, rippled_carry_d1 :  std_logic_vector(31 downto 0);
+signal count_bit :  std_logic;
+signal count_lzoc_o, count_lzoc_o_d1 :  std_logic_vector(5 downto 0);
+signal frac_lzoc_o :  std_logic_vector(8 downto 0);
 signal sticky_lzoc_o :  std_logic;
 signal unbiased_exp :  std_logic_vector(5 downto 0);
-signal fraction :  std_logic_vector(13 downto 0);
-signal bin_regime :  std_logic_vector(4 downto 0);
-signal first_regime :  std_logic;
-signal regime :  std_logic_vector(4 downto 0);
-signal pad :  std_logic;
-signal start_regime :  std_logic_vector(1 downto 0);
-signal in_shift :  std_logic_vector(15 downto 0);
-signal extended_posit :  std_logic_vector(15 downto 0);
-signal pre_sticky :  std_logic;
-signal truncated_posit :  std_logic_vector(14 downto 0);
-signal lsb :  std_logic;
-signal guard :  std_logic;
-signal sticky :  std_logic;
-signal round_bit :  std_logic;
-signal is_NAR, is_NAR_d1 :  std_logic;
-signal rounded_reg_exp_frac :  std_logic_vector(14 downto 0);
-signal rounded_posit :  std_logic_vector(15 downto 0);
+signal bias, bias_d1 :  std_logic_vector(7 downto 0);
+signal biased_exp :  std_logic_vector(7 downto 0);
+signal not_frac_lzoc :  std_logic_vector(8 downto 0);
+signal unrounded_frac :  std_logic_vector(8 downto 0);
+signal G :  std_logic;
+signal R :  std_logic;
+signal S :  std_logic;
+signal round_up :  std_logic;
+signal rounded_frac :  std_logic_vector(8 downto 0);
+signal post_round_ovf :  std_logic;
+signal post_rounding_exp :  std_logic_vector(8 downto 0);
+signal nan_out :  std_logic;
 signal is_zero :  std_logic;
-signal rounded_posit_zero :  std_logic_vector(15 downto 0);
+signal final_exp :  std_logic_vector(7 downto 0);
+signal isNaN_d1 :  std_logic;
 begin
    process(clk)
       begin
          if clk'event and clk = '1' then
-            count_bit_d1 <=  count_bit;
-            is_NAR_d1 <=  is_NAR;
+            rippled_carry_d1 <=  rippled_carry;
+            count_lzoc_o_d1 <=  count_lzoc_o;
+            bias_d1 <=  bias;
+            isNaN_d1 <=  isNaN;
          end if;
       end process;
 
@@ -406,7 +239,7 @@ begin
 
 --------------- Count 0/1 while shifting and sticky computation ---------------
    count_bit <= rippled_carry(31);
-   lzoc_inst: LZOCShifterSticky_32_to_15_counting_64_F200_uid22
+   lzoc_inst: LZOCShifterSticky_32_to_9_counting_64_F200_uid20
       port map ( clk  => clk,
                  I => rippled_carry,
                  OZb => count_bit,
@@ -415,40 +248,33 @@ begin
                  Sticky => sticky_lzoc_o);
 
 ----------- Compute unbiased exponent from msb weigth and lzoc count -----------
-   unbiased_exp <= CONV_STD_LOGIC_VECTOR(7,6) - (count_lzoc_o);
-   fraction <= frac_lzoc_o (13 downto 0);
-bin_regime<= unbiased_exp(4 downto 0);
-first_regime<= unbiased_exp(5);
-with first_regime  select  regime <= 
-   bin_regime when '0', 
-   not bin_regime when others;
-pad<= not(first_regime xor count_bit_d1);
-with pad  select  start_regime <= 
-   "01" when '0', 
-   "10" when others; 
-in_shift <= start_regime & fraction;
-   rshift: RightShifterSticky16_by_max_16_F200_uid24
-      port map ( clk  => clk,
-                 S => regime,
-                 X => in_shift,
-                 padBit => pad,
-                 R => extended_posit,
-                 Sticky => pre_sticky);
-truncated_posit<= extended_posit(15 downto 1);
-lsb <= extended_posit(1);
-guard <= extended_posit(0);
-sticky <= fraction(0) or pre_sticky or sticky_lzoc_o;
-round_bit<= guard and (sticky or lsb);
-is_NAR<= isNaN;
-rounded_reg_exp_frac<= truncated_posit + round_bit;
-rounded_posit <= count_bit_d1 & rounded_reg_exp_frac;
-is_zero <= count_lzoc_o(5) when fraction="00000000000000" else '0';
-rounded_posit_zero<= rounded_posit when is_zero= '0' else "0000000000000000";
-arith_o <= rounded_posit_zero when is_NAR_d1 = '0' else "1000000000000000";
+   unbiased_exp <= CONV_STD_LOGIC_VECTOR(7,6) - (count_lzoc_o_d1);
+   bias <= CONV_STD_LOGIC_VECTOR(127,8);
+   biased_exp <= bias_d1 + ((7 downto 6 => unbiased_exp(5)) & unbiased_exp);
+
+-------------------------- Convert in sign magnitude --------------------------
+   not_frac_lzoc <=  frac_lzoc_o xor (8 downto 0 => rippled_carry_d1(31));
+   unrounded_frac <= "0" & not_frac_lzoc(7 downto 0) + rippled_carry_d1(31);
+
+---- G and R should be taken from lzoc adding one size more frac lzoc width ----
+------------------------------- GRS rounding up -------------------------------
+   G <= unrounded_frac(1);
+   R <= unrounded_frac(0);
+   S <= sticky_lzoc_o;
+   round_up <= G and (R or S);
+   rounded_frac <= unrounded_frac + round_up;
+   post_round_ovf <= rounded_frac(8);
+
+------------------------- post rounding scale handling -------------------------
+   post_rounding_exp <= ("0" & biased_exp) + (rounded_frac(8));
+   nan_out <= post_rounding_exp(8) or isNaN_d1;
+is_zero <= count_lzoc_o_d1(5) when rounded_frac="000000000" else '0';
+   final_exp <= post_rounding_exp(7 downto 0) when nan_out = '0' else "11111111";
+   arith_o <= (rippled_carry_d1(31) & final_exp(7 downto 0) & rounded_frac(7 downto 1)) when is_zero = '0' else "0000000000000000";
 end architecture;
 
 --------------------------------------------------------------------------------
---                         DSPBlock_14x14_F200_uid35
+--                          DSPBlock_8x8_F200_uid31
 -- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
@@ -467,26 +293,26 @@ library std;
 use std.textio.all;
 library work;
 
-entity DSPBlock_14x14_F200_uid35 is
+entity DSPBlock_8x8_F200_uid31 is
     port (clk : in std_logic;
-          X : in  std_logic_vector(13 downto 0);
-          Y : in  std_logic_vector(13 downto 0);
-          R : out  std_logic_vector(27 downto 0)   );
+          X : in  std_logic_vector(7 downto 0);
+          Y : in  std_logic_vector(7 downto 0);
+          R : out  std_logic_vector(15 downto 0)   );
 end entity;
 
-architecture arch of DSPBlock_14x14_F200_uid35 is
-signal Mint :  std_logic_vector(27 downto 0);
-signal M :  std_logic_vector(27 downto 0);
-signal Rtmp :  std_logic_vector(27 downto 0);
+architecture arch of DSPBlock_8x8_F200_uid31 is
+signal Mint :  std_logic_vector(15 downto 0);
+signal M :  std_logic_vector(15 downto 0);
+signal Rtmp :  std_logic_vector(15 downto 0);
 begin
    Mint <= std_logic_vector(unsigned(X) * unsigned(Y)); -- multiplier
-   M <= Mint(27 downto 0);
+   M <= Mint(15 downto 0);
    Rtmp <= M;
    R <= Rtmp;
 end architecture;
 
 --------------------------------------------------------------------------------
---                          IntMultiplier_F200_uid31
+--                          IntMultiplier_F200_uid27
 -- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
@@ -505,114 +331,90 @@ library std;
 use std.textio.all;
 library work;
 
-entity IntMultiplier_F200_uid31 is
+entity IntMultiplier_F200_uid27 is
     port (clk : in std_logic;
-          X : in  std_logic_vector(13 downto 0);
-          Y : in  std_logic_vector(13 downto 0);
-          R : out  std_logic_vector(27 downto 0)   );
+          X : in  std_logic_vector(7 downto 0);
+          Y : in  std_logic_vector(7 downto 0);
+          R : out  std_logic_vector(15 downto 0)   );
 end entity;
 
-architecture arch of IntMultiplier_F200_uid31 is
-   component DSPBlock_14x14_F200_uid35 is
+architecture arch of IntMultiplier_F200_uid27 is
+   component DSPBlock_8x8_F200_uid31 is
       port ( clk : in std_logic;
-             X : in  std_logic_vector(13 downto 0);
-             Y : in  std_logic_vector(13 downto 0);
-             R : out  std_logic_vector(27 downto 0)   );
+             X : in  std_logic_vector(7 downto 0);
+             Y : in  std_logic_vector(7 downto 0);
+             R : out  std_logic_vector(15 downto 0)   );
    end component;
 
-signal XX_m32 :  std_logic_vector(13 downto 0);
-signal YY_m32 :  std_logic_vector(13 downto 0);
-signal tile_0_X :  std_logic_vector(13 downto 0);
-signal tile_0_Y :  std_logic_vector(13 downto 0);
-signal tile_0_output :  std_logic_vector(27 downto 0);
-signal tile_0_filtered_output :  std_logic_vector(27 downto 0);
-signal bh33_w0_0 :  std_logic;
-signal bh33_w1_0 :  std_logic;
-signal bh33_w2_0 :  std_logic;
-signal bh33_w3_0 :  std_logic;
-signal bh33_w4_0 :  std_logic;
-signal bh33_w5_0 :  std_logic;
-signal bh33_w6_0 :  std_logic;
-signal bh33_w7_0 :  std_logic;
-signal bh33_w8_0 :  std_logic;
-signal bh33_w9_0 :  std_logic;
-signal bh33_w10_0 :  std_logic;
-signal bh33_w11_0 :  std_logic;
-signal bh33_w12_0 :  std_logic;
-signal bh33_w13_0 :  std_logic;
-signal bh33_w14_0 :  std_logic;
-signal bh33_w15_0 :  std_logic;
-signal bh33_w16_0 :  std_logic;
-signal bh33_w17_0 :  std_logic;
-signal bh33_w18_0 :  std_logic;
-signal bh33_w19_0 :  std_logic;
-signal bh33_w20_0 :  std_logic;
-signal bh33_w21_0 :  std_logic;
-signal bh33_w22_0 :  std_logic;
-signal bh33_w23_0 :  std_logic;
-signal bh33_w24_0 :  std_logic;
-signal bh33_w25_0 :  std_logic;
-signal bh33_w26_0 :  std_logic;
-signal bh33_w27_0 :  std_logic;
-signal tmp_bitheapResult_bh33_27 :  std_logic_vector(27 downto 0);
-signal bitheapResult_bh33 :  std_logic_vector(27 downto 0);
+signal XX_m28 :  std_logic_vector(7 downto 0);
+signal YY_m28 :  std_logic_vector(7 downto 0);
+signal tile_0_X :  std_logic_vector(7 downto 0);
+signal tile_0_Y :  std_logic_vector(7 downto 0);
+signal tile_0_output :  std_logic_vector(15 downto 0);
+signal tile_0_filtered_output :  std_logic_vector(15 downto 0);
+signal bh29_w0_0 :  std_logic;
+signal bh29_w1_0 :  std_logic;
+signal bh29_w2_0 :  std_logic;
+signal bh29_w3_0 :  std_logic;
+signal bh29_w4_0 :  std_logic;
+signal bh29_w5_0 :  std_logic;
+signal bh29_w6_0 :  std_logic;
+signal bh29_w7_0 :  std_logic;
+signal bh29_w8_0 :  std_logic;
+signal bh29_w9_0 :  std_logic;
+signal bh29_w10_0 :  std_logic;
+signal bh29_w11_0 :  std_logic;
+signal bh29_w12_0 :  std_logic;
+signal bh29_w13_0 :  std_logic;
+signal bh29_w14_0 :  std_logic;
+signal bh29_w15_0 :  std_logic;
+signal tmp_bitheapResult_bh29_15 :  std_logic_vector(15 downto 0);
+signal bitheapResult_bh29 :  std_logic_vector(15 downto 0);
 begin
-   XX_m32 <= X ;
-   YY_m32 <= Y ;
-   tile_0_X <= X(13 downto 0);
-   tile_0_Y <= Y(13 downto 0);
-   tile_0_mult: DSPBlock_14x14_F200_uid35
+   XX_m28 <= X ;
+   YY_m28 <= Y ;
+   tile_0_X <= X(7 downto 0);
+   tile_0_Y <= Y(7 downto 0);
+   tile_0_mult: DSPBlock_8x8_F200_uid31
       port map ( clk  => clk,
                  X => tile_0_X,
                  Y => tile_0_Y,
                  R => tile_0_output);
 
-tile_0_filtered_output <= tile_0_output(27 downto 0);
-   bh33_w0_0 <= tile_0_filtered_output(0);
-   bh33_w1_0 <= tile_0_filtered_output(1);
-   bh33_w2_0 <= tile_0_filtered_output(2);
-   bh33_w3_0 <= tile_0_filtered_output(3);
-   bh33_w4_0 <= tile_0_filtered_output(4);
-   bh33_w5_0 <= tile_0_filtered_output(5);
-   bh33_w6_0 <= tile_0_filtered_output(6);
-   bh33_w7_0 <= tile_0_filtered_output(7);
-   bh33_w8_0 <= tile_0_filtered_output(8);
-   bh33_w9_0 <= tile_0_filtered_output(9);
-   bh33_w10_0 <= tile_0_filtered_output(10);
-   bh33_w11_0 <= tile_0_filtered_output(11);
-   bh33_w12_0 <= tile_0_filtered_output(12);
-   bh33_w13_0 <= tile_0_filtered_output(13);
-   bh33_w14_0 <= tile_0_filtered_output(14);
-   bh33_w15_0 <= tile_0_filtered_output(15);
-   bh33_w16_0 <= tile_0_filtered_output(16);
-   bh33_w17_0 <= tile_0_filtered_output(17);
-   bh33_w18_0 <= tile_0_filtered_output(18);
-   bh33_w19_0 <= tile_0_filtered_output(19);
-   bh33_w20_0 <= tile_0_filtered_output(20);
-   bh33_w21_0 <= tile_0_filtered_output(21);
-   bh33_w22_0 <= tile_0_filtered_output(22);
-   bh33_w23_0 <= tile_0_filtered_output(23);
-   bh33_w24_0 <= tile_0_filtered_output(24);
-   bh33_w25_0 <= tile_0_filtered_output(25);
-   bh33_w26_0 <= tile_0_filtered_output(26);
-   bh33_w27_0 <= tile_0_filtered_output(27);
+tile_0_filtered_output <= tile_0_output(15 downto 0);
+   bh29_w0_0 <= tile_0_filtered_output(0);
+   bh29_w1_0 <= tile_0_filtered_output(1);
+   bh29_w2_0 <= tile_0_filtered_output(2);
+   bh29_w3_0 <= tile_0_filtered_output(3);
+   bh29_w4_0 <= tile_0_filtered_output(4);
+   bh29_w5_0 <= tile_0_filtered_output(5);
+   bh29_w6_0 <= tile_0_filtered_output(6);
+   bh29_w7_0 <= tile_0_filtered_output(7);
+   bh29_w8_0 <= tile_0_filtered_output(8);
+   bh29_w9_0 <= tile_0_filtered_output(9);
+   bh29_w10_0 <= tile_0_filtered_output(10);
+   bh29_w11_0 <= tile_0_filtered_output(11);
+   bh29_w12_0 <= tile_0_filtered_output(12);
+   bh29_w13_0 <= tile_0_filtered_output(13);
+   bh29_w14_0 <= tile_0_filtered_output(14);
+   bh29_w15_0 <= tile_0_filtered_output(15);
 
    -- Adding the constant bits
       -- All the constant bits are zero, nothing to add
 
-   tmp_bitheapResult_bh33_27 <= bh33_w27_0 & bh33_w26_0 & bh33_w25_0 & bh33_w24_0 & bh33_w23_0 & bh33_w22_0 & bh33_w21_0 & bh33_w20_0 & bh33_w19_0 & bh33_w18_0 & bh33_w17_0 & bh33_w16_0 & bh33_w15_0 & bh33_w14_0 & bh33_w13_0 & bh33_w12_0 & bh33_w11_0 & bh33_w10_0 & bh33_w9_0 & bh33_w8_0 & bh33_w7_0 & bh33_w6_0 & bh33_w5_0 & bh33_w4_0 & bh33_w3_0 & bh33_w2_0 & bh33_w1_0 & bh33_w0_0;
-   bitheapResult_bh33 <= tmp_bitheapResult_bh33_27;
-   R <= bitheapResult_bh33(27 downto 0);
+   tmp_bitheapResult_bh29_15 <= bh29_w15_0 & bh29_w14_0 & bh29_w13_0 & bh29_w12_0 & bh29_w11_0 & bh29_w10_0 & bh29_w9_0 & bh29_w8_0 & bh29_w7_0 & bh29_w6_0 & bh29_w5_0 & bh29_w4_0 & bh29_w3_0 & bh29_w2_0 & bh29_w1_0 & bh29_w0_0;
+   bitheapResult_bh29 <= tmp_bitheapResult_bh29_15;
+   R <= bitheapResult_bh29(15 downto 0);
 end architecture;
 
 --------------------------------------------------------------------------------
---                     LeftShifter28_by_max_63_F200_uid38
+--                    LeftShifter16_by_max_511_F200_uid34
 -- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
 -- Authors: Bogdan Pasca (2008-2011), Florent de Dinechin (2008-2019)
 --------------------------------------------------------------------------------
--- Pipeline depth: 0 cycles
+-- Pipeline depth: 1 cycles
 -- Clock period (ns): 5
 -- Target frequency (MHz): 200
 -- Input signals: X S padBit
@@ -626,38 +428,48 @@ library std;
 use std.textio.all;
 library work;
 
-entity LeftShifter28_by_max_63_F200_uid38 is
+entity LeftShifter16_by_max_511_F200_uid34 is
     port (clk : in std_logic;
-          X : in  std_logic_vector(27 downto 0);
-          S : in  std_logic_vector(5 downto 0);
+          X : in  std_logic_vector(15 downto 0);
+          S : in  std_logic_vector(8 downto 0);
           padBit : in  std_logic;
-          R : out  std_logic_vector(90 downto 0)   );
+          R : out  std_logic_vector(526 downto 0)   );
 end entity;
 
-architecture arch of LeftShifter28_by_max_63_F200_uid38 is
-signal ps :  std_logic_vector(5 downto 0);
-signal level0 :  std_logic_vector(27 downto 0);
-signal level1 :  std_logic_vector(28 downto 0);
-signal level2 :  std_logic_vector(30 downto 0);
-signal level3 :  std_logic_vector(34 downto 0);
-signal level4 :  std_logic_vector(42 downto 0);
-signal level5 :  std_logic_vector(58 downto 0);
-signal level6 :  std_logic_vector(90 downto 0);
+architecture arch of LeftShifter16_by_max_511_F200_uid34 is
+signal ps, ps_d1 :  std_logic_vector(8 downto 0);
+signal level0 :  std_logic_vector(15 downto 0);
+signal level1 :  std_logic_vector(16 downto 0);
+signal level2 :  std_logic_vector(18 downto 0);
+signal level3 :  std_logic_vector(22 downto 0);
+signal level4 :  std_logic_vector(30 downto 0);
+signal level5 :  std_logic_vector(46 downto 0);
+signal level6 :  std_logic_vector(78 downto 0);
+signal level7, level7_d1 :  std_logic_vector(142 downto 0);
+signal level8 :  std_logic_vector(270 downto 0);
+signal level9 :  std_logic_vector(526 downto 0);
+signal padBit_d1 :  std_logic;
 begin
+   process(clk)
+      begin
+         if clk'event and clk = '1' then
+            ps_d1 <=  ps;
+            level7_d1 <=  level7;
+            padBit_d1 <=  padBit;
+         end if;
+      end process;
    ps<= S;
    level0<= X;
    level1<= level0 & (0 downto 0 => '0') when ps(0)= '1' else     (0 downto 0 => padBit) & level0;
-   R <= level6(90 downto 0);
    level2<= level1 & (1 downto 0 => '0') when ps(1)= '1' else     (1 downto 0 => padBit) & level1;
-   R <= level6(90 downto 0);
    level3<= level2 & (3 downto 0 => '0') when ps(2)= '1' else     (3 downto 0 => padBit) & level2;
-   R <= level6(90 downto 0);
    level4<= level3 & (7 downto 0 => '0') when ps(3)= '1' else     (7 downto 0 => padBit) & level3;
-   R <= level6(90 downto 0);
    level5<= level4 & (15 downto 0 => '0') when ps(4)= '1' else     (15 downto 0 => padBit) & level4;
-   R <= level6(90 downto 0);
    level6<= level5 & (31 downto 0 => '0') when ps(5)= '1' else     (31 downto 0 => padBit) & level5;
-   R <= level6(90 downto 0);
+   level7<= level6 & (63 downto 0 => '0') when ps(6)= '1' else     (63 downto 0 => padBit) & level6;
+   level8<= level7_d1 & (127 downto 0 => '0') when ps_d1(7)= '1' else     (127 downto 0 => padBit_d1) & level7_d1;
+   level9<= level8 & (255 downto 0 => '0') when ps_d1(8)= '1' else     (255 downto 0 => padBit_d1) & level8;
+   R <= level9(526 downto 0);
 end architecture;
 
 --------------------------------------------------------------------------------
@@ -667,7 +479,7 @@ end architecture;
 -- All rights reserved 
 -- Authors: Ledoux Louis - BSC / UPC
 --------------------------------------------------------------------------------
--- Pipeline depth: 1 cycles
+-- Pipeline depth: 2 cycles
 -- Clock period (ns): 5
 -- Target frequency (MHz): 200
 -- Input signals: S3_x S3_y FTZ EOB
@@ -683,8 +495,8 @@ library work;
 
 entity s3fdp is
     port (clk, rst : in std_logic;
-          S3_x : in  std_logic_vector(20 downto 0);
-          S3_y : in  std_logic_vector(20 downto 0);
+          S3_x : in  std_logic_vector(17 downto 0);
+          S3_y : in  std_logic_vector(17 downto 0);
           FTZ : in  std_logic;
           EOB : in  std_logic;
           A : out  std_logic_vector(31 downto 0);
@@ -693,41 +505,41 @@ entity s3fdp is
 end entity;
 
 architecture arch of s3fdp is
-   component IntMultiplier_F200_uid31 is
+   component IntMultiplier_F200_uid27 is
       port ( clk : in std_logic;
-             X : in  std_logic_vector(13 downto 0);
-             Y : in  std_logic_vector(13 downto 0);
-             R : out  std_logic_vector(27 downto 0)   );
+             X : in  std_logic_vector(7 downto 0);
+             Y : in  std_logic_vector(7 downto 0);
+             R : out  std_logic_vector(15 downto 0)   );
    end component;
 
-   component LeftShifter28_by_max_63_F200_uid38 is
+   component LeftShifter16_by_max_511_F200_uid34 is
       port ( clk : in std_logic;
-             X : in  std_logic_vector(27 downto 0);
-             S : in  std_logic_vector(5 downto 0);
+             X : in  std_logic_vector(15 downto 0);
+             S : in  std_logic_vector(8 downto 0);
              padBit : in  std_logic;
-             R : out  std_logic_vector(90 downto 0)   );
+             R : out  std_logic_vector(526 downto 0)   );
    end component;
 
 signal sign_X :  std_logic;
 signal sign_Y :  std_logic;
-signal sign_M :  std_logic;
+signal sign_M, sign_M_d1 :  std_logic;
 signal isNaN_X :  std_logic;
 signal isNaN_Y :  std_logic;
-signal isNaN_M :  std_logic;
-signal significand_X :  std_logic_vector(13 downto 0);
-signal significand_Y :  std_logic_vector(13 downto 0);
-signal significand_product :  std_logic_vector(27 downto 0);
-signal scale_X_biased :  std_logic_vector(4 downto 0);
-signal scale_Y_biased :  std_logic_vector(4 downto 0);
-signal scale_product_twice_biased :  std_logic_vector(5 downto 0);
-signal significand_product_cpt1 :  std_logic_vector(27 downto 0);
-signal shift_value :  std_logic_vector(5 downto 0);
-signal shifted_significand :  std_logic_vector(90 downto 0);
-signal too_small :  std_logic;
-signal too_big :  std_logic;
+signal isNaN_M, isNaN_M_d1 :  std_logic;
+signal significand_X :  std_logic_vector(7 downto 0);
+signal significand_Y :  std_logic_vector(7 downto 0);
+signal significand_product :  std_logic_vector(15 downto 0);
+signal scale_X_biased :  std_logic_vector(7 downto 0);
+signal scale_Y_biased :  std_logic_vector(7 downto 0);
+signal scale_product_twice_biased :  std_logic_vector(8 downto 0);
+signal significand_product_cpt1 :  std_logic_vector(15 downto 0);
+signal shift_value :  std_logic_vector(8 downto 0);
+signal shifted_significand :  std_logic_vector(526 downto 0);
+signal too_small, too_small_d1 :  std_logic;
+signal too_big, too_big_d1 :  std_logic;
 signal ext_summand1c :  std_logic_vector(31 downto 0);
-signal not_ftz :  std_logic;
-signal EOB_internal, EOB_internal_d1 :  std_logic;
+signal not_ftz, not_ftz_d1 :  std_logic;
+signal EOB_internal, EOB_internal_d1, EOB_internal_d2 :  std_logic;
 signal not_ftz_sync :  std_logic;
 signal carry_0_sync :  std_logic;
 signal EOB_internal_delayed :  std_logic;
@@ -744,7 +556,13 @@ begin
    process(clk)
       begin
          if clk'event and clk = '1' then
+            sign_M_d1 <=  sign_M;
+            isNaN_M_d1 <=  isNaN_M;
+            too_small_d1 <=  too_small;
+            too_big_d1 <=  too_big;
+            not_ftz_d1 <=  not_ftz;
             EOB_internal_d1 <=  EOB_internal;
+            EOB_internal_d2 <=  EOB_internal_d1;
          end if;
       end process;
    process(clk, rst)
@@ -758,35 +576,35 @@ begin
          end if;
       end process;
 --------------------------- sign product processing ---------------------------
-   sign_X <= S3_x(19);
-   sign_Y <= S3_y(19);
+   sign_X <= S3_x(16);
+   sign_Y <= S3_y(16);
    sign_M <= sign_X xor sign_Y;
 
 ---------------------------- NaN product processing ----------------------------
-   isNaN_X <= S3_x(20);
-   isNaN_Y <= S3_y(20);
+   isNaN_X <= S3_x(17);
+   isNaN_Y <= S3_y(17);
    isNaN_M <= isNaN_X or isNaN_Y;
 
 ---------------------------- significand processing ----------------------------
-   significand_X <= S3_x(18 downto 5);
-   significand_Y <= S3_y(18 downto 5);
-   significand_product_inst: IntMultiplier_F200_uid31
+   significand_X <= S3_x(15 downto 8);
+   significand_Y <= S3_y(15 downto 8);
+   significand_product_inst: IntMultiplier_F200_uid27
       port map ( clk  => clk,
                  X => significand_X,
                  Y => significand_Y,
                  R => significand_product);
 
 ------------------------------- scale processing -------------------------------
-   scale_X_biased <= S3_x(4 downto 0);
-   scale_Y_biased <= S3_y(4 downto 0);
+   scale_X_biased <= S3_x(7 downto 0);
+   scale_Y_biased <= S3_y(7 downto 0);
    scale_product_twice_biased <= ("0" & scale_X_biased) + ("0" & scale_Y_biased);
 
 --------------------------- pre-shift xoring (cpt1) ---------------------------
    significand_product_cpt1 <= significand_product when sign_M='0' else not(significand_product);
 
 ------------------------- significand product shifting -------------------------
-   shift_value <= (scale_product_twice_biased) - (3);
-   significand_product_shifter_inst: LeftShifter28_by_max_63_F200_uid38
+   shift_value <= (scale_product_twice_biased) - (229);
+   significand_product_shifter_inst: LeftShifter16_by_max_511_F200_uid34
       port map ( clk  => clk,
                  S => shift_value,
                  X => significand_product_cpt1,
@@ -794,21 +612,21 @@ begin
                  R => shifted_significand);
 
 -------------- detect too low scale for this specific scratchpad --------------
-   too_small <= '1' when (shift_value(5)='1') else '0';
+   too_small <= '1' when (shift_value(8)='1') else '0';
 
 -------------- detect too big scale for this specific scratchpad --------------
    too_big <= '1' when (unsigned(shift_value) > 29 and too_small='0') else '0';
 
 --------------- shifted significand part select to form summand ---------------
-   ext_summand1c <= "00000000000000000000000000000000" when too_small='1' else shifted_significand(58 downto 27);
+   ext_summand1c <= "00000000000000000000000000000000" when too_small_d1='1' else shifted_significand(46 downto 15);
 ----------------------------- Syncing some signals -----------------------------
    not_ftz <= not FTZ;
    EOB_internal <= EOB;
-   not_ftz_sync <= not_ftz;
-   carry_0_sync <= sign_M;
-   EOB_internal_delayed <= EOB_internal_d1;
-   isNaN_M_sync <= isNaN_M;
-   too_big_sync <= too_big;
+   not_ftz_sync <= not_ftz_d1;
+   carry_0_sync <= sign_M_d1;
+   EOB_internal_delayed <= EOB_internal_d2;
+   isNaN_M_sync <= isNaN_M_d1;
+   too_big_sync <= too_big_d1;
 
 ------------------------------ Output isNaN latch ------------------------------
    isNaN_o <= (too_big_sync or isNaN_M_sync or isNaN_delayed) when not_ftz_sync='1' else '0';
@@ -855,13 +673,13 @@ library work;
 
 entity PE_S3 is
     port (clk, rst : in std_logic;
-          s3_row_i_A : in  std_logic_vector(20 downto 0);
-          s3_col_j_B : in  std_logic_vector(20 downto 0);
+          s3_row_i_A : in  std_logic_vector(17 downto 0);
+          s3_col_j_B : in  std_logic_vector(17 downto 0);
           C_out : in  std_logic_vector(32 downto 0);
           SOB : in  std_logic;
           EOB : in  std_logic;
-          s3_row_im1_A : out  std_logic_vector(20 downto 0);
-          s3_col_jm1_B : out  std_logic_vector(20 downto 0);
+          s3_row_im1_A : out  std_logic_vector(17 downto 0);
+          s3_col_jm1_B : out  std_logic_vector(17 downto 0);
           SOB_Q : out  std_logic;
           EOB_Q : out  std_logic;
           C_out_Q : out  std_logic_vector(32 downto 0)   );
@@ -870,8 +688,8 @@ end entity;
 architecture arch of PE_S3 is
    component s3fdp is
       port ( clk, rst : in std_logic;
-             S3_x : in  std_logic_vector(20 downto 0);
-             S3_y : in  std_logic_vector(20 downto 0);
+             S3_x : in  std_logic_vector(17 downto 0);
+             S3_y : in  std_logic_vector(17 downto 0);
              FTZ : in  std_logic;
              EOB : in  std_logic;
              A : out  std_logic_vector(31 downto 0);
@@ -879,8 +697,8 @@ architecture arch of PE_S3 is
              isNaN : out  std_logic   );
    end component;
 
-signal s3_row_i_A_q :  std_logic_vector(20 downto 0);
-signal s3_col_j_B_q :  std_logic_vector(20 downto 0);
+signal s3_row_i_A_q :  std_logic_vector(17 downto 0);
+signal s3_col_j_B_q :  std_logic_vector(17 downto 0);
 signal sob_delayed :  std_logic;
 signal eob_delayed :  std_logic;
 signal mux_C_out, mux_C_out_d1, mux_C_out_d2 :  std_logic_vector(32 downto 0);
@@ -888,8 +706,8 @@ signal mux_C_out_HSSD :  std_logic_vector(32 downto 0);
 signal isNaN_s3fdp :  std_logic;
 signal EOB_s3fdp :  std_logic;
 signal A_s3fdp :  std_logic_vector(31 downto 0);
-signal s3_row_i_A_d1 :  std_logic_vector(20 downto 0);
-signal s3_col_j_B_d1 :  std_logic_vector(20 downto 0);
+signal s3_row_i_A_d1 :  std_logic_vector(17 downto 0);
+signal s3_col_j_B_d1 :  std_logic_vector(17 downto 0);
 signal SOB_d1 :  std_logic;
 signal EOB_d1 :  std_logic;
 begin
@@ -961,8 +779,8 @@ library work;
 
 entity SystolicArrayKernel is
     port (clk, rst : in std_logic;
-          rowsA : in  std_logic_vector(671 downto 0);
-          colsB : in  std_logic_vector(650 downto 0);
+          rowsA : in  std_logic_vector(575 downto 0);
+          colsB : in  std_logic_vector(557 downto 0);
           SOB : in  std_logic;
           EOB : in  std_logic;
           colsC : out  std_logic_vector(1022 downto 0);
@@ -972,21 +790,21 @@ end entity;
 architecture arch of SystolicArrayKernel is
    component PE_S3 is
       port ( clk, rst : in std_logic;
-             s3_row_i_A : in  std_logic_vector(20 downto 0);
-             s3_col_j_B : in  std_logic_vector(20 downto 0);
+             s3_row_i_A : in  std_logic_vector(17 downto 0);
+             s3_col_j_B : in  std_logic_vector(17 downto 0);
              C_out : in  std_logic_vector(32 downto 0);
              SOB : in  std_logic;
              EOB : in  std_logic;
-             s3_row_im1_A : out  std_logic_vector(20 downto 0);
-             s3_col_jm1_B : out  std_logic_vector(20 downto 0);
+             s3_row_im1_A : out  std_logic_vector(17 downto 0);
+             s3_col_jm1_B : out  std_logic_vector(17 downto 0);
              SOB_Q : out  std_logic;
              EOB_Q : out  std_logic;
              C_out_Q : out  std_logic_vector(32 downto 0)   );
    end component;
 
 type T_2D_LAICPT2_np1_m is array(32 downto 0, 30 downto 0) of std_logic_vector(32 downto 0);
-type T_2D_n_mp1 is array(31 downto 0, 31 downto 0) of std_logic_vector(20 downto 0);
-type T_2D_np1_m is array(32 downto 0, 30 downto 0) of std_logic_vector(20 downto 0);
+type T_2D_n_mp1 is array(31 downto 0, 31 downto 0) of std_logic_vector(17 downto 0);
+type T_2D_np1_m is array(32 downto 0, 30 downto 0) of std_logic_vector(17 downto 0);
 type T_2D_np1_m_logic is array(32 downto 0, 30 downto 0) of std_logic;
 signal systolic_wires_rows_2D : T_2D_n_mp1;
 signal systolic_wires_cols_2D : T_2D_np1_m;
@@ -997,12 +815,12 @@ begin
 
 ----------------- Connect bus of B columns to top edges SA PEs -----------------
    cols_in: for JJ in 0 to 30 generate
-      systolic_wires_cols_2D(0,JJ) <= colsB(((JJ+1)*21)-1 downto (JJ*21));
+      systolic_wires_cols_2D(0,JJ) <= colsB(((JJ+1)*18)-1 downto (JJ*18));
    end generate;
 
 ------------------ Connect bus of A rows to left edges SA PEs ------------------
    rows_in: for II in 0 to 31 generate
-      systolic_wires_rows_2D(II,0) <= rowsA(((II+1)*21)-1 downto (II*21));
+      systolic_wires_rows_2D(II,0) <= rowsA(((II+1)*18)-1 downto (II*18));
    end generate;
 
 -------------- Connect the Start of Block signals of the TOP PEs --------------
@@ -1053,7 +871,7 @@ end architecture;
 
 --------------------------------------------------------------------------------
 --                               SystolicArray
---              (SA_orthogonal_32w31h_posit_16_0_HSSD_F200_uid2)
+--               (SA_orthogonal_32w31h_ieee_8_7_HSSD_F200_uid2)
 -- VHDL generated for VirtexUltrascalePlus @ 200MHz
 -- This operator is part of the Infinite Virtual Library FloPoCoLib
 -- All rights reserved 
@@ -1087,7 +905,7 @@ architecture arch of SystolicArray is
    component Arith_to_S3 is
       port ( clk : in std_logic;
              arith_i : in  std_logic_vector(15 downto 0);
-             S3_o : out  std_logic_vector(20 downto 0)   );
+             S3_o : out  std_logic_vector(17 downto 0)   );
    end component;
 
    component l2a is
@@ -1099,8 +917,8 @@ architecture arch of SystolicArray is
 
    component SystolicArrayKernel is
       port ( clk, rst : in std_logic;
-             rowsA : in  std_logic_vector(671 downto 0);
-             colsB : in  std_logic_vector(650 downto 0);
+             rowsA : in  std_logic_vector(575 downto 0);
+             colsB : in  std_logic_vector(557 downto 0);
              SOB : in  std_logic;
              EOB : in  std_logic;
              colsC : out  std_logic_vector(1022 downto 0);
@@ -1108,9 +926,9 @@ architecture arch of SystolicArray is
    end component;
 
 type array_M_dense is array(30 downto 0) of std_logic_vector(15 downto 0);
-type array_M_s3 is array(30 downto 0) of std_logic_vector(20 downto 0);
+type array_M_s3 is array(30 downto 0) of std_logic_vector(17 downto 0);
 type array_N_dense is array(31 downto 0) of std_logic_vector(15 downto 0);
-type array_N_s3 is array(31 downto 0) of std_logic_vector(20 downto 0);
+type array_N_s3 is array(31 downto 0) of std_logic_vector(17 downto 0);
 signal arith_in_row_0 :  std_logic_vector(15 downto 0);
 signal arith_in_row_0_q0 :  std_logic_vector(15 downto 0);
 signal arith_in_row_1, arith_in_row_1_d1 :  std_logic_vector(15 downto 0);
@@ -1306,9 +1124,9 @@ signal arith_out_col_out_29_q1 :  std_logic_vector(15 downto 0);
 signal arith_out_col_out_30 :  std_logic_vector(15 downto 0);
 signal arith_out_col_out_30_q0 :  std_logic_vector(15 downto 0);
 signal rows_i_arith : array_N_dense;
-signal rows_i_s3 :  std_logic_vector(671 downto 0);
+signal rows_i_s3 :  std_logic_vector(575 downto 0);
 signal cols_j_arith : array_M_dense;
-signal cols_j_s3 :  std_logic_vector(650 downto 0);
+signal cols_j_s3 :  std_logic_vector(557 downto 0);
 begin
    process(clk)
       begin
@@ -2978,7 +2796,7 @@ begin
       a2s3_i: Arith_to_S3
          port map ( clk => clk,
                     arith_i => rows_i_arith(II),
-                    s3_o => rows_i_s3(((II+1)*21)-1 downto II*21));
+                    s3_o => rows_i_s3(((II+1)*18)-1 downto II*18));
    end generate;
 
 ---------------- Generate Arith_to_S3 for cols and connect them ----------------
@@ -3017,7 +2835,7 @@ begin
       a2s3_j: Arith_to_S3
          port map ( clk => clk,
                     arith_i => cols_j_arith(JJ),
-                    s3_o => cols_j_s3(((JJ+1)*21)-1 downto JJ*21));
+                    s3_o => cols_j_s3(((JJ+1)*18)-1 downto JJ*18));
    end generate;
 
 -------------------- Instantiate the Systolic Array Kernel --------------------

@@ -462,6 +462,13 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 #endif
 
   if ((args.m == 0) || (args.n == 0)) return;
+  double *A = (double*)a;
+  double *B = (double*)b;
+  printf("from interface:\n");
+  printf("original A[0]=%lf\n", A[0]);
+  printf("original A[1]=%lf\n", A[1]);
+  printf("original B[0]=%lf\n", B[0]);
+  printf("original B[1]=%lf\n", B[1]);
 
 #if 0
   fprintf(stderr, "m = %4d  n = %d  k = %d  lda = %4d  ldb = %4d  ldc = %4d\n",
@@ -472,10 +479,33 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
   FUNCTION_PROFILE_START();
 
-#if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
+#if USE_OCAPI == 1 && CBLAS==1 // we go on ocse or oc-accel depending on the machine architecture
 	// printf("OCAPI DEFINED\n");
 	// printf("modified blas\n");
-	int adasd = gemm_backend_test(args.m, args.n,args.k);
+// 	int adasd = gemm_backend_test(
+// 			args.m,
+// 			args.n,
+// 			args.k,
+// 			args.alpha,
+// 			args.beta,
+// 			args.a,
+// 			args.b,
+// 			args.c,
+// 			args.lda,
+// 			args.ldb,
+// 			args.ldc);
+	int adasd = gemm_backend_test(
+			(uint64_t) m,
+			(uint64_t) n,
+			(uint64_t) k,
+			(void*)    &alpha,
+			(void*)    &beta,
+			(void*)    &a,
+			(void*)    &b,
+			(void*)    &c,
+			(uint64_t) lda,
+			(uint64_t) ldb,
+			(uint64_t) ldc);
 	printf("value from backend: %d", adasd);
 #else // we fall back on all other backends
 
