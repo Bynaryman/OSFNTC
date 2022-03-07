@@ -245,7 +245,6 @@ static int gemm_backend_test (
 	double *B_T   = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
     	cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, A, k, A_T, m);
     	// cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k); if transpose A is good to do
-	double *aggregate_dma_memory = (double *)(alloc_mem(4096, sizeof(double)*(k*n)));
     #else
     	float *A = (float*)a;
     	float *B = (float*)b;
@@ -261,12 +260,21 @@ static int gemm_backend_test (
 
     const uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
     const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
+    const uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
+    const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
+
+    uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
+    // TODO(lledoux): add border pad band
+    char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*(fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B)));
 
     for (uint64_t row_band_i 0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
 	for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-		tmp = A[(row_band_i*k) + (systolic_array_rows*row_i) + (col_j)];  // z order access per horizontal band in A in row major order
-		aggregate_dma_memory[] =
+		double tmp = A[(row_band_i*k) + (systolic_array_rows*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+			memcpy(aggregate_dma_memory + (row_band_i*entire_vertical_bands_matrix_B) + (rewrite_i*k) + (fpga_bus_size*col_j) + (row_i*sizeof(double)), &tmp, sizeof(double));
+			// for cols, i should add N*sizeof(double) offset, and maybe col_j is different index
+		}
 	    }
 	}
     }
