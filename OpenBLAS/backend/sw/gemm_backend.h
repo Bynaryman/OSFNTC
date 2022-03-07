@@ -138,31 +138,6 @@ static void snap_prepare_action(struct snap_job *cjob,
     snap_job_set(cjob, mjob, sizeof(*mjob), NULL, 0);
 }
 
-// static int mem_init (void* patt_src_base, size_t patt_size)
-// {
-//     uint8_t* ptr_src = (uint8_t*) patt_src_base;
-//     size_t cnt = 0;
-//     uint32_t initial_cntr = 1;
-//     srand((unsigned) time(0));
-//
-//     do {
-//         if(cnt%64 == 0 && cnt > 0) {initial_cntr++;}
-//         *(ptr_src++) = (initial_cntr);
-//         cnt++;
-//     } while (cnt < patt_size);
-//
-//     return 0;
-// }
-
-/**
- *
- * @brief check if the input file is a multiple of 784*64*x bits (64 pictures with posit<x,0>)
- * @returns true if satisfies (no error), false otherwise
- */
-// static bool check_size(size_t size_in, uint32_t x) {
-//     return (((size_in*8) % (784*64*x))==0);
-// }
-
 /**
  *
  * @brief load file into RAM
@@ -259,18 +234,49 @@ static int gemm_backend_test (
     char * mem_out = NULL;
     char path_in[1000];
     char path_out[1000];
-    printf("printing from backend, receiving m=%ld;n=%ld;k=%ld from python\n", m,n,k);
-    printf("printing from backend, lda=%ld, ldb=%ld, ldc=%ld.\n", lda, ldb, ldc);
-    double *AA = (double*)a;
-    float *A = (float*)a;
-    double *BB = (double*)b;
-    printf("printing from backend, float  A[0][0]=%lf\n", A[0]);
-    printf("printing from backend, double A[0][0]=%lf\n", AA[0]);
-    double *BETA=(double*)beta;
-    double *ALPHA=(double*)alpha;
-    printf("printing from backend, alpha=%lf, beta=%lf\n", ALPHA,BETA);
 
-    simatcopy_( CblasRowMajor, CblasTrans, k, n, BETA, BB, k, n);
+
+    #if defined(DOUBLE)
+    	double *A     = (double*)a;
+    	double *B     = (double*)b;
+    	double *BETA  = (double*)beta;
+    	double *ALPHA = (double*)alpha;
+	double *A_T   = (double *)(alloc_mem(64, sizeof(double)*(m*k)));
+	double *B_T   = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
+    	cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, A, k, A_T, m);
+    	// cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k); if transpose A is good to do
+	double *aggregate_dma_memory = (double *)(alloc_mem(4096, sizeof(double)*(k*n)));
+    #else
+    	float *A = (float*)a;
+    	float *B = (float*)b;
+    	float *BETA=(float*)beta;
+    	float *ALPHA=(float*)alpha;
+	float *B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
+    	cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+    #endif
+
+    // TODO(lledoux): pull such numbers at runtime from fpga register polling
+    const uint8_t systolic_array_rows    = 8;
+    const uint8_t systolic_array_columns = 7;
+
+    const uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
+    const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
+
+    for (uint64_t row_band_i 0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+	for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
+            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
+		tmp = A[(row_band_i*k) + (systolic_array_rows*row_i) + (col_j)];  // z order access per horizontal band in A in row major order
+		aggregate_dma_memory[] =
+	    }
+	}
+    }
+    for (uint8_t pad_row_i=0 ; pad_row_i<rows_last_partial_band_matrix_A ; ++pad_row_i) {
+
+    }
+
+    for (uint64_t col_band_j=0 ; col_band_j<entire_vertical_bands_matrix_B ; ++col_band_j) { // then, place all vertical bands of B. one fetch is sufficient for many writes
+
+    }
 
     uint8_t  type_in = SNAP_ADDRTYPE_HOST_DRAM;
     uint64_t addr_in = 0x0ull;
@@ -431,7 +437,7 @@ static int gemm_backend_test (
     // deallocate the card
     snap_card_free(card);
     // deallocate matrices in and out
-    // free(mem_in);
+    free(B_T);
     free(mem_out);
     exit(EXIT_SUCCESS);
 
@@ -440,7 +446,7 @@ static int gemm_backend_test (
     out_error1:
         snap_card_free(card);
     out_error:
-        // free(mem_in);
+        free(B_T);
         free(mem_out);
         exit(EXIT_FAILURE);
 

@@ -25,8 +25,8 @@ int main()
   double alpha, beta;
   double start, end;
 
-  m = 20000, k = 2000, n = 1000;
-  // m = 20, k = 20, n = 10;
+  // m = 20000, k = 2000, n = 1000;
+  m = 200, k = 242, n = 27;
 
   alpha = 1.0; beta = 0.0;
 
@@ -53,6 +53,14 @@ int main()
   for (i = 0; i < (m*n); i++) {
     C[i] = 0.0;
   }
+double *B_T;
+posix_memalign((void**) &B_T, 64, k*n*sizeof( double ));
+cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, 1.0f, B, n, B_T, k);
+printf("transpose B[2]=%lf\n", B[2]);
+printf("transpose B_T[484]=%lf\n", B_T[484]);
+printf("transpose B_T[3]=%lf\n", B_T[3]);
+printf("transpose B_T[4]=%lf\n", B_T[4]);
+free(B_T);
 
   start = get_time();
   cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
@@ -65,6 +73,7 @@ int main()
   free(A);
   free(B);
   free(C);
-  return 0;
+
+return 0;
 }
 
