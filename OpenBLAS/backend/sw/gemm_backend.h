@@ -48,7 +48,7 @@ extern "C" {
 /* This number is unique and is declared in ~snap/ActionTypes.md */
 #define ACTION_TYPE 0x86868604
 
-static int verbose_level = 0;
+static uint8_t verbose_level = 0;
 
 #define VERBOSE0(file, fmt, ...) do {       \
         fprintf(file, fmt, ## __VA_ARGS__);  \
@@ -228,6 +228,10 @@ static int gemm_backend_test (
 		uint64_t lda,
 		uint64_t ldb,
 		uint64_t ldc) {
+
+    char *pTmp = NULL;
+    if (( pTmp = getenv( "VERBOSITY" )) != NULL )
+        verbose_level = atoi(pTmp);
     size_t Data_Size_in = 0;
     size_t Data_Size_out = 0;
     char * mem_in = NULL;
@@ -267,17 +271,62 @@ static int gemm_backend_test (
     // TODO(lledoux): add border pad band
     char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*(fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B)));
 
-    for (uint64_t row_band_i 0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+    for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
 	for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-		double tmp = A[(row_band_i*k) + (systolic_array_rows*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+		double tmp = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
 		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
-			memcpy(aggregate_dma_memory + (row_band_i*entire_vertical_bands_matrix_B) + (rewrite_i*k) + (fpga_bus_size*col_j) + (row_i*sizeof(double)), &tmp, sizeof(double));
+			memcpy( aggregate_dma_memory +
+				(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+				(rewrite_i*k*fpga_bus_size) +
+				(fpga_bus_size*col_j) +
+				(row_i*sizeof(double)), // end address calcultation
+				&tmp,
+				sizeof(double));
+		}
+	    }
+	}
+    }
+
+    for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
+	for (uint64_t row_i=0 ; row_i < systolic_array_cols ; ++row_i) {
+            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+		double tmp = B_T[(row_band_i*k*systolic_array_cols) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+			memcpy( aggregate_dma_memory +
+				(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+				(rewrite_i*k*fpga_bus_size) +
+				(fpga_bus_size*col_j) +
+				(row_i*sizeof(double)), // end address calcultation
+				&tmp,
+				sizeof(double));
+		}
+	    }
+	}
+    }
+
+    for (uint64_t col_band_j=0 ; col_band_j < entire_vertical_bands_matrix_B ; ++col_band_j) {
+	for (uint64_t col_j=0 ; col_j < systolic_array_cols ; ++col_j) {
+            for (uint64_t row_i=0 ; row_i < k ; ++row_i) { // place all B band_j (k-rolling loop). adjacent element will be together in $
+		double tmp = B_T[(col_band_j*k*systolic_array_cols) + (systolic_array_cols*col_j) + (row_i)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+			memcpy( aggregate_dma_memory +
+				(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+				(rewrite_i*k*fpga_bus_size) +
+				(fpga_bus_size*col_j) +
+				(row_i*sizeof(double)), // end address calcultation
+				&tmp,
+				sizeof(double));
 			// for cols, i should add N*sizeof(double) offset, and maybe col_j is different index
 		}
 	    }
 	}
     }
+
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, aggregate_dma_memory, (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B));
+    }
+
     for (uint8_t pad_row_i=0 ; pad_row_i<rows_last_partial_band_matrix_A ; ++pad_row_i) {
 
     }
@@ -307,7 +356,7 @@ static int gemm_backend_test (
     unsigned int N = 32;
     unsigned int M = 31;
     unsigned int P = 32;
-    unsigned int B = 1;
+    unsigned int BLOCKS = 1;
     //strcpy(path_in, "/home/lledoux/Documents/high_end/oc-accel/actions/cgemm/sw/in_float_batched.raw");
     strcpy(path_in, "/home/binaryman/Documents/PhD/fpga/P9_OPC/snap/actions/SA_s3/sw/in_float_batched.raw");
     strcpy(path_out, "/tmp/tmp.txt");
@@ -322,7 +371,7 @@ static int gemm_backend_test (
     } else {
 	printf("pointer from file alloc is NOT 4096 aligned\n");
     }
-    Data_Size_out = N*128*B;  // if OpenCAPI replace 64 by 128
+    Data_Size_out = N*128*BLOCKS;  // if OpenCAPI replace 64 by 128
     // mem_in = alloc_mem(4096, Data_Size_in);
     mem_out = alloc_mem(4096, Data_Size_out);
 
@@ -412,7 +461,7 @@ static int gemm_backend_test (
     //          ((Data_Size_in/((long long)timediff_usec(&etime,  &stime)))/1)
     //        );
 
-    uint64_t total_arithmetic_ops = (uint64_t)((M*N)+(N*M))*B*P;
+    uint64_t total_arithmetic_ops = (uint64_t)((M*N)+(N*M))*BLOCKS*P;
     // VERBOSE2 ( stdout, "%lld %lld %lld %lld %lld %lld %f %lld %lld\n",
     //            (long long)N*1,
     //            (long long)M*1,
@@ -447,6 +496,7 @@ static int gemm_backend_test (
     // deallocate matrices in and out
     free(B_T);
     free(mem_out);
+    free(aggregate_dma_memory);
     exit(EXIT_SUCCESS);
 
     out_error2:
@@ -456,6 +506,7 @@ static int gemm_backend_test (
     out_error:
         free(B_T);
         free(mem_out);
+	free(aggregate_dma_memory);
         exit(EXIT_FAILURE);
 
 }

@@ -463,15 +463,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 #endif
 
   if ((args.m == 0) || (args.n == 0)) return;
-  double *A = (double*)a;
-  double *B = (double*)b;
-  printf("from interface:\n");
-  printf("original A[0]=%lf\n", A[0]);
-  printf("original A[1]=%lf\n", A[1]);
-  printf("original B[0]=%lf\n", B[0]);
-  printf("original B[1]=%lf\n", B[1]);
-  printf("original alpha=%lf\n", alpha);
-  printf("original alpha=%f\n", alpha);
 
 #if 0
   fprintf(stderr, "m = %4d  n = %d  k = %d  lda = %4d  ldb = %4d  ldc = %4d\n",

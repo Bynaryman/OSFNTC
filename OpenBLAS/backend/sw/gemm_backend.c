@@ -1,6 +1,5 @@
 #include "gemm_backend.h"
 
-
 // int gemm_backend_test ()
 // {
 // 	printf("N from gemm backend");
