@@ -232,116 +232,11 @@ static int gemm_backend_test (
     char *pTmp = NULL;
     if (( pTmp = getenv( "VERBOSITY" )) != NULL )
         verbose_level = atoi(pTmp);
-    size_t Data_Size_in = 0;
-    size_t Data_Size_out = 0;
-    char * mem_in = NULL;
-    char * mem_out = NULL;
-    char path_in[1000];
     char path_out[1000];
 
 
-    #if defined(DOUBLE)
-    	double *A     = (double*)a;
-    	double *B     = (double*)b;
-    	double *BETA  = (double*)beta;
-    	double *ALPHA = (double*)alpha;
-	double *A_T   = (double *)(alloc_mem(64, sizeof(double)*(m*k)));
-	double *B_T   = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
-    	cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, A, k, A_T, m);
-    	// cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k); if transpose A is good to do
-    #else
-    	float *A = (float*)a;
-    	float *B = (float*)b;
-    	float *BETA=(float*)beta;
-    	float *ALPHA=(float*)alpha;
-	float *B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
-    	cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
-    #endif
 
-    // TODO(lledoux): pull such numbers at runtime from fpga register polling
-    const uint8_t systolic_array_rows    = 8;
-    const uint8_t systolic_array_columns = 7;
 
-    const uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
-    const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
-    const uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
-    const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
-
-    uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
-    // TODO(lledoux): add border pad band
-    char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*(fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B)));
-
-    for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
-	for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
-            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-		double tmp = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
-			memcpy( aggregate_dma_memory +
-				(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
-				(rewrite_i*k*fpga_bus_size) +
-				(fpga_bus_size*col_j) +
-				(row_i*sizeof(double)), // end address calcultation
-				&tmp,
-				sizeof(double));
-		}
-	    }
-	}
-    }
-
-    for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
-	for (uint64_t row_i=0 ; row_i < systolic_array_cols ; ++row_i) {
-            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-		double tmp = B_T[(row_band_i*k*systolic_array_cols) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
-			memcpy( aggregate_dma_memory +
-				(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
-				(rewrite_i*k*fpga_bus_size) +
-				(fpga_bus_size*col_j) +
-				(row_i*sizeof(double)), // end address calcultation
-				&tmp,
-				sizeof(double));
-		}
-	    }
-	}
-    }
-
-    for (uint64_t col_band_j=0 ; col_band_j < entire_vertical_bands_matrix_B ; ++col_band_j) {
-	for (uint64_t col_j=0 ; col_j < systolic_array_cols ; ++col_j) {
-            for (uint64_t row_i=0 ; row_i < k ; ++row_i) { // place all B band_j (k-rolling loop). adjacent element will be together in $
-		double tmp = B_T[(col_band_j*k*systolic_array_cols) + (systolic_array_cols*col_j) + (row_i)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-		for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
-			memcpy( aggregate_dma_memory +
-				(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
-				(rewrite_i*k*fpga_bus_size) +
-				(fpga_bus_size*col_j) +
-				(row_i*sizeof(double)), // end address calcultation
-				&tmp,
-				sizeof(double));
-			// for cols, i should add N*sizeof(double) offset, and maybe col_j is different index
-		}
-	    }
-	}
-    }
-
-    if (verbose_level > 3 ) {
-        __hexdump(stdout, aggregate_dma_memory, (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B));
-    }
-
-    for (uint8_t pad_row_i=0 ; pad_row_i<rows_last_partial_band_matrix_A ; ++pad_row_i) {
-
-    }
-
-    for (uint64_t col_band_j=0 ; col_band_j<entire_vertical_bands_matrix_B ; ++col_band_j) { // then, place all vertical bands of B. one fetch is sufficient for many writes
-
-    }
-
-    uint8_t  type_in = SNAP_ADDRTYPE_HOST_DRAM;
-    uint64_t addr_in = 0x0ull;
-    uint8_t  type_out = SNAP_ADDRTYPE_HOST_DRAM;
-    uint64_t addr_out = 0x0ull;
-    uint32_t read_burst_num = 128; // fpga has logic only for 64 arlen/awlen
-    uint32_t write_burst_num = 128;
-    uint32_t transfer_type = 4; // host to host
 
     int rc = 0;
     int card_no = 0;
@@ -351,41 +246,37 @@ static int gemm_backend_test (
     struct snap_job cjob;
     struct action_job mjob;
     unsigned long timeout = 360;
-    struct timeval etime, stime, etime1, stime1, etime2, stime2, etime3, stime3, etime0, stime0;
+    struct timeval etime_card_allocation, stime_card_allocation,
+		   etime_attach_action, stime_attach_action,
+		   etime_memory_allocation, stime_memory_allocation,
+		   etime_prepare_action, stime_prepare_action,
+		   etime0, stime0;
 
-    unsigned int N = 32;
-    unsigned int M = 31;
-    unsigned int P = 32;
-    unsigned int BLOCKS = 1;
-    //strcpy(path_in, "/home/lledoux/Documents/high_end/oc-accel/actions/cgemm/sw/in_float_batched.raw");
-    strcpy(path_in, "/home/binaryman/Documents/PhD/fpga/P9_OPC/snap/actions/SA_s3/sw/in_float_batched.raw");
     strcpy(path_out, "/tmp/tmp.txt");
-
-    // Allocation of memories (in and out)
-    gettimeofday(&stime0, NULL);
-    // here we consider that input file has 2 square matrices
-    // so, the output file is half size and contains 1 result matrix
-    Data_Size_in  = mem_init_from_file(path_in, &mem_in, 4096);
-    if (is_aligned(mem_in, 4096)) {
-	printf("pointer from file alloc is 4096 aligned\n");
-    } else {
-	printf("pointer from file alloc is NOT 4096 aligned\n");
-    }
-    Data_Size_out = N*128*BLOCKS;  // if OpenCAPI replace 64 by 128
-    // mem_in = alloc_mem(4096, Data_Size_in);
-    mem_out = alloc_mem(4096, Data_Size_out);
-
-    // memcpy(mem_in, mem_in_non_aligned, 512);
-    gettimeofday(&etime0, NULL);
-    if ( verbose_level > 2 ) {
-        __hexdump(stdout, mem_in, Data_Size_in);
-    }
 
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
-    // Offloading Action
-    // Card Allocation
-    gettimeofday(&stime1, NULL);
+
+    // Transposition of input matrix B
+    #if defined(DOUBLE)
+    	double *A     = (double*)a;
+    	double *B     = (double*)b;
+    	double *BETA  = (double*)beta;
+    	double *ALPHA = (double*)alpha;
+	double *B_T   = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
+    	cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+    #else
+    	float *A = (float*)a;
+    	float *B = (float*)b;
+    	float *BETA=(float*)beta;
+    	float *ALPHA=(float*)alpha;
+	float *B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
+    	cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+    #endif
+
+
+    // Allocate Card
+    gettimeofday(&stime_card_allocation, NULL);
     if(card_no == 0) {
         snprintf(device, sizeof(device)-1, "IBM,oc-snap");
     } else {
@@ -396,63 +287,131 @@ static int gemm_backend_test (
         VERBOSE0(stderr, "err: failed to open card %u: %s\n", card_no, strerror(errno));
         goto out_error;
     }
-    gettimeofday(&etime1, NULL);
-
+    gettimeofday(&etime_card_allocation, NULL);
     VERBOSE3(stdout, "Card Allocated Successfully\n");
 
-    // Attaching Action
-    gettimeofday(&stime2, NULL);
+
+    // Attach Action
+    gettimeofday(&stime_attach_action, NULL);
     action = snap_attach_action(card, ACTION_TYPE, action_irq, 180);
     if (action == NULL) {
         VERBOSE0(stderr, "err: failed to attach action %u: %s\n", card_no, strerror(errno));
         goto out_error1;
     }
-    gettimeofday(&etime2, NULL);
+    gettimeofday(&etime_attach_action, NULL);
     VERBOSE3(stdout, "Action Attached Successfully\n");
 
-    //-- Puting Data Addr and Size in cjob structure --
-    gettimeofday(&stime3, NULL);
-    addr_in  = (unsigned long)mem_in;
-    addr_out = (unsigned long)mem_out;
+
+    // Retrieve HW-accelerated kernel informations
+    int reg=0;
+    snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
+    VERBOSE3(stdout, "test version SA from register polling %d", reg);
+    // TODO(lledoux): pull such numbers at runtime from fpga register polling
+    const uint8_t systolic_array_rows    = 8;
+    const uint8_t systolic_array_columns = 7;
+
+
+    // Allocate memories (in and out)
+    gettimeofday(&stime_memory_allocation, NULL);
+    mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
+    char *mem_out = alloc_mem(4096, mem_out_size);
+    gettimeofday(&etime_memory_allocation, NULL);
+
+    const uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
+    const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
+    const uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
+    const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
+
+    uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
+    // TODO(lledoux): add border pad band
+    size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B);
+    char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*aggregate_dma_memory_size));
+
+    for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+        for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
+            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
+        	double tmp = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+        	for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+        		memcpy( aggregate_dma_memory +
+        			(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+        			(rewrite_i*k*fpga_bus_size) +
+        			(fpga_bus_size*col_j) +
+        			(row_i*sizeof(double)), // end address calcultation
+        			&tmp,
+        			sizeof(double));
+        	}
+            }
+        }
+    }
+    for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
+	for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
+            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+		double tmp = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+		for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
+			memcpy( aggregate_dma_memory +
+				(row_band_i*fpga_bus_size*k) +
+				(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
+				(fpga_bus_size*col_j) +
+				(systolic_array_rows*sizeof(double)) + // offset
+				(row_i*sizeof(double)), // end address calcultation
+				&tmp,
+				sizeof(double));
+		}
+	    }
+	}
+    }
+    for (uint64_t i=(fpga_bus_size-1) ; i < aggregate_dma_memory_size ; i+=fpga_bus_size) {
+	if (((i/(fpga_bus_size-1)) % k) == 1)
+		aggregate_dma_memory[i] = 0x40;
+	else if (((i/127) % k) == 0)
+		aggregate_dma_memory[i] = 0x80;
+	else
+		aggregate_dma_memory[i] = 0x00;
+    }
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, aggregate_dma_memory, aggregate_dma_memory_size);
+    }
+
+
+    // Prepare action for DMA
+    uint8_t  type_in  = SNAP_ADDRTYPE_HOST_DRAM;
+    uint8_t  type_out = SNAP_ADDRTYPE_HOST_DRAM;
+    uint32_t read_burst_num  = 128; // fpga has logic only for 7 arlen
+    uint32_t write_burst_num = 128; // fpga has logic only for 7 awlen
+    uint32_t transfer_type = 4; // host to host
+    gettimeofday(&stime_prepare_action, NULL);
     snap_prepare_action(&cjob,
                         &mjob,
-                        (void *)addr_in,
-                        Data_Size_in,
+                        (void *)aggregate_dma_memory,
+                        aggregate_dma_memory_size,
                         type_in,
-                        (void *)addr_out,
-                        Data_Size_out,
+                        (void *)mem_out,
+                        mem_out_size,
                         type_out,
                         read_burst_num,
                         write_burst_num,
                         transfer_type
     );
-    gettimeofday(&etime3, NULL);
+    gettimeofday(&etime_prepare_action, NULL);
 
-    // TimeStamp1 of action execution
-    gettimeofday(&stime, NULL);
 
-    //long a = get_nanos();
-    // Set MMIO, Start Action, Wait for Idle
+    // Execute Action
+    gettimeofday(&stime_action_execution, NULL);
     rc = snap_action_sync_execute_job(action, &cjob, timeout);
-    //long b = get_nanos();
-
-    // TimeStamp2 of action execution
-    gettimeofday(&etime, NULL);
-
+    gettimeofday(&etime_action_execution, NULL);
     if (rc != 0) {
         VERBOSE0(stderr, "err: job execution %d: %s!\n", rc, strerror(errno));
         goto out_error2;
     }
-
-    // test return code
-    if (cjob.retc == SNAP_RETC_SUCCESS)
+    if (cjob.retc == SNAP_RETC_SUCCESS) {
         VERBOSE3(stdout, "SUCCESS\n");
-    else
-    {
+    }
+    else {
         VERBOSE3(stdout, "FAILED\n");
         VERBOSE0(stderr, "err: Unexpected RETC=%x!\n", cjob.retc);
         goto out_error2;
     }
+
 
     // Printing Results if enough verbosity
     //VERBOSE2( stdout, "Sent (%zu Bytes) took %lld usec, so BW = %lld MiBps \n",
@@ -461,7 +420,7 @@ static int gemm_backend_test (
     //          ((Data_Size_in/((long long)timediff_usec(&etime,  &stime)))/1)
     //        );
 
-    uint64_t total_arithmetic_ops = (uint64_t)((M*N)+(N*M))*BLOCKS*P;
+    //uint64_t total_arithmetic_ops = (uint64_t)((M*N)+(N*M))*BLOCKS*P;
     // VERBOSE2 ( stdout, "%lld %lld %lld %lld %lld %lld %f %lld %lld\n",
     //            (long long)N*1,
     //            (long long)M*1,
@@ -474,39 +433,44 @@ static int gemm_backend_test (
     //            (long long)timediff_usec(&etime,  &stime)
 
     //         );
-    VERBOSE2( stdout, "%zu %lld %f %f\n",
-              Data_Size_in,
-              (long long)timediff_usec(&etime,  &stime),
-              (((float)(Data_Size_in+Data_Size_out)/((long long)timediff_usec(&etime,  &stime)))),
-              ((double)(total_arithmetic_ops)/((long long)timediff_usec(&etime,  &stime)))
-            );
+    // VERBOSE2( stdout, "%zu %lld %f %f\n",
+    //           Data_Size_in,
+    //           (long long)timediff_usec(&etime,  &stime),
+    //           (((float)(Data_Size_in+Data_Size_out)/((long long)timediff_usec(&etime,  &stime)))),
+    //           ((double)(total_arithmetic_ops)/((long long)timediff_usec(&etime,  &stime)))
+    //         );
 
-    if (verbose_level > 2 ) {
-        __hexdump(stdout, mem_out, Data_Size_out);
-    }
+    // if (verbose_level > 2 ) {
+    //     __hexdump(stdout, mem_out, Data_Size_out);
+    // }
 
-    // Writing Matrix C to out
-    save_file_from_memory(path_out, &mem_out, Data_Size_out);
+
+    // Write Matrix C to out
+    save_file_from_memory(path_out, &mem_out, mem_out_size);
+
 
     // Detach action
     snap_detach_action(action);
 
-    // deallocate the card
+
+    // Deallocate the card
     snap_card_free(card);
-    // deallocate matrices in and out
+
+
+    // Deallocate input and output matrices
     free(B_T);
     free(mem_out);
     free(aggregate_dma_memory);
     exit(EXIT_SUCCESS);
 
     out_error2:
+	free(aggregate_dma_memory);
         snap_detach_action(action);
     out_error1:
         snap_card_free(card);
     out_error:
         free(B_T);
         free(mem_out);
-	free(aggregate_dma_memory);
         exit(EXIT_FAILURE);
 
 }
