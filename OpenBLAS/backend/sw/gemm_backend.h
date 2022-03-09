@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 #define is_aligned(POINTER, BYTE_COUNT) \
-    (((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
+	(((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 
 #include "../../../oc-accel/software/include/osnap_tools.h"
 #include "../../../oc-accel/software/include/osnap_hls_if.h"
@@ -51,12 +51,12 @@ extern "C" {
 static uint8_t verbose_level = 0;
 
 #define VERBOSE0(file, fmt, ...) do {       \
-        fprintf(file, fmt, ## __VA_ARGS__);  \
+		fprintf(file, fmt, ## __VA_ARGS__);  \
 } while (0)
 
 #define VERBOSE1(file, fmt, ...) do {       \
-    if (verbose_level > 0)            \
-        fprintf(file, fmt, ## __VA_ARGS__);  \
+	if (verbose_level > 0)            \
+		fprintf(file, fmt, ## __VA_ARGS__);  \
 } while (0)
 
 #define VERBOSE2(file, fmt, ...) do {       \
@@ -229,13 +229,12 @@ static int gemm_backend_test (
 		uint64_t ldb,
 		uint64_t ldc) {
 
+
+
+    // Set verbosity
     char *pTmp = NULL;
     if (( pTmp = getenv( "VERBOSITY" )) != NULL )
         verbose_level = atoi(pTmp);
-    char path_out[1000];
-
-
-
 
 
     int rc = 0;
@@ -250,9 +249,8 @@ static int gemm_backend_test (
 		   etime_attach_action, stime_attach_action,
 		   etime_memory_allocation, stime_memory_allocation,
 		   etime_prepare_action, stime_prepare_action,
-		   etime0, stime0;
+		   etime_action_execution, stime_action_execution;
 
-    strcpy(path_out, "/tmp/tmp.txt");
 
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
@@ -312,20 +310,18 @@ static int gemm_backend_test (
 
 
     // Allocate memories (in and out)
-    gettimeofday(&stime_memory_allocation, NULL);
-    mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
-    char *mem_out = alloc_mem(4096, mem_out_size);
-    gettimeofday(&etime_memory_allocation, NULL);
-
+    uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
     const uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
     const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
     const uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
     const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
-
-    uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
     // TODO(lledoux): add border pad band
     size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B);
     char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*aggregate_dma_memory_size));
+
+    gettimeofday(&stime_memory_allocation, NULL);
+    size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
+    char *mem_out = alloc_mem(4096, mem_out_size);
 
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
@@ -362,12 +358,13 @@ static int gemm_backend_test (
     }
     for (uint64_t i=(fpga_bus_size-1) ; i < aggregate_dma_memory_size ; i+=fpga_bus_size) {
 	if (((i/(fpga_bus_size-1)) % k) == 1)
-		aggregate_dma_memory[i] = 0x40;
+		aggregate_dma_memory[i] = 0x40;  // SOB
 	else if (((i/127) % k) == 0)
-		aggregate_dma_memory[i] = 0x80;
+		aggregate_dma_memory[i] = 0x80;  // EOB
 	else
 		aggregate_dma_memory[i] = 0x00;
     }
+    gettimeofday(&etime_memory_allocation, NULL);
     if (verbose_level > 3 ) {
         __hexdump(stdout, aggregate_dma_memory, aggregate_dma_memory_size);
     }
@@ -446,7 +443,34 @@ static int gemm_backend_test (
 
 
     // Write Matrix C to out
+    char path_out[1000];
+    strcpy(path_out, "/tmp/tmp.txt");
     save_file_from_memory(path_out, &mem_out, mem_out_size);
+    #if defined(DOUBLE)
+        double *C = (double*) c;
+        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_A ; ++vertical_band_j) {
+            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_B ; ++horizontal_block_i) {
+                for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
+                    for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
+                        double f_tmp;
+			char * c_tmp = mem_out +
+                                (vertical_band_j * entire_vertical_bands_matrix_B * fpga_bus_size * systolic_array_rows) +
+                                (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
+                                (fpga_bus_size * row_i) +
+                                (sizeof(double)*col_j);
+                        memcpy(&f_tmp, c_tmp, sizeof(double));
+			C[(vertical_band_j*n*systolic_array_rows)+
+			  (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
+			  ((systolic_array_rows-1-row_i)*systolic_array_columns)+
+			  col_j
+			] = f_tmp;
+                    }
+                }
+	    }
+	}
+    #else
+        float *C = (float*) c;
+    #endif
 
 
     // Detach action
@@ -464,13 +488,13 @@ static int gemm_backend_test (
     exit(EXIT_SUCCESS);
 
     out_error2:
-	free(aggregate_dma_memory);
         snap_detach_action(action);
+	free(aggregate_dma_memory);
+        free(mem_out);
     out_error1:
         snap_card_free(card);
     out_error:
         free(B_T);
-        free(mem_out);
         exit(EXIT_FAILURE);
 
 }
