@@ -5,7 +5,7 @@
 // Company: BSC
 // Engineer: LEDOUX Louis
 //
-// Create Date: 16/02/2022
+// Create Date: 09/03/2022
 // Description: axi stream sv wrapper +
 //  assuming N + M arithmetic dense words fit in the 512b bus or 1024. Depending CAPI2 or CAPI3
 //
@@ -41,13 +41,13 @@ module my_sv_wrapper #
 );
 
 // localparams
-localparam integer ARITH_IN_WIDTH = 16;
-localparam integer ARITH_OUT_WIDTH = 16;
-localparam integer N = 32;
-localparam integer M = 31;
+localparam integer ARITH_IN_WIDTH = 64;
+localparam integer ARITH_OUT_WIDTH = 64;
+localparam integer N = 8;
+localparam integer M = 7;
 // this number exists only after a flopoco run
-localparam integer S3FDP_PP_DEPTH = 2;
-localparam integer L2A_PP_DEPTH = 1;
+localparam integer S3FDP_PP_DEPTH = 21;
+localparam integer L2A_PP_DEPTH = 2;
 localparam integer FIFO_DEPTH = 1024;
 localparam integer OUT_WIDTH = M*ARITH_OUT_WIDTH;
 localparam integer FIFO_WIDTH = OUT_WIDTH;
@@ -111,7 +111,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 		shift_register <= {shift_register[size-2:0],sa_eob_q};
 	end
 end
-assign sa_valid_o = |shift_register[(size-1) -: N];
+assign sa_valid_o = |shift_register[(size-2) -: N];
 //     ____________________
 //    / ____/  _/ ____/ __ \
 //   / /_   / // /_  / / / /

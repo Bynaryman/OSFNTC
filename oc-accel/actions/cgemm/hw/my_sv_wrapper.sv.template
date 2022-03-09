@@ -111,7 +111,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 		shift_register <= {shift_register[size-2:0],sa_eob_q};
 	end
 end
-assign sa_valid_o = |shift_register[(size-1) -: N];
+assign sa_valid_o = |shift_register[(size-2) -: N];
 //     ____________________
 //    / ____/  _/ ____/ __ \
 //   / /_   / // /_  / / / /
