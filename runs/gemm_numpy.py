@@ -14,8 +14,13 @@ a = np.random.random((m,k))
 b = np.random.random((k,n))
 #print(a)
 #print(b)
-print(a[0][0])
+#print(a[0][0])
 
 C = np.matmul(a, b)
-
 print(C)
+
+a = np.identity(64)
+b = np.ones((64,28))
+
+C = np.matmul(a, b)
+print(8)
