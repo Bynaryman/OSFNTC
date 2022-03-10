@@ -317,11 +317,11 @@ static int gemm_backend_test (
     const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
     // TODO(lledoux): add border pad band
     size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B);
-    char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*aggregate_dma_memory_size));
+    size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
 
     gettimeofday(&stime_memory_allocation, NULL);
-    size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
-    char *mem_out = alloc_mem(4096, mem_out_size);
+    char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*aggregate_dma_memory_size));
+    char *mem_out = alloc_mem(4096, sizeof(char)*mem_out_size);
 
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
