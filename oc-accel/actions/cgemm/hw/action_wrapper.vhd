@@ -86,7 +86,7 @@ ENTITY action_wrapper IS
 END action_wrapper;
 
 ARCHITECTURE STRUCTURE OF action_wrapper IS
-  COMPONENT action_cgemm IS
+  COMPONENT action_cgemm_capi3 IS
     GENERIC (
       -- Parameters for Axi Master Bus Interface AXI_CARD_MEM0 : to on-card SDRAM
       C_AXI_CARD_MEM0_ID_WIDTH       : integer;
@@ -191,10 +191,10 @@ ARCHITECTURE STRUCTURE OF action_wrapper IS
       axi_host_mem_ruser       : IN  STD_LOGIC_VECTOR(C_M_AXI_HOST_MEM_RUSER_WIDTH-1 DOWNTO 0);
       axi_host_mem_wuser       : OUT STD_LOGIC_VECTOR(C_M_AXI_HOST_MEM_WUSER_WIDTH-1 DOWNTO 0)
     );
-  END COMPONENT action_cgemm;
+  END COMPONENT action_cgemm_capi3;
 
 BEGIN
-action_0: COMPONENT action_cgemm
+action_0: COMPONENT action_cgemm_capi3
   GENERIC MAP (
     -- Parameters for Axi Master Bus Interface AXI_CARD_MEM0 : to on-card SDRAM
     C_AXI_CARD_MEM0_ID_WIDTH       => C_M_AXI_CARD_MEM0_ID_WIDTH,

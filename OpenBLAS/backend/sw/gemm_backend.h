@@ -98,7 +98,7 @@ static void *alloc_mem(int align, size_t size)
 
 	VERBOSE3(stdout, "%s Enter Align: %d Size: %zu (malloc Size: %zu)\n",
 		__func__, align, size, size2);
-	if (posix_memalign((void **)&a, 4096, size2) != 0) {
+	if (posix_memalign((void **)&a, 16384, size2) != 0) {
 		perror("FAILED: posix_memalign()");
 		return NULL;
 	}
@@ -302,8 +302,8 @@ static int gemm_backend_test (
 
     // Retrieve HW-accelerated kernel informations
     int reg=0;
-    snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
-    VERBOSE3(stdout, "test version SA from register polling %d", reg);
+    //snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
+    VERBOSE3(stdout, "test version SA from register polling %d\n", reg);
     // TODO(lledoux): pull such numbers at runtime from fpga register polling
     const uint8_t systolic_array_rows    = 8;
     const uint8_t systolic_array_columns = 7;
@@ -315,24 +315,31 @@ static int gemm_backend_test (
     const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
     const uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
     const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
+    VERBOSE3(stdout, "entire horizontal bands matrix A: %d\n", entire_horizontal_bands_matrix_A);
+    VERBOSE3(stdout, "entire vertical bands matrix b: %d\n", entire_vertical_bands_matrix_B);
+
     // TODO(lledoux): add border pad band
     size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B);
     size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
+    VERBOSE3(stdout,"size in: %zu\n", aggregate_dma_memory_size);
+    VERBOSE3(stdout,"size out: %zu\n", mem_out_size);
+
 
     gettimeofday(&stime_memory_allocation, NULL);
-    char *aggregate_dma_memory = (char *)(alloc_mem(4096, sizeof(char)*aggregate_dma_memory_size));
-    char *mem_out = alloc_mem(4096, sizeof(char)*mem_out_size);
+    char *aggregate_dma_memory = (char *)(alloc_mem(16384, sizeof(char)*aggregate_dma_memory_size));
+    char *mem_out = (char*)(alloc_mem(16384, sizeof(char)*mem_out_size));
 
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
         	double tmp = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+		VERBOSE3(stdout, "tmp_float: %lf\n", tmp);
         	for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
         		memcpy( aggregate_dma_memory +
         			(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
         			(rewrite_i*k*fpga_bus_size) +
         			(fpga_bus_size*col_j) +
-        			(row_i*sizeof(double)), // end address calcultation
+        			(row_i*sizeof(double)), // end address calculation
         			&tmp,
         			sizeof(double));
         	}
@@ -343,26 +350,43 @@ static int gemm_backend_test (
 	for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
 		double tmp = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+		VERBOSE3(stdout, "tmp_float: %lf\n", tmp);
 		for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
 			memcpy( aggregate_dma_memory +
 				(row_band_i*fpga_bus_size*k) +
 				(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
 				(fpga_bus_size*col_j) +
 				(systolic_array_rows*sizeof(double)) + // offset
-				(row_i*sizeof(double)), // end address calcultation
+				(row_i*sizeof(double)), // end address calculation
 				&tmp,
 				sizeof(double));
 		}
 	    }
 	}
     }
-    for (uint64_t i=(fpga_bus_size-1) ; i < aggregate_dma_memory_size ; i+=fpga_bus_size) {
-	if (((i/(fpga_bus_size-1)) % k) == 1)
-		aggregate_dma_memory[i] = 0x40;  // SOB
-	else if (((i/127) % k) == 0)
-		aggregate_dma_memory[i] = 0x80;  // EOB
-	else
-		aggregate_dma_memory[i] = 0x00;
+    // for (uint64_t i=(fpga_bus_size-1) ; i < aggregate_dma_memory_size ; i+=fpga_bus_size) {
+    //         VERBOSE3(stdout, "calul sob eob: %d\n", i/(fpga_bus_size-1) % k);
+    //     if (((i/(fpga_bus_size-1)) % k) == 1)
+    //     	aggregate_dma_memory[i] = 0x40;  // SOB
+    //     else if (((i/127) % k) == 0)
+    //     	aggregate_dma_memory[i] = 0x80;  // EOB
+    //     else
+    //     	aggregate_dma_memory[i] = 0x00;
+    // }
+    for (uint64_t i=0 ; i < aggregate_dma_memory_size ; ++i) {
+	uint64_t bus_index = i % fpga_bus_size;
+	uint64_t col_index = (i/fpga_bus_size) % k;
+	if (bus_index == 127) {
+	    if (col_index == 0) {
+		    VERBOSE3(stdout,"i index value=%d", i);
+                aggregate_dma_memory[i] = 0x40;  // SOB
+	    } else if (col_index==k-1) {
+		    VERBOSE3(stdout,"i index value=%d", i);
+                aggregate_dma_memory[i] = 0x80;  // EOB
+	    } else {
+                aggregate_dma_memory[i] = 0x00;
+	    }
+	}
     }
     gettimeofday(&etime_memory_allocation, NULL);
     if (verbose_level > 3 ) {
@@ -373,16 +397,20 @@ static int gemm_backend_test (
     // Prepare action for DMA
     uint8_t  type_in  = SNAP_ADDRTYPE_HOST_DRAM;
     uint8_t  type_out = SNAP_ADDRTYPE_HOST_DRAM;
-    uint32_t read_burst_num  = 128; // fpga has logic only for 7 arlen
-    uint32_t write_burst_num = 128; // fpga has logic only for 7 awlen
+    uint32_t read_burst_num  = 64; // fpga has logic only for 7 arlen
+    uint32_t write_burst_num = 64; // fpga has logic only for 7 awlen
     uint32_t transfer_type = 4; // host to host
     gettimeofday(&stime_prepare_action, NULL);
+    uint64_t addr_in = 0x0ull;
+    uint64_t addr_out = 0x0ull;
+    addr_in  = (unsigned long)aggregate_dma_memory;
+    addr_out = (unsigned long)mem_out;
     snap_prepare_action(&cjob,
                         &mjob,
-                        (void *)aggregate_dma_memory,
+                        (void *)addr_in,
                         aggregate_dma_memory_size,
                         type_in,
-                        (void *)mem_out,
+                        (void *)addr_out,
                         mem_out_size,
                         type_out,
                         read_burst_num,
@@ -393,6 +421,9 @@ static int gemm_backend_test (
 
 
     // Execute Action
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, aggregate_dma_memory, aggregate_dma_memory_size);
+    }
     gettimeofday(&stime_action_execution, NULL);
     rc = snap_action_sync_execute_job(action, &cjob, timeout);
     gettimeofday(&etime_action_execution, NULL);
@@ -496,7 +527,8 @@ static int gemm_backend_test (
         snap_card_free(card);
     out_error:
         free(B_T);
-        exit(EXIT_FAILURE);
+        // exit(EXIT_FAILURE);
+	return 1;
 
 }
 

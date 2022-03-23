@@ -3,8 +3,8 @@
 -- Engineer: LEDOUX Louis
 --
 -- Create Date: 2021
--- Design Name: action_cgemm
--- Module Name: action_cgemm
+-- Design Name: action_cgemm_capi3
+-- Module Name: action_cgemm_capi3
 -- Project Name:
 -- Target Devices:
 -- Tool Versions:
@@ -26,7 +26,7 @@ use ieee.STD_LOGIC_UNSIGNED.all;
 use ieee.numeric_std.all;
 
 
-entity action_cgemm is
+entity action_cgemm_capi3 is
     generic (
         -- Parameters of Axi Master Bus Interface AXI_CARD_MEM0 ; to DDR memory
         C_AXI_CARD_MEM0_ID_WIDTH     : integer   := 2;
@@ -134,9 +134,9 @@ entity action_cgemm is
         axi_host_mem_ruser    : in std_logic_vector(C_AXI_HOST_MEM_RUSER_WIDTH-1 downto 0);
         axi_host_mem_wuser    : out std_logic_vector(C_AXI_HOST_MEM_WUSER_WIDTH-1 downto 0)
 );
-end action_cgemm;
+end action_cgemm_capi3;
 
-architecture action_cgemm of action_cgemm is
+architecture action_cgemm_capi3 of action_cgemm_capi3 is
 
     component my_sv_wrapper
     generic (
@@ -273,8 +273,8 @@ action_axi_slave_inst : entity work.action_axi_slave
     port map (
         -- User ports begin
         o_int_enable            => int_enable,
-        i_Action_Type           => x"8686_8604",  -- action type
-        i_Action_VER            => x"0000_0002",  -- 2nd version (OpenCAPI)
+        i_Action_Type           => x"8600_0003",  -- B3=action type; B2=undefined; B1=arith type; B0=accum type
+        i_Action_VER            => x"0807_1152",  -- B3=N; B2=M; B1=param1 arith; B0=param2 arith)
         o_Context_ID            => s_Context_ID,
 
         o_app_start             => app_start,
@@ -460,8 +460,8 @@ action_dma_axi_master_inst : entity work.action_axi_master
     -- decrease the dma block to read, active high when is 0 and lst of chunk
     eow_dma <= '1' when ((dma_rd_data_last = '1') and (unsigned(dma_blocks_to_read) = 0)) else '0';
 
-    block_diff <= "000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 6)) - (s_src_addr_h & s_src_addr_l(31 downto 6)));
-    --block_diff <= "0000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 7)) - (s_src_addr_h & s_src_addr_l(31 downto 7)));
+    --block_diff <= "000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 6)) - (s_src_addr_h & s_src_addr_l(31 downto 6)));
+    block_diff <= "0000000" & ((s_dst_addr_h & s_dst_addr_l(31 downto 7)) - (s_src_addr_h & s_src_addr_l(31 downto 7)));
 
     process(action_clk ) is
      variable temp64 : std_logic_vector(63 downto 0);
@@ -482,10 +482,10 @@ action_dma_axi_master_inst : entity work.action_axi_master
                   wr_done_count      <= 0;
                   wr_gate            <= '0';
                   -- blocks_to_read     <= "000000"   & s_src_data_size(31 downto 6);
-                  blocks_to_read     <= "000000"   & s_src_data_size(31 downto 6);
-                  dma_blocks_to_read <= "000000"   & s_src_data_size(31 downto 6);
-                  blocks_to_write    <= "000000"   & s_dst_data_size(31 downto 6);
-                  blocks_expected    <= "000000"   & s_dst_data_size(31 downto 6);
+                  blocks_to_read     <= "0000000"   & s_src_data_size(31 downto 7);
+                  dma_blocks_to_read <= "0000000"   & s_src_data_size(31 downto 7);
+                  blocks_to_write    <= "0000000"   & s_dst_data_size(31 downto 7);
+                  blocks_expected    <= "0000000"   & s_dst_data_size(31 downto 7);
                   first_max_blk_w    <= x"0000_00" & (x"40" - s_dst_addr_l(11 downto 6));
                   first_max_blk_r    <= x"0000_00" & (x"40" - s_src_addr_l(11 downto 6));
 
@@ -509,10 +509,10 @@ action_dma_axi_master_inst : entity work.action_axi_master
                   rd_len          <= first_blk_r (7 downto 0) - '1';
                   wr_len          <= first_blk_w (7 downto 0) - '1';
 
-                  rd_addr_adder   <= x"1000" - (s_src_addr_l(11 downto 6) & (5 downto 0 =>'0'));
+                  rd_addr_adder   <= x"2000" - (s_src_addr_l(11 downto 6) & (5 downto 0 =>'0'));
 
                   if start_copy = '1' then
-                    wr_addr_adder   <= x"1000" - (s_dst_addr_l(11 downto 6) & (5 downto 0 =>'0'));
+                    wr_addr_adder   <= x"2000" - (s_dst_addr_l(11 downto 6) & (5 downto 0 =>'0'));
                     blocks_to_read  <= blocks_to_read  -first_blk_r (7 downto 0) ;
                     dma_blocks_to_read <= dma_blocks_to_read  - first_blk_r (7 downto 0) ;
                     blocks_to_write <= blocks_to_write -first_blk_w (7 downto 0) ;
@@ -527,7 +527,7 @@ action_dma_axi_master_inst : entity work.action_axi_master
 
                   if rd_req_ack = '1' and or_reduce(blocks_to_read) = '1' then
                     rd_addr          <= rd_addr + rd_addr_adder;
-                    rd_addr_adder    <= x"1000";
+                    rd_addr_adder    <= x"2000";
                     dma_rd_req       <= src_host;
                     if blocks_to_read >  x"0000_0040" then
                       rd_len         <= x"3f";
@@ -669,4 +669,5 @@ wr_strobes: process(dma_wr_data_valid, memcopy )
 
   end process;
 
-end action_cgemm;
+end action_cgemm_capi3;
+
