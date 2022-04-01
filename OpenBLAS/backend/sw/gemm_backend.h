@@ -561,9 +561,6 @@ static int gemm_backend_test (
 			       col_j >= cols_last_partial_band_matrix_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(double));
-			      (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
-			      ((systolic_array_rows-1-row_i)*systolic_array_columns)+
-			      col_j, arith_scratchpad);
 			    C[(vertical_band_j*n*systolic_array_rows)+
 			      (horizontal_block_i*systolic_array_columns)+
 			      ((systolic_array_rows-1-row_i)*n)+
@@ -596,9 +593,6 @@ static int gemm_backend_test (
 			       col_j >= cols_last_partial_band_matrix_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(float));
-			      (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
-			      ((systolic_array_rows-1-row_i)*systolic_array_columns)+
-			      col_j, arith_scratchpad);
 			    C[(vertical_band_j*n*systolic_array_rows)+
 			      (horizontal_block_i*systolic_array_columns)+
 			      ((systolic_array_rows-1-row_i)*n)+
