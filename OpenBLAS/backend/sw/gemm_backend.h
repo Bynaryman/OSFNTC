@@ -548,7 +548,6 @@ static int gemm_backend_test (
             for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_B ; ++horizontal_block_i) {
                 for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
                     for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
-			// TODO(lledoux): review condition
 			char * c_tmp = mem_out +
                                 (vertical_band_j * entire_vertical_bands_matrix_B * fpga_bus_size * systolic_array_rows) +
                                 (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
@@ -562,7 +561,6 @@ static int gemm_backend_test (
 			       col_j >= cols_last_partial_band_matrix_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(double));
-			    VERBOSE3(stdout, "index: %d, float value: %lf\n", (vertical_band_j*n*systolic_array_rows)+
 			      (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
 			      ((systolic_array_rows-1-row_i)*systolic_array_columns)+
 			      col_j, arith_scratchpad);
@@ -571,19 +569,51 @@ static int gemm_backend_test (
 			      ((systolic_array_rows-1-row_i)*n)+
 			      col_j
 			    ] = arith_scratchpad;
-			    // C[0] = arith_scratchpad;
 			}
                     }
                 }
 	    }
 	}
+        if (verbose_level > 3 ) {
+            __hexdump(stdout, C, sizeof(double)*n*m);
+        }
     #else
         float *C = (float*) c;
+        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_A ; ++vertical_band_j) {
+            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_B ; ++horizontal_block_i) {
+                for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
+                    for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
+			char * c_tmp = mem_out +
+                                (vertical_band_j * entire_vertical_bands_matrix_B * fpga_bus_size * systolic_array_rows) +
+                                (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
+                                (fpga_bus_size * row_i) +
+                                (sizeof(float)*col_j);
+			if ( !(horizontal_padding_case &&
+			       vertical_band_j==entire_horizontal_bands_matrix_A-1 &&
+			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_A) &&
+			     !(vertical_padding_case   &&
+			       horizontal_block_i==entire_vertical_bands_matrix_B-1 &&
+			       col_j >= cols_last_partial_band_matrix_B)
+			   ) {
+                            memcpy(&arith_scratchpad, c_tmp, sizeof(float));
+			      (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
+			      ((systolic_array_rows-1-row_i)*systolic_array_columns)+
+			      col_j, arith_scratchpad);
+			    C[(vertical_band_j*n*systolic_array_rows)+
+			      (horizontal_block_i*systolic_array_columns)+
+			      ((systolic_array_rows-1-row_i)*n)+
+			      col_j
+			    ] = arith_scratchpad;
+			}
+                    }
+                }
+	    }
+	}
+        if (verbose_level > 3 ) {
+            __hexdump(stdout, C, sizeof(float)*n*m);
+        }
     #endif
 
-    if (verbose_level > 3 ) {
-        __hexdump(stdout, C, 8*n*m);
-    }
 
 
     // Detach action

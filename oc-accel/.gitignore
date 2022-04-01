@@ -1,7 +1,0 @@
-.snap*
-hardware/sim/
-software/*/*.o
-software/*/*.d
-software/*/*.so
-*.jou
-*.log
