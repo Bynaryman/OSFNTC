@@ -98,7 +98,7 @@ static void *alloc_mem(int align, size_t size)
 
 	VERBOSE3(stdout, "%s Enter Align: %d Size: %zu (malloc Size: %zu)\n",
 		__func__, align, size, size2);
-	if (posix_memalign((void **)&a, 16384, size2) != 0) {
+	if (posix_memalign((void **)&a, align, size2) != 0) {
 		perror("FAILED: posix_memalign()");
 		return NULL;
 	}
@@ -305,20 +305,29 @@ static int gemm_backend_test (
     //snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
     VERBOSE3(stdout, "test version SA from register polling %d\n", reg);
     // TODO(lledoux): pull such numbers at runtime from fpga register polling
-    const uint8_t systolic_array_rows    = 8;
-    const uint8_t systolic_array_columns = 7;
+    uint8_t systolic_array_rows    = 8;
+    uint8_t systolic_array_columns = 7;
 
 
     // Allocate memories (in and out)
     uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
-    const uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
-    const uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
-    const uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
-    const uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
+    uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
+    uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
+    uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
+    uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
     VERBOSE3(stdout, "entire horizontal bands matrix A: %d\n", entire_horizontal_bands_matrix_A);
     VERBOSE3(stdout, "entire vertical bands matrix b: %d\n", entire_vertical_bands_matrix_B);
+    VERBOSE3(stdout, "rows last band matrix A: %d\n", rows_last_partial_band_matrix_A);
+    VERBOSE3(stdout, "columns last band matrix b: %d\n", cols_last_partial_band_matrix_B);
 
     // TODO(lledoux): add border pad band
+    bool horizontal_padding_case      = (rows_last_partial_band_matrix_A>0);
+    entire_horizontal_bands_matrix_A += horizontal_padding_case? 1 : 0;
+    bool vertical_padding_case        = (cols_last_partial_band_matrix_B>0);
+    entire_vertical_bands_matrix_B   += (vertical_padding_case)? 1 : 0;
+    VERBOSE3(stdout, "case vertical padding: %d\n", vertical_padding_case);
+    VERBOSE3(stdout, "case horizontal padding: %d\n", horizontal_padding_case);
+
     size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B);
     size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
     VERBOSE3(stdout,"size in: %zu\n", aggregate_dma_memory_size);
@@ -326,62 +335,121 @@ static int gemm_backend_test (
 
 
     gettimeofday(&stime_memory_allocation, NULL);
-    char *aggregate_dma_memory = (char *)(alloc_mem(16384, sizeof(char)*aggregate_dma_memory_size));
-    char *mem_out = (char*)(alloc_mem(16384, sizeof(char)*mem_out_size));
+    char *aggregate_dma_memory = (char *)(alloc_mem(8192, sizeof(char)*aggregate_dma_memory_size));
+    char *mem_out = (char*)(alloc_mem(8192, sizeof(char)*mem_out_size));
 
-    for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
-        for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
-            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-        	double tmp = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-		VERBOSE3(stdout, "tmp_float: %lf\n", tmp);
-        	for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
-        		memcpy( aggregate_dma_memory +
-        			(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
-        			(rewrite_i*k*fpga_bus_size) +
-        			(fpga_bus_size*col_j) +
-        			(row_i*sizeof(double)), // end address calculation
-        			&tmp,
-        			sizeof(double));
-        	}
+
+    #if defined(DOUBLE)
+        double arith_scratchpad;
+        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+            for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
+                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
+            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_A-1)) {
+            	        if (row_i<rows_last_partial_band_matrix_A) {
+            	            arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+            	        } else {
+            	            arith_scratchpad = 0.0f;
+            	        }
+            	    } else {
+            	    	arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+            	    }
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+            	    	memcpy( aggregate_dma_memory +
+            	    		(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+            	    		(rewrite_i*k*fpga_bus_size) +
+            	    		(fpga_bus_size*col_j) +
+            	    		(row_i*sizeof(double)), // end address calculation
+            	    		&arith_scratchpad,
+            	    		sizeof(double));
+            	    }
+                }
             }
         }
-    }
-    for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
-	for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
-            for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-		double tmp = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-		VERBOSE3(stdout, "tmp_float: %lf\n", tmp);
-		for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
-			memcpy( aggregate_dma_memory +
-				(row_band_i*fpga_bus_size*k) +
-				(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
-				(fpga_bus_size*col_j) +
-				(systolic_array_rows*sizeof(double)) + // offset
-				(row_i*sizeof(double)), // end address calculation
-				&tmp,
-				sizeof(double));
-		}
-	    }
-	}
-    }
-    // for (uint64_t i=(fpga_bus_size-1) ; i < aggregate_dma_memory_size ; i+=fpga_bus_size) {
-    //         VERBOSE3(stdout, "calul sob eob: %d\n", i/(fpga_bus_size-1) % k);
-    //     if (((i/(fpga_bus_size-1)) % k) == 1)
-    //     	aggregate_dma_memory[i] = 0x40;  // SOB
-    //     else if (((i/127) % k) == 0)
-    //     	aggregate_dma_memory[i] = 0x80;  // EOB
-    //     else
-    //     	aggregate_dma_memory[i] = 0x00;
-    // }
+        for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
+            for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
+                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+            	    if (vertical_padding_case && row_band_i==(entire_vertical_bands_matrix_B-1)) {
+            	        if (row_i<cols_last_partial_band_matrix_B) {
+            	            arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+            	        } else {
+            	            arith_scratchpad = 0.0f;
+            	        }
+            	    } else {
+            	        arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+            	    }
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
+            	    	memcpy( aggregate_dma_memory +
+            	    		(row_band_i*fpga_bus_size*k) +
+            	    		(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
+            	    		(fpga_bus_size*col_j) +
+            	    		(systolic_array_rows*sizeof(double)) + // offset
+            	    		(row_i*sizeof(double)), // end address calculation
+            	    		&arith_scratchpad,
+            	    		sizeof(double));
+            	    }
+                }
+            }
+        }
+    #else
+        float arith_scratchpad;
+        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+            for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
+                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
+            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_A-1)) {
+            	        if (row_i<rows_last_partial_band_matrix_A) {
+            	            arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+            	        } else {
+            	            arith_scratchpad = 0.0f;
+            	        }
+            	    } else {
+            	    	arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+            	    }
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+            	    	memcpy( aggregate_dma_memory +
+            	    		(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+            	    		(rewrite_i*k*fpga_bus_size) +
+            	    		(fpga_bus_size*col_j) +
+            	    		(row_i*sizeof(float)), // end address calculation
+            	    		&arith_scratchpad,
+            	    		sizeof(float));
+            	    }
+                }
+            }
+        }
+        for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
+            for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
+                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+            	    if (vertical_padding_case && row_band_i==(entire_vertical_bands_matrix_B-1)) {
+            	        if (row_i<cols_last_partial_band_matrix_B) {
+            	            arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+            	        } else {
+            	            arith_scratchpad = 0.0f;
+            	        }
+            	    } else {
+            	        arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+            	    }
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
+            	    	memcpy( aggregate_dma_memory +
+            	    		(row_band_i*fpga_bus_size*k) +
+            	    		(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
+            	    		(fpga_bus_size*col_j) +
+            	    		(systolic_array_rows*sizeof(float)) + // offset
+            	    		(row_i*sizeof(float)), // end address calculation
+            	    		&arith_scratchpad,
+            	    		sizeof(float));
+            	    }
+                }
+            }
+        }
+    #endif
+
     for (uint64_t i=0 ; i < aggregate_dma_memory_size ; ++i) {
 	uint64_t bus_index = i % fpga_bus_size;
 	uint64_t col_index = (i/fpga_bus_size) % k;
 	if (bus_index == 127) {
 	    if (col_index == 0) {
-		    VERBOSE3(stdout,"i index value=%d", i);
                 aggregate_dma_memory[i] = 0x40;  // SOB
 	    } else if (col_index==k-1) {
-		    VERBOSE3(stdout,"i index value=%d", i);
                 aggregate_dma_memory[i] = 0x80;  // EOB
 	    } else {
                 aggregate_dma_memory[i] = 0x00;
@@ -468,33 +536,43 @@ static int gemm_backend_test (
     //           ((double)(total_arithmetic_ops)/((long long)timediff_usec(&etime,  &stime)))
     //         );
 
-    // if (verbose_level > 2 ) {
-    //     __hexdump(stdout, mem_out, Data_Size_out);
-    // }
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, mem_out, mem_out_size);
+    }
 
 
     // Write Matrix C to out
-    char path_out[1000];
-    strcpy(path_out, "/tmp/tmp.txt");
-    save_file_from_memory(path_out, &mem_out, mem_out_size);
     #if defined(DOUBLE)
         double *C = (double*) c;
         for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_A ; ++vertical_band_j) {
             for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_B ; ++horizontal_block_i) {
                 for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
                     for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
-                        double f_tmp;
+			// TODO(lledoux): review condition
 			char * c_tmp = mem_out +
                                 (vertical_band_j * entire_vertical_bands_matrix_B * fpga_bus_size * systolic_array_rows) +
                                 (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
                                 (fpga_bus_size * row_i) +
                                 (sizeof(double)*col_j);
-                        memcpy(&f_tmp, c_tmp, sizeof(double));
-			C[(vertical_band_j*n*systolic_array_rows)+
-			  (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
-			  ((systolic_array_rows-1-row_i)*systolic_array_columns)+
-			  col_j
-			] = f_tmp;
+			if ( !(horizontal_padding_case &&
+			       vertical_band_j==entire_horizontal_bands_matrix_A-1 &&
+			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_A) &&
+			     !(vertical_padding_case   &&
+			       horizontal_block_i==entire_vertical_bands_matrix_B-1 &&
+			       col_j >= cols_last_partial_band_matrix_B)
+			   ) {
+                            memcpy(&arith_scratchpad, c_tmp, sizeof(double));
+			    VERBOSE3(stdout, "index: %d, float value: %lf\n", (vertical_band_j*n*systolic_array_rows)+
+			      (horizontal_block_i*systolic_array_rows*systolic_array_columns)+
+			      ((systolic_array_rows-1-row_i)*systolic_array_columns)+
+			      col_j, arith_scratchpad);
+			    C[(vertical_band_j*n*systolic_array_rows)+
+			      (horizontal_block_i*systolic_array_columns)+
+			      ((systolic_array_rows-1-row_i)*n)+
+			      col_j
+			    ] = arith_scratchpad;
+			    // C[0] = arith_scratchpad;
+			}
                     }
                 }
 	    }
@@ -502,6 +580,10 @@ static int gemm_backend_test (
     #else
         float *C = (float*) c;
     #endif
+
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, C, 8*n*m);
+    }
 
 
     // Detach action

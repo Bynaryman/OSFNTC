@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import numpy as np
+import sys
 import struct
+np.set_printoptions(threshold=sys.maxsize)
 def double_to_hex(f):
     return hex(struct.unpack('<Q', struct.pack('<d', f))[0])
 
@@ -9,9 +11,9 @@ b = np.array([[1, 0], [0, 1]])
 
 np.matmul(a, b)
 
-m=16
-n=7
-k=256
+m=65
+n=64
+k=15
 
 np.random.seed(123)
 

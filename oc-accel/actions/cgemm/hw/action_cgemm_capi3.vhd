@@ -545,7 +545,7 @@ action_dma_axi_master_inst : entity work.action_axi_master
 
                   if wr_req_ack = '1' and or_reduce(blocks_to_write) = '1' then
                     wr_addr         <= wr_addr + wr_addr_adder;
-                    wr_addr_adder   <= x"1000";
+                    wr_addr_adder   <= x"2000";
                     dma_wr_req      <= dest_host;
                     if blocks_to_write >  x"0000_0040" then
                       wr_len     <= x"3f";
