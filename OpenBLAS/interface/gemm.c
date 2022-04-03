@@ -503,7 +503,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			(uint64_t) *ldC
 		);
 	#endif
-	printf("value from backend: %d", fpga_return_code);
 #else // we fall back on all other backends
 
 #if USE_SMALL_MATRIX_OPT
