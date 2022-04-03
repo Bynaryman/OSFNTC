@@ -305,8 +305,8 @@ static int gemm_backend_test (
     //snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
     VERBOSE3(stdout, "test version SA from register polling %d\n", reg);
     // TODO(lledoux): pull such numbers at runtime from fpga register polling
-    uint8_t systolic_array_rows    = 8;
-    uint8_t systolic_array_columns = 7;
+    uint8_t systolic_array_rows    = 16;
+    uint8_t systolic_array_columns = 15;
 
 
     // Allocate memories (in and out)
