@@ -257,10 +257,10 @@ static int gemm_backend_test (
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
     #if defined(DOUBLE)
-        VERBOSE2(stdout, "alpha=%lf, beta=%lf", *((double*)(alpha)),*((double*)(alpha)));
+        VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(alpha)));
         VERBOSE3(stdout, "float type is DOUBLE\n");
     #else
-        VERBOSE2(stdout, "alpha=%f, beta=%f", *((float*)(alpha)),*((float*)(alpha)));
+        VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(alpha)));
         VERBOSE3(stdout, "float type is SINGLE\n");
     #endif
 
@@ -317,6 +317,7 @@ static int gemm_backend_test (
     uint8_t systolic_array_rows    = 16;
     uint8_t systolic_array_columns = 15;
 
+    if (k < systolic_array_rows) exit(EXIT_FAILURE);
 
     // Allocate memories (in and out)
     uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
