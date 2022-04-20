@@ -259,9 +259,11 @@ static int gemm_backend_test (
     #if defined(DOUBLE)
         VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(beta)));
         VERBOSE3(stdout, "float type is DOUBLE\n");
+        VERBOSE2(stdout, "one element of C=%lf\n", *((double*)(c)));
     #else
         VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(beta)));
         VERBOSE3(stdout, "float type is SINGLE\n");
+        VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
     #endif
 
     // Transposition of input matrix B
