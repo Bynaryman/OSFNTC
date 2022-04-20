@@ -619,12 +619,29 @@ static int gemm_backend_test (
 			    	  ((systolic_array_rows-1-row_i)*n)+
 			    	  col_j
 			    	] = arith_scratchpad;
+				VERBOSE2(stdout, "beta is 0\n");
 			    } else if (*BETA == 1.0f) {
+				float C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	];
+				VERBOSE2(stdout, "beta is 1\n");
+				VERBOSE2(stdout, "old C is: %f\n", C_tmp);
+				VERBOSE2(stdout, "arith_scrat(A*B): %f\n", arith_scratchpad);
+				VERBOSE2(stdout, "new C should be: %f\n", C_tmp+arith_scratchpad);
+
 			    	C[(vertical_band_j*n*systolic_array_rows)+
 			    	  (horizontal_block_i*systolic_array_columns)+
 			    	  ((systolic_array_rows-1-row_i)*n)+
 			    	  col_j
 			    	] += arith_scratchpad;
+			    	C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	];
+				VERBOSE2(stdout, "new C is: %f\n", C_tmp);
 			    }
 			}
                     }
