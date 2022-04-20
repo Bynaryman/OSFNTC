@@ -573,11 +573,19 @@ static int gemm_backend_test (
 			       col_j >= cols_last_partial_band_matrix_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(double));
-			    C[(vertical_band_j*n*systolic_array_rows)+
-			      (horizontal_block_i*systolic_array_columns)+
-			      ((systolic_array_rows-1-row_i)*n)+
-			      col_j
-			    ] = arith_scratchpad;
+			    if (BETA == 0) {  // we consider beta is 0 or 1 to avoid a multiplication
+			    	C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	] = arith_scratchpad;
+			    } else if (BETA == 1) {
+			    	C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	] += arith_scratchpad;
+			    }
 			}
                     }
                 }
@@ -605,11 +613,19 @@ static int gemm_backend_test (
 			       col_j >= cols_last_partial_band_matrix_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(float));
-			    C[(vertical_band_j*n*systolic_array_rows)+
-			      (horizontal_block_i*systolic_array_columns)+
-			      ((systolic_array_rows-1-row_i)*n)+
-			      col_j
-			    ] = arith_scratchpad;
+			    if (BETA == 0) {  // we consider beta is 0 or 1 to avoid a multiplication
+			    	C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	] = arith_scratchpad;
+			    } else if (BETA == 1) {
+			    	C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	] += arith_scratchpad;
+			    }
 			}
                     }
                 }
