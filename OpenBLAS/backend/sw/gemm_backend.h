@@ -245,8 +245,8 @@ static int gemm_backend_test (
     char device[128];
     struct snap_job cjob;
     struct action_job mjob;
-    // unsigned long timeout = 360*2;  // 12 min
-    unsigned long timeout = 180;  // 3 min
+    unsigned long timeout = 360*2;  // 12 min
+    //unsigned long timeout = 180;  // 3 min
     struct timeval etime_card_allocation, stime_card_allocation,
 		   etime_attach_action, stime_attach_action,
 		   etime_memory_allocation, stime_memory_allocation,
@@ -257,10 +257,10 @@ static int gemm_backend_test (
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
     #if defined(DOUBLE)
-        VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(alpha)));
+        VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(beta)));
         VERBOSE3(stdout, "float type is DOUBLE\n");
     #else
-        VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(alpha)));
+        VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(beta)));
         VERBOSE3(stdout, "float type is SINGLE\n");
     #endif
 
