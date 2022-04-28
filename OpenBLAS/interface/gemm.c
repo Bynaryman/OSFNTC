@@ -490,6 +490,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			(uint64_t) ldc
 		);
 	#else
+  		printf("lda=%d, ldb=%d, ldc=%d\n", *ldA,*ldB,*ldC);
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) *M,
 			(uint64_t) *N,
