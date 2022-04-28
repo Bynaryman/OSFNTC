@@ -488,7 +488,9 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			(void*)    c,
 			(uint64_t) lda,
 			(uint64_t) ldb,
-			(uint64_t) ldc
+			(uint64_t) ldc,
+			transa,
+			transb
 		);
 	#else
   		printf("lda=%d, ldb=%d, ldc=%d\n", *ldA,*ldB,*ldC);
@@ -504,7 +506,9 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			(void*)    c,
 			(uint64_t) *ldA,
 			(uint64_t) *ldB,
-			(uint64_t) *ldC
+			(uint64_t) *ldC,
+			transa,
+			transb
 		);
 	#endif
 #else // we fall back on all other backends

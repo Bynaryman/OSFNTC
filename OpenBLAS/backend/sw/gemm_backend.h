@@ -227,7 +227,9 @@ static int gemm_backend_test (
 		void *c,
 		uint64_t lda,
 		uint64_t ldb,
-		uint64_t ldc) {
+		uint64_t ldc,
+		int transA,
+		int transB) {
 
 
 
@@ -268,19 +270,41 @@ static int gemm_backend_test (
 
     // Transposition of input matrix B
     #if defined(DOUBLE)
-    	double *A     = (double*)a;
+    	double *A     = NULL;
     	double *B     = (double*)b;
     	double *BETA  = (double*)beta;
     	double *ALPHA = (double*)alpha;
-	double *B_T   = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
-    	cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+	double *B_T   = NULL;
+        if (transB == 0) {
+	    B_T = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
+    	    cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+	} else {
+	    B_T = B;
+	}
+	if (transA == 1){
+	    A = (double *)(alloc_mem(64, sizeof(double)*(m*k)));
+	    cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (double *)a, k, A, m);
+	} else {
+	    A = (double *)a;
+	}
     #else
-    	float *A = (float*)a;
+    	float *A = NULL;
     	float *B = (float*)b;
     	float *BETA=(float*)beta;
     	float *ALPHA=(float*)alpha;
-	float *B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
-    	cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+	float *B_T = NULL;
+        if (transB == 0) {
+	    B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
+    	    cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+	} else {
+	    B_T = B;
+	}
+	if (transA == 1){
+	    A = (float *)(alloc_mem(64, sizeof(float)*(m*k)));
+	    cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (float *)a, k, A, m);
+	} else {
+	    A = (float *)a;
+	}
     #endif
 
 
