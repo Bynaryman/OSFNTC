@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 # check device
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-numpy.set_printoptions(threshold=10_000)
+np.set_printoptions(threshold=10_000)
 
 # parameters
 RANDOM_SEED = 42
