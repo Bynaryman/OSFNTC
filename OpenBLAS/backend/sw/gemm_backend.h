@@ -295,13 +295,13 @@ static int gemm_backend_test (
 	float *B_T = NULL;
         if (transB == 0) {
 	    B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
-    	    cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+    	    cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
 	} else {
 	    B_T = B;
 	}
 	if (transA == 1){
 	    A = (float *)(alloc_mem(64, sizeof(float)*(m*k)));
-	    cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (float *)a, k, A, m);
+	    cblas_somatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (float *)a, k, A, m);
 	} else {
 	    A = (float *)a;
 	}
