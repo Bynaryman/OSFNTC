@@ -20,7 +20,7 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 RANDOM_SEED = 42
 LEARNING_RATE = 0.001
 BATCH_SIZE = 32
-N_EPOCHS = 9
+N_EPOCHS = 1
 
 IMG_SIZE = 32
 N_CLASSES = 10
@@ -186,6 +186,14 @@ valid_loader = DataLoader(dataset=valid_dataset,
 						  shuffle=False)
 
 
+class PrintLayer(nn.Module):
+    def __init__(self):
+        super(PrintLayer, self).__init__()
+
+    def forward(self, x):
+        # Do your print / debug stuff here
+        print(x)
+        return x
 
 class LeNet5(nn.Module):
 
@@ -194,9 +202,13 @@ class LeNet5(nn.Module):
 
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1),
+			PrintLayer(),
             nn.Tanh(),
+			PrintLayer(),
             nn.AvgPool2d(kernel_size=2),
+			PrintLayer(),
             nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5, stride=1),
+			PrintLayer(),
             nn.Tanh(),
             nn.AvgPool2d(kernel_size=2),
             nn.Conv2d(in_channels=16, out_channels=120, kernel_size=5, stride=1),
