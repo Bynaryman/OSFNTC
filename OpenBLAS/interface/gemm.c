@@ -475,6 +475,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
 	#if defined(CBLAS)
+  		printf("lda=%d, ldb=%d, ldc=%d\n", lda,ldb,ldc);
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) m,
 			(uint64_t) n,
