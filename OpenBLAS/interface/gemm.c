@@ -356,7 +356,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
   transb = -1;
   info   =  0;
 
-  if (order == CblasColMajor) {
+//  if (order == CblasColMajor) {
     args.m = m;
     args.n = n;
     args.k = k;
@@ -403,7 +403,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
     if (args.m < 0)        info =  3;
     if (transb < 0)        info =  2;
     if (transa < 0)        info =  1;
-  }
+  //}
 
 //   if (order == CblasRowMajor) {
 //     args.m = n;
