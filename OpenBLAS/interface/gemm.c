@@ -494,8 +494,8 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
     info = -1;
 
     if (args.ldc < args.m) info = 13;
-    if (args.ldb < nrowb)  info = 10;
-    if (args.lda < nrowa)  info =  8;
+    if (args.lda < nrowb)  info = 10;
+    if (args.ldb < nrowa)  info =  8;
     if (args.k < 0)        info =  5;
     if (args.n < 0)        info =  4;
     if (args.m < 0)        info =  3;
