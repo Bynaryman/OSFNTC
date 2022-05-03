@@ -296,6 +296,9 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
   FLOAT *c = (FLOAT*) vc;
 #endif
 
+  printf("arg TransA= %d\n", TransA);
+  printf("arg TransB= %d\n", TransB);
+
   blas_arg_t args;
   int transa, transb;
   blasint nrowa, nrowb, info;
@@ -473,10 +476,11 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
   FUNCTION_PROFILE_START();
 
+  printf("transA=%d\n", transa);
+  printf("transB=%d\n", transb);
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
 	#if defined(CBLAS)
   		printf("lda=%d, ldb=%d, ldc=%d\n", lda,ldb,ldc);
-  		printf("transA=%d, transB=%d\n", transa,transb);
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) m,
 			(uint64_t) n,
@@ -494,7 +498,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 		);
 	#else
   		printf("lda=%d, ldb=%d, ldc=%d\n", *ldA,*ldB,*ldC);
-  		printf("transA=%d, transB=%d\n", transa,transb);
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) *M,
 			(uint64_t) *N,
