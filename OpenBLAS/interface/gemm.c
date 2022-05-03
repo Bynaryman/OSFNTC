@@ -296,9 +296,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
   FLOAT *c = (FLOAT*) vc;
 #endif
 
-  printf("arg TransA= %d\n", TransA);
-  printf("arg TransB= %d\n", TransB);
-
   blas_arg_t args;
   int transa, transb;
   blasint nrowa, nrowb, info;
@@ -408,55 +405,55 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
     if (transa < 0)        info =  1;
   }
 
-  if (order == CblasRowMajor) {
-    args.m = n;
-    args.n = m;
-    args.k = k;
-
-    args.a = (void *)b;
-    args.b = (void *)a;
-    args.c = (void *)c;
-
-    args.lda = ldb;
-    args.ldb = lda;
-    args.ldc = ldc;
-
-    if (TransB == CblasNoTrans)     transa = 0;
-    if (TransB == CblasTrans)       transa = 1;
-#ifndef COMPLEX
-    if (TransB == CblasConjNoTrans) transa = 0;
-    if (TransB == CblasConjTrans)   transa = 1;
-#else
-    if (TransB == CblasConjNoTrans) transa = 2;
-    if (TransB == CblasConjTrans)   transa = 3;
-#endif
-    if (TransA == CblasNoTrans)     transb = 0;
-    if (TransA == CblasTrans)       transb = 1;
-#ifndef COMPLEX
-    if (TransA == CblasConjNoTrans) transb = 0;
-    if (TransA == CblasConjTrans)   transb = 1;
-#else
-    if (TransA == CblasConjNoTrans) transb = 2;
-    if (TransA == CblasConjTrans)   transb = 3;
-#endif
-
-    nrowa = args.m;
-    if (transa & 1) nrowa = args.k;
-    nrowb = args.k;
-    if (transb & 1) nrowb = args.n;
-
-    info = -1;
-
-    if (args.ldc < args.m) info = 13;
-    if (args.ldb < nrowb)  info = 10;
-    if (args.lda < nrowa)  info =  8;
-    if (args.k < 0)        info =  5;
-    if (args.n < 0)        info =  4;
-    if (args.m < 0)        info =  3;
-    if (transb < 0)        info =  2;
-    if (transa < 0)        info =  1;
-
-  }
+//   if (order == CblasRowMajor) {
+//     args.m = n;
+//     args.n = m;
+//     args.k = k;
+//
+//     args.a = (void *)b;
+//     args.b = (void *)a;
+//     args.c = (void *)c;
+//
+//     args.lda = ldb;
+//     args.ldb = lda;
+//     args.ldc = ldc;
+//
+//     if (TransB == CblasNoTrans)     transa = 0;
+//     if (TransB == CblasTrans)       transa = 1;
+// #ifndef COMPLEX
+//     if (TransB == CblasConjNoTrans) transa = 0;
+//     if (TransB == CblasConjTrans)   transa = 1;
+// #else
+//     if (TransB == CblasConjNoTrans) transa = 2;
+//     if (TransB == CblasConjTrans)   transa = 3;
+// #endif
+//     if (TransA == CblasNoTrans)     transb = 0;
+//     if (TransA == CblasTrans)       transb = 1;
+// #ifndef COMPLEX
+//     if (TransA == CblasConjNoTrans) transb = 0;
+//     if (TransA == CblasConjTrans)   transb = 1;
+// #else
+//     if (TransA == CblasConjNoTrans) transb = 2;
+//     if (TransA == CblasConjTrans)   transb = 3;
+// #endif
+//
+//     nrowa = args.m;
+//     if (transa & 1) nrowa = args.k;
+//     nrowb = args.k;
+//     if (transb & 1) nrowb = args.n;
+//
+//     info = -1;
+//
+//     if (args.ldc < args.m) info = 13;
+//     if (args.ldb < nrowb)  info = 10;
+//     if (args.lda < nrowa)  info =  8;
+//     if (args.k < 0)        info =  5;
+//     if (args.n < 0)        info =  4;
+//     if (args.m < 0)        info =  3;
+//     if (transb < 0)        info =  2;
+//     if (transa < 0)        info =  1;
+//
+//   }
 
   if (info >= 0) {
     BLASFUNC(xerbla)(ERROR_NAME, &info, sizeof(ERROR_NAME));
@@ -476,8 +473,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
   FUNCTION_PROFILE_START();
 
-  printf("transA=%d\n", transa);
-  printf("transB=%d\n", transb);
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
 	#if defined(CBLAS)
   		printf("lda=%d, ldb=%d, ldc=%d\n", lda,ldb,ldc);

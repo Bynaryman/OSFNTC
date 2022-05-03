@@ -268,6 +268,13 @@ static int gemm_backend_test (
         VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
     #endif
 
+    // int transA=-1;
+    // int transB=-1;
+    // if (TransA == 112) {transA = 1;}
+    // else {transA = 0;}
+    // if (TransB == 112) {transB = 1;}
+    // else {transB = 0;}
+
     // Transposition of input matrix B
     #if defined(DOUBLE)
     	double *A     = NULL;
