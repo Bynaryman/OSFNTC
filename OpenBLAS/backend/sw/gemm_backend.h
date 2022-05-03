@@ -239,6 +239,7 @@ static int gemm_backend_test (
         verbose_level = atoi(pTmp);
 
     VERBOSE2(stdout, "m=%lld, n=%lld, k=%lld\n", m, n, k);
+    VERBOSE2(stdout, "transA=%d, transB=%d\n", transA, transB);
 
     int rc = 0;
     int card_no = 0;
@@ -657,10 +658,10 @@ static int gemm_backend_test (
 			    	  ((systolic_array_rows-1-row_i)*n)+
 			    	  col_j
 			    	];
-				VERBOSE2(stdout, "beta is 1\n");
-				VERBOSE2(stdout, "old C is: %f\n", C_tmp);
-				VERBOSE2(stdout, "arith_scrat(A*B): %f\n", arith_scratchpad);
-				VERBOSE2(stdout, "new C should be: %f\n", C_tmp+arith_scratchpad);
+				VERBOSE3(stdout, "beta is 1\n");
+				VERBOSE3(stdout, "old C is: %f\n", C_tmp);
+				VERBOSE3(stdout, "arith_scrat(A*B): %f\n", arith_scratchpad);
+				VERBOSE3(stdout, "new C should be: %f\n", C_tmp+arith_scratchpad);
 
 			    	C[(vertical_band_j*n*systolic_array_rows)+
 			    	  (horizontal_block_i*systolic_array_columns)+
@@ -695,7 +696,12 @@ static int gemm_backend_test (
 
 
     // Deallocate input and output matrices
-    free(B_T);
+    if (transB==0) {
+    	free(B_T);
+    }
+    if (transA==1) {
+        free(A);
+    }
     free(mem_out);
     free(aggregate_dma_memory);
     //exit(EXIT_SUCCESS);
@@ -708,7 +714,12 @@ static int gemm_backend_test (
     out_error1:
         snap_card_free(card);
     out_error:
-        free(B_T);
+    	if (transB==0) {
+    	    free(B_T);
+    	}
+        if (transA==1) {
+            free(A);
+        }
         // exit(EXIT_FAILURE);
 	return 1;
 
