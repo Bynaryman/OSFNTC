@@ -404,86 +404,37 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
     if (transb < 0)        info =  2;
     if (transa < 0)        info =  1;
   }
-//  if (order == CblasRowMajor) {
-//    args.m = n;
-//    args.n = m;
-//    args.k = k;
-//
-//    args.a = (void *)b;
-//    args.b = (void *)a;
-//    args.c = (void *)c;
-//
-//    args.lda = ldb;
-//    args.ldb = lda;
-//    args.ldc = ldc;
-//
-//    if (TransB == CblasNoTrans)     transa = 0;
-//    if (TransB == CblasTrans)       transa = 1;
-//#ifndef COMPLEX
-//    if (TransB == CblasConjNoTrans) transa = 0;
-//    if (TransB == CblasConjTrans)   transa = 1;
-//#else
-//    if (TransB == CblasConjNoTrans) transa = 2;
-//    if (TransB == CblasConjTrans)   transa = 3;
-//#endif
-//    if (TransA == CblasNoTrans)     transb = 0;
-//    if (TransA == CblasTrans)       transb = 1;
-//#ifndef COMPLEX
-//    if (TransA == CblasConjNoTrans) transb = 0;
-//    if (TransA == CblasConjTrans)   transb = 1;
-//#else
-//    if (TransA == CblasConjNoTrans) transb = 2;
-//    if (TransA == CblasConjTrans)   transb = 3;
-//#endif
-//
-//    nrowa = args.m;
-//    if (transa & 1) nrowa = args.k;
-//    nrowb = args.k;
-//    if (transb & 1) nrowb = args.n;
-//
-//    info = -1;
-//
-//    if (args.ldc < args.m) info = 13;
-//    if (args.ldb < nrowb)  info = 10;
-//    if (args.lda < nrowa)  info =  8;
-//    if (args.k < 0)        info =  5;
-//    if (args.n < 0)        info =  4;
-//    if (args.m < 0)        info =  3;
-//    if (transb < 0)        info =  2;
-//    if (transa < 0)        info =  1;
-//
-//  }
 
   if (order == CblasRowMajor) {
-    args.m = m;
-    args.n = n;
+    args.m = n;
+    args.n = m;
     args.k = k;
 
-    args.a = (void *)a;
-    args.b = (void *)b;
+    args.a = (void *)b;
+    args.b = (void *)a;
     args.c = (void *)c;
 
-    args.lda = lda;
-    args.ldb = ldb;
+    args.lda = ldb;
+    args.ldb = lda;
     args.ldc = ldc;
 
-    if (TransA == CblasNoTrans)     transa = 0;
-    if (TransA == CblasTrans)       transa = 1;
+    if (TransB == CblasNoTrans)     transa = 0;
+    if (TransB == CblasTrans)       transa = 1;
 #ifndef COMPLEX
-    if (TransA == CblasConjNoTrans) transa = 0;
-    if (TransA == CblasConjTrans)   transa = 1;
+    if (TransB == CblasConjNoTrans) transa = 0;
+    if (TransB == CblasConjTrans)   transa = 1;
 #else
-    if (TransA == CblasConjNoTrans) transa = 2;
-    if (TransA == CblasConjTrans)   transa = 3;
+    if (TransB == CblasConjNoTrans) transa = 2;
+    if (TransB == CblasConjTrans)   transa = 3;
 #endif
-    if (TransB == CblasNoTrans)     transb = 0;
-    if (TransB == CblasTrans)       transb = 1;
+    if (TransA == CblasNoTrans)     transb = 0;
+    if (TransA == CblasTrans)       transb = 1;
 #ifndef COMPLEX
-    if (TransB == CblasConjNoTrans) transb = 0;
-    if (TransB == CblasConjTrans)   transb = 1;
+    if (TransA == CblasConjNoTrans) transb = 0;
+    if (TransA == CblasConjTrans)   transb = 1;
 #else
-    if (TransB == CblasConjNoTrans) transb = 2;
-    if (TransB == CblasConjTrans)   transb = 3;
+    if (TransA == CblasConjNoTrans) transb = 2;
+    if (TransA == CblasConjTrans)   transb = 3;
 #endif
 
     nrowa = args.m;
@@ -494,8 +445,8 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
     info = -1;
 
     if (args.ldc < args.m) info = 13;
-    if (args.lda < nrowb)  info = 10;
-    if (args.ldb < nrowa)  info =  8;
+    if (args.ldb < nrowb)  info = 10;
+    if (args.lda < nrowa)  info =  8;
     if (args.k < 0)        info =  5;
     if (args.n < 0)        info =  4;
     if (args.m < 0)        info =  3;
@@ -503,6 +454,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
     if (transa < 0)        info =  1;
 
   }
+
 
   if (info >= 0) {
     BLASFUNC(xerbla)(ERROR_NAME, &info, sizeof(ERROR_NAME));
@@ -525,6 +477,10 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
 	#if defined(CBLAS)
   		printf("lda=%d, ldb=%d, ldc=%d\n", lda,ldb,ldc);
+                if (TransA == CblasNoTrans)     transa = 0;
+                if (TransA == CblasTrans)       transa = 1;
+                if (TransB == CblasNoTrans)     transb = 0;
+                if (TransB == CblasTrans)       transb = 1;
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) m,
 			(uint64_t) n,
@@ -542,6 +498,10 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 		);
 	#else
   		printf("lda=%d, ldb=%d, ldc=%d\n", *ldA,*ldB,*ldC);
+                if (transA == 'N') transa = 0;
+                if (transA == 'T') transa = 1;
+                if (transB == 'N') transb = 0;
+                if (transB == 'T') transb = 1;
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) *M,
 			(uint64_t) *N,
