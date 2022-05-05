@@ -476,7 +476,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
 	#if defined(CBLAS)
-  		printf("lda=%d, ldb=%d, ldc=%d\n", lda,ldb,ldc);
                 if (TransA == CblasNoTrans)     transa = 0;
                 if (TransA == CblasTrans)       transa = 1;
                 if (TransB == CblasNoTrans)     transb = 0;
@@ -496,8 +495,16 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			transa,
 			transb
 		);
+		#if defined(DO_COMPARISON)
+			#if defined(DOUBLE)
+				double* C_fpga = (double*)malloc(m*n*sizeof(double));
+				memcpy(C_fpga,(double*)c,m*n*sizeof(double));
+			#else
+				float* C_fpga = (float*)malloc(m*n*sizeof(float));
+				memcpy(C_fpga,(float*)c,m*n*sizeof(float));
+			#endif
+		#endif
 	#else
-  		printf("lda=%d, ldb=%d, ldc=%d\n", *ldA,*ldB,*ldC);
                 if (transA == 'N') transa = 0;
                 if (transA == 'T') transa = 1;
                 if (transB == 'N') transb = 0;
@@ -517,8 +524,18 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			transa,
 			transb
 		);
+		#if defined(DO_COMPARISON)
+			#if defined(DOUBLE)
+				double* C_fpga = (double*)malloc((*M)*(*N)*sizeof(double));
+				memcpy(C_fpga,(double*)c,(*M)*(*N)*sizeof(double));
+			#else
+				float* C_fpga = (float*)malloc((*M)*(*N)*sizeof(float));
+				memcpy(C_fpga,(float*)c,(*M)*(*N)*sizeof(float));
+			#endif
+		#endif
 	#endif
-#else // we fall back on all other backends
+#endif
+#if (USE_OCAPI==1 && DO_COMPARISON==1) || USE_OCAPI!=1// we fall back on all other backends
 
 #if USE_SMALL_MATRIX_OPT
 #if !defined(COMPLEX)
@@ -588,7 +605,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
 	args.nthreads /= nodes;
 
-    printf("gemm_thread_nn no affinity\n");
 	gemm_thread_mn(mode, &args, NULL, NULL, gemm[16 | (transb << 2) | transa], sa, sb, nodes);
 
       } else {
@@ -598,7 +614,6 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
 #else
 
-    printf("GEMM THREAD\n");
 	GEMM_THREAD(mode, &args, NULL, NULL, gemm[(transb << 2) | transa], sa, sb, args.nthreads);
 
 #endif
@@ -618,6 +633,36 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
  blas_memory_free(buffer);
 
 #endif // end non OCAPI code
+
+#if defined(DO_COMPARISON)
+ 	#if defined(CBLAS)
+		#if defined(DOUBLE)
+ 			VERBOSE3(stdout, "original\n");
+		        __hexdump(stdout, (double*)c, m*n*sizeof(double));
+ 			VERBOSE3(stdout, "fpga\n");
+		        __hexdump(stdout, C_fpga, m*n*sizeof(double));
+		#else
+ 			VERBOSE3(stdout, "original\n");
+		        __hexdump(stdout, (float*)c, m*n*sizeof(float));
+ 			VERBOSE3(stdout, "fpga\n");
+		        __hexdump(stdout, C_fpga, m*n*sizeof(float));
+		#endif
+	#else
+		#if defined(DOUBLE)
+ 			VERBOSE3(stdout, "original\n");
+		        __hexdump(stdout, (double*)c, (*M)*(*N)*sizeof(double));
+ 			VERBOSE3(stdout, "fpga\n");
+		        __hexdump(stdout, C_fpga, (*M)*(*N)*sizeof(double));
+		#else
+ 			VERBOSE3(stdout, "original\n");
+		        __hexdump(stdout, (float*)c, (*M)*(*N)*sizeof(float));
+ 			VERBOSE3(stdout, "fpga\n");
+		        __hexdump(stdout, C_fpga, (*M)*(*N)*sizeof(float));
+		#endif
+
+	#endif
+	free(C_fpga);
+#endif
 
   FUNCTION_PROFILE_END(COMPSIZE * COMPSIZE, args.m * args.k + args.k * args.n + args.m * args.n, 2 * args.m * args.n * args.k);
 

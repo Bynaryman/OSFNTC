@@ -46,6 +46,10 @@ ifeq ($(USE_OCAPI),1)
 CFLAGS += -DUSE_OCAPI=0
 endif
 
+ifeq ($(DO_COMPARISON),1)
+CFLAGS += -DDO_COMPARISON=0
+endif
+
 all : run_test
 
 $(UTESTBIN): $(OBJS)

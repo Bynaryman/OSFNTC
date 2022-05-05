@@ -25,6 +25,13 @@ endef
 export USE_OCAPI
 endif
 
+ifeq ($(DO_COMPARISON), 1)
+define DO_COMPARISON
+1
+endef
+export DO_COMPARISON
+endif
+
 
 RELA =
 ifeq ($(BUILD_RELAPACK), 1)
