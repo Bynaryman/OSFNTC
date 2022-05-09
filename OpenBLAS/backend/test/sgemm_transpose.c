@@ -26,7 +26,7 @@ int main()
   float start, end;
 
   // m = 20000, k = 2000, n = 1000;
-  m = 200, k = 242, n = 27;
+  m = 784, k = 25, n = 6;
 
   alpha = 1.0; beta = 1.0;
 
