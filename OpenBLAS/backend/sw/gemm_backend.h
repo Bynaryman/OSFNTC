@@ -384,6 +384,11 @@ static int gemm_backend_test (
 
 
     #if defined(DOUBLE)
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, A,m*k*sizeof(double));
+        __hexdump(stdout, B,k*n*sizeof(double));
+        __hexdump(stdout, C,m*n*sizeof(double));
+    }
         double arith_scratchpad;
         for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
             for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
@@ -435,6 +440,11 @@ static int gemm_backend_test (
             }
         }
     #else
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, A,m*k*sizeof(float));
+        __hexdump(stdout, B,k*n*sizeof(float));
+        __hexdump(stdout, C,m*n*sizeof(float));
+    }
         float arith_scratchpad;
         for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
             for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {

@@ -51,7 +51,7 @@ int main()
   }
 
   for (i = 0; i < (m*n); i++) {
-    C[i] = 0.0;
+    C[i] = 3.0;
   }
   // double *B_T;
   // posix_memalign((void**) &B_T, 64, k*n*sizeof( double ));
