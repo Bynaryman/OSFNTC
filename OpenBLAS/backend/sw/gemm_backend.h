@@ -678,7 +678,12 @@ static int gemm_backend_test (
 			    	  (horizontal_block_i*systolic_array_columns)+
 			    	  ((systolic_array_rows-1-row_i)*n)+
 			    	  col_j
-			    	] += (*BETA)*arith_scratchpad;
+			    	] *= (*BETA);
+				C[(vertical_band_j*n*systolic_array_rows)+
+			    	  (horizontal_block_i*systolic_array_columns)+
+			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	  col_j
+			    	] += arith_scratchpad;
 			    	// C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
 			    	//   (horizontal_block_i*systolic_array_columns)+
 			    	//   ((systolic_array_rows-1-row_i)*n)+
