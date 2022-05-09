@@ -26,9 +26,9 @@ int main()
   double start, end;
 
   // m = 20000, k = 2000, n = 1000;
-  m = 200, k = 242, n = 27;
+  m = 784, k = 25, n = 6;
 
-  alpha = 1.0; beta = 1.0;
+  alpha = 1.0; beta = 0.0;
 
   posix_memalign((void**) &A, 64, m*k*sizeof( double ));
   posix_memalign((void**) &B, 64, k*n*sizeof( double ));
@@ -65,7 +65,7 @@ int main()
   start = get_time();
   //cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
   //      m, n, k, alpha, A, k, B, n, beta, C, n);
-  cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans,
+  cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
         m, n, k, alpha, A, k, B, n, beta, C, n);
   end = get_time();
 
