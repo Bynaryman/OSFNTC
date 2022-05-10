@@ -480,6 +480,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
                 if (TransA == CblasTrans)       transa = 1;
                 if (TransB == CblasNoTrans)     transb = 0;
                 if (TransB == CblasTrans)       transb = 1;
+		VERBOSE3(stdout, "lda=%d, ldb=%d, ldc=%d", lda, ldb, ldc);
 		#if defined(DO_COMPARISON)
 			#if defined(DOUBLE)
 				double* C_original = (double*)malloc(m*n*sizeof(double));
@@ -522,6 +523,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
                 if (transA == 'T') transa = 1;
                 if (transB == 'N') transb = 0;
                 if (transB == 'T') transb = 1;
+		VERBOSE3(stdout, "lda=%d, ldb=%d, ldc=%d", *ldA, *ldB, *ldC);
 		#if defined(DO_COMPARISON)
 			#if defined(DOUBLE)
 				double* C_original = (double*)malloc((*M)*(*N)*sizeof(double));
