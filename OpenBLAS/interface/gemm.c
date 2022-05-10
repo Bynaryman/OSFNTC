@@ -480,6 +480,15 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
                 if (TransA == CblasTrans)       transa = 1;
                 if (TransB == CblasNoTrans)     transb = 0;
                 if (TransB == CblasTrans)       transb = 1;
+		#if defined(DO_COMPARISON)
+			#if defined(DOUBLE)
+				double* C_original = (double*)malloc(m*n*sizeof(double));
+				memcpy(C_original,(double*)c,m*n*sizeof(double));
+			#else
+				float* C_original = (float*)malloc(m*n*sizeof(float));
+				memcpy(C_original,(float*)c,m*n*sizeof(float));
+			#endif
+		#endif
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) m,
 			(uint64_t) n,
@@ -488,7 +497,11 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			(void*)    &beta,
 			(void*)    a,
 			(void*)    b,
+			#if defined(DO_COMPARISON)
+			(void*)    C_original,
+			#else
 			(void*)    c,
+			#endif
 			(uint64_t) lda,
 			(uint64_t) ldb,
 			(uint64_t) ldc,
@@ -498,10 +511,10 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 		#if defined(DO_COMPARISON)
 			#if defined(DOUBLE)
 				double* C_fpga = (double*)malloc(m*n*sizeof(double));
-				memcpy(C_fpga,(double*)c,m*n*sizeof(double));
+				memcpy(C_fpga,(double*)C_original,m*n*sizeof(double));
 			#else
 				float* C_fpga = (float*)malloc(m*n*sizeof(float));
-				memcpy(C_fpga,(float*)c,m*n*sizeof(float));
+				memcpy(C_fpga,(float*)C_original,m*n*sizeof(float));
 			#endif
 		#endif
 	#else
@@ -509,6 +522,15 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
                 if (transA == 'T') transa = 1;
                 if (transB == 'N') transb = 0;
                 if (transB == 'T') transb = 1;
+		#if defined(DO_COMPARISON)
+			#if defined(DOUBLE)
+				double* C_original = (double*)malloc((*M)*(*N)*sizeof(double));
+				memcpy(C_original,(double*)c,(*M)*(*N)*sizeof(double));
+			#else
+				float* C_original = (float*)malloc((*M)*(*N)*sizeof(float));
+				memcpy(C_original,(float*)c,(*M)*(*N)*sizeof(float));
+			#endif
+		#endif
 		int fpga_return_code = gemm_backend_test(
 			(uint64_t) *M,
 			(uint64_t) *N,
@@ -517,7 +539,11 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 			(void*)    beta,
 			(void*)    a,
 			(void*)    b,
+			#if defined(DO_COMPARISON)
+			(void*)    C_original,
+			#else
 			(void*)    c,
+			#endif
 			(uint64_t) *ldA,
 			(uint64_t) *ldB,
 			(uint64_t) *ldC,
@@ -527,10 +553,10 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 		#if defined(DO_COMPARISON)
 			#if defined(DOUBLE)
 				double* C_fpga = (double*)malloc((*M)*(*N)*sizeof(double));
-				memcpy(C_fpga,(double*)c,(*M)*(*N)*sizeof(double));
+				memcpy(C_fpga,(double*)C_original,(*M)*(*N)*sizeof(double));
 			#else
 				float* C_fpga = (float*)malloc((*M)*(*N)*sizeof(float));
-				memcpy(C_fpga,(float*)c,(*M)*(*N)*sizeof(float));
+				memcpy(C_fpga,(float*)C_original,(*M)*(*N)*sizeof(float));
 			#endif
 		#endif
 	#endif
@@ -662,6 +688,7 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 
 	#endif
 	free(C_fpga);
+	free(C_original);
 #endif
 
   FUNCTION_PROFILE_END(COMPSIZE * COMPSIZE, args.m * args.k + args.k * args.n + args.m * args.n, 2 * args.m * args.n * args.k);
