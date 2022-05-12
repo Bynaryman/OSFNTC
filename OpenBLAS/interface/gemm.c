@@ -277,6 +277,7 @@ void NAME(char *TRANSA, char *TRANSB,
 
 void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANSPOSE TransB,
 	   blasint m, blasint n, blasint k,
+	   printf("order is:%d\n", order);
 #ifndef COMPLEX
 	   FLOAT alpha,
 	   IFLOAT *a, blasint lda,
