@@ -289,13 +289,13 @@ void CNAME(enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE TransA, enum CBLAS_TRANS
 	   void *vb, blasint ldb,
 	   void *vbeta,
 	   void *vc, blasint ldc) {
-	   printf("order is:%d\n", order);
   FLOAT *alpha = (FLOAT*) valpha;
   FLOAT *beta  = (FLOAT*) vbeta;
   FLOAT *a = (FLOAT*) va;
   FLOAT *b = (FLOAT*) vb;
   FLOAT *c = (FLOAT*) vc;
 #endif
+printf("order is:%d\n", order);
 
   blas_arg_t args;
   int transa, transb;
