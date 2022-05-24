@@ -492,21 +492,21 @@ printf("order is:%d\n", order);
 			#endif
 		#endif
 		int fpga_return_code = gemm_backend_test(
-			(uint64_t) m,
-			(uint64_t) n,
-			(uint64_t) k,
-			(void*)    &alpha,
-			(void*)    &beta,
-			(void*)    a,
-			(void*)    b,
+			(uint64_t) args.m,
+			(uint64_t) args.n,
+			(uint64_t) args.k,
+			(void*)    args.alpha,
+			(void*)    args.beta,
+			(void*)    args.a,
+			(void*)    args.b,
 			#if defined(DO_COMPARISON)
 			(void*)    C_original,
 			#else
-			(void*)    c,
+			(void*)    args.c,
 			#endif
-			(uint64_t) lda,
-			(uint64_t) ldb,
-			(uint64_t) ldc,
+			(uint64_t) args.lda,
+			(uint64_t) args.ldb,
+			(uint64_t) args.ldc,
 			transa,
 			transb
 		);
@@ -535,21 +535,21 @@ printf("order is:%d\n", order);
 			#endif
 		#endif
 		int fpga_return_code = gemm_backend_test(
-			(uint64_t) *M,
-			(uint64_t) *N,
-			(uint64_t) *K,
-			(void*)    alpha,
-			(void*)    beta,
-			(void*)    a,
-			(void*)    b,
+			(uint64_t) args.m,
+			(uint64_t) args.n,
+			(uint64_t) args.k,
+			(void*)    args.alpha,
+			(void*)    args.beta,
+			(void*)    args.a,
+			(void*)    args.b,
 			#if defined(DO_COMPARISON)
 			(void*)    C_original,
 			#else
-			(void*)    c,
+			(void*)    args.c,
 			#endif
-			(uint64_t) *ldA,
-			(uint64_t) *ldB,
-			(uint64_t) *ldC,
+			(uint64_t) args.lda,
+			(uint64_t) args.ldb,
+			(uint64_t) args.ldc,
 			transa,
 			transb
 		);

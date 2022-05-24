@@ -278,41 +278,41 @@ static int gemm_backend_test (
 
     // Transposition of input matrix B
     #if defined(DOUBLE)
-    	double *A     = NULL;
+    	double *A     = (double*)a;
     	double *B     = (double*)b;
     	double *BETA  = (double*)beta;
     	double *ALPHA = (double*)alpha;
-	double *B_T   = NULL;
-        if (transB == 0) {
-	    B_T = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
-    	    cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
-	} else {
-	    B_T = B;
-	}
-	if (transA == 1){
-	    A = (double *)(alloc_mem(64, sizeof(double)*(m*k)));
-	    cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (double *)a, k, A, m);
-	} else {
-	    A = (double *)a;
-	}
+	//double *B_T   = NULL;
+        //if (transB == 0) {
+	//    B_T = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
+    	//    cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+	//} else {
+	//    B_T = B;
+	//}
+	//if (transA == 1){
+	//    A = (double *)(alloc_mem(64, sizeof(double)*(m*k)));
+	//    cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (double *)a, k, A, m);
+	//} else {
+	//    A = (double *)a;
+	//}
     #else
-    	float *A = NULL;
+    	float *A = (float*)a;
     	float *B = (float*)b;
     	float *BETA=(float*)beta;
     	float *ALPHA=(float*)alpha;
-	float *B_T = NULL;
-        if (transB == 0) {
-	    B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
-    	    cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
-	} else {
-	    B_T = B;
-	}
-	if (transA == 1){
-	    A = (float *)(alloc_mem(64, sizeof(float)*(m*k)));
-	    cblas_somatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (float *)a, k, A, m);
-	} else {
-	    A = (float *)a;
-	}
+	//float *B_T = NULL;
+        //if (transB == 0) {
+	//    B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
+    	//    cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
+	//} else {
+	//    B_T = B;
+	//}
+	//if (transA == 1){
+	//    A = (float *)(alloc_mem(64, sizeof(float)*(m*k)));
+	//    cblas_somatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (float *)a, k, A, m);
+	//} else {
+	//    A = (float *)a;
+	//}
     #endif
 
 
@@ -355,30 +355,31 @@ static int gemm_backend_test (
 
     // Allocate memories (in and out)
     uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
-    uint64_t entire_horizontal_bands_matrix_A = m / systolic_array_rows;
-    uint8_t rows_last_partial_band_matrix_A = m % systolic_array_rows;
-    uint64_t entire_vertical_bands_matrix_B = n / systolic_array_columns;
-    uint8_t cols_last_partial_band_matrix_B = n % systolic_array_columns;
-    VERBOSE3(stdout, "entire horizontal bands matrix A: %d\n", entire_horizontal_bands_matrix_A);
-    VERBOSE3(stdout, "entire vertical bands matrix b: %d\n", entire_vertical_bands_matrix_B);
-    VERBOSE3(stdout, "rows last band matrix A: %d\n", rows_last_partial_band_matrix_A);
-    VERBOSE3(stdout, "columns last band matrix b: %d\n", cols_last_partial_band_matrix_B);
+    uint64_t entire_horizontal_bands_matrix_op_A = m / systolic_array_rows;
+    uint8_t rows_last_partial_band_matrix_op_A = m % systolic_array_rows;
+    uint64_t entire_vertical_bands_matrix_op_B = n / systolic_array_columns;
+    uint8_t cols_last_partial_band_matrix_op_B = n % systolic_array_columns;
+    VERBOSE3(stdout, "entire horizontal bands matrix A: %d\n", entire_horizontal_bands_matrix_op_A);
+    VERBOSE3(stdout, "entire vertical bands matrix b: %d\n", entire_vertical_bands_matrix_op_B);
+    VERBOSE3(stdout, "rows last band matrix A: %d\n", rows_last_partial_band_matrix_op_A);
+    VERBOSE3(stdout, "columns last band matrix b: %d\n", cols_last_partial_band_matrix_op_B);
 
     // TODO(lledoux): add border pad band
-    bool horizontal_padding_case      = (rows_last_partial_band_matrix_A>0);
-    entire_horizontal_bands_matrix_A += horizontal_padding_case? 1 : 0;
-    bool vertical_padding_case        = (cols_last_partial_band_matrix_B>0);
-    entire_vertical_bands_matrix_B   += (vertical_padding_case)? 1 : 0;
+    bool horizontal_padding_case         = (rows_last_partial_band_matrix_op_A>0);
+    entire_horizontal_bands_matrix_op_A += horizontal_padding_case? 1 : 0;
+    bool vertical_padding_case           = (cols_last_partial_band_matrix_op_B>0);
+    entire_vertical_bands_matrix_op_B   += (vertical_padding_case)? 1 : 0;
     VERBOSE3(stdout, "case vertical padding: %d\n", vertical_padding_case);
     VERBOSE3(stdout, "case horizontal padding: %d\n", horizontal_padding_case);
 
-    size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B);
-    size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_A*entire_vertical_bands_matrix_B;  // TODO(lledoux): add pad bands
+    size_t aggregate_dma_memory_size = (fpga_bus_size*k*entire_horizontal_bands_matrix_op_A*entire_vertical_bands_matrix_op_B);
+    size_t mem_out_size = systolic_array_rows*fpga_bus_size*entire_horizontal_bands_matrix_op_A*entire_vertical_bands_matrix_op_B;
     VERBOSE3(stdout,"size in: %zu\n", aggregate_dma_memory_size);
     VERBOSE3(stdout,"size out: %zu\n", mem_out_size);
 
 
     gettimeofday(&stime_memory_allocation, NULL);
+    // we perform 8192 bytes alignment to match arsize / arlen of fpga logic. bursts of 64 transfers of 128B
     char *aggregate_dma_memory = (char *)(alloc_mem(8192, sizeof(char)*aggregate_dma_memory_size));
     char *mem_out = (char*)(alloc_mem(8192, sizeof(char)*mem_out_size));
 
@@ -390,21 +391,21 @@ static int gemm_backend_test (
         __hexdump(stdout, (double*)c,m*n*sizeof(double));
     }
         double arith_scratchpad;
-        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
             for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
                 for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_A-1)) {
-            	        if (row_i<rows_last_partial_band_matrix_A) {
-            	            arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-            	        } else {
-            	            arith_scratchpad = 0.0f;
-            	        }
+            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
+            	        arith_scratchpad = 0.0f;
             	    } else {
-            	    	arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+			if (transA==0) {
+            	    		arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)]; // z order access per horizontal band in A in row major order and in native type
+			} else {
+            	    		arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+			}
             	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
             	    	memcpy( aggregate_dma_memory +
-            	    		(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+            	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
             	    		(rewrite_i*k*fpga_bus_size) +
             	    		(fpga_bus_size*col_j) +
             	    		(row_i*sizeof(double)), // end address calculation
@@ -414,25 +415,25 @@ static int gemm_backend_test (
                 }
             }
         }
-        for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
-            for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
-                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-            	    if (vertical_padding_case && row_band_i==(entire_vertical_bands_matrix_B-1)) {
-            	        if (row_i<cols_last_partial_band_matrix_B) {
-            	            arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-            	        } else {
-            	            arith_scratchpad = 0.0f;
-            	        }
+        for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
+            for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
+                for (uint64_t row_j=0 ; row_j < k ; ++row_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+            	    if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
+            		arith_scratchpad = 0.0f;
             	    } else {
-            	        arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+			if(transB==0) {
+            	        	arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+			} else {
+            	        	arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+			}
             	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
             	    	memcpy( aggregate_dma_memory +
-            	    		(row_band_i*fpga_bus_size*k) +
-            	    		(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
-            	    		(fpga_bus_size*col_j) +
+            	    		(col_band_i*fpga_bus_size*k) +
+            	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
+            	    		(fpga_bus_size*row_j) +
             	    		(systolic_array_rows*sizeof(double)) + // offset
-            	    		(row_i*sizeof(double)), // end address calculation
+            	    		(col_i*sizeof(double)), // end address calculation
             	    		&arith_scratchpad,
             	    		sizeof(double));
             	    }
@@ -446,21 +447,21 @@ static int gemm_backend_test (
         __hexdump(stdout, (float*)c,m*n*sizeof(float));
     }
         float arith_scratchpad;
-        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_A ; ++row_band_i) {
+        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
             for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
                 for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_A-1)) {
-            	        if (row_i<rows_last_partial_band_matrix_A) {
-            	            arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-            	        } else {
-            	            arith_scratchpad = 0.0f;
-            	        }
+            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
+            	        arith_scratchpad = 0.0f;
             	    } else {
-            	    	arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+			if (transA==0) {
+            	    		arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)]; // z order access per horizontal band in A in row major order and in native type
+			} else {
+            	    		arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+			}
             	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_B ; ++rewrite_i) {
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
             	    	memcpy( aggregate_dma_memory +
-            	    		(row_band_i*entire_vertical_bands_matrix_B*fpga_bus_size*k) +
+            	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
             	    		(rewrite_i*k*fpga_bus_size) +
             	    		(fpga_bus_size*col_j) +
             	    		(row_i*sizeof(float)), // end address calculation
@@ -470,31 +471,80 @@ static int gemm_backend_test (
                 }
             }
         }
-        for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_B ; ++row_band_i) {
-            for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
-                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-            	    if (vertical_padding_case && row_band_i==(entire_vertical_bands_matrix_B-1)) {
-            	        if (row_i<cols_last_partial_band_matrix_B) {
-            	            arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-            	        } else {
-            	            arith_scratchpad = 0.0f;
-            	        }
+        for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
+            for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
+                for (uint64_t row_j=0 ; row_j < k ; ++row_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+            	    if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
+            		arith_scratchpad = 0.0f;
             	    } else {
-            	        arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+			if(transB==0) {
+            	        	arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+			} else {
+            	        	arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+			}
             	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_A ; ++rewrite_i) {
+            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
             	    	memcpy( aggregate_dma_memory +
-            	    		(row_band_i*fpga_bus_size*k) +
-            	    		(rewrite_i*entire_vertical_bands_matrix_B*k*fpga_bus_size) +
-            	    		(fpga_bus_size*col_j) +
+            	    		(col_band_i*fpga_bus_size*k) +
+            	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
+            	    		(fpga_bus_size*row_j) +
             	    		(systolic_array_rows*sizeof(float)) + // offset
-            	    		(row_i*sizeof(float)), // end address calculation
+            	    		(col_i*sizeof(float)), // end address calculation
             	    		&arith_scratchpad,
             	    		sizeof(float));
             	    }
                 }
             }
         }
+        // for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
+        //     for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
+        //         for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
+        //     	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1)) {
+        //     	        if (row_i<rows_last_partial_band_matrix_op_A) {
+        //     	            arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+        //     	        } else {
+        //     	            arith_scratchpad = 0.0f;
+        //     	        }
+        //     	    } else {
+        //     	    	arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
+        //     	    }
+        //     	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
+        //     	    	memcpy( aggregate_dma_memory +
+        //     	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
+        //     	    		(rewrite_i*k*fpga_bus_size) +
+        //     	    		(fpga_bus_size*col_j) +
+        //     	    		(row_i*sizeof(float)), // end address calculation
+        //     	    		&arith_scratchpad,
+        //     	    		sizeof(float));
+        //     	    }
+        //         }
+        //     }
+        // }
+        // for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_op_B ; ++row_band_i) {
+        //     for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
+        //         for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
+        //     	    if (vertical_padding_case && row_band_i==(entire_vertical_bands_matrix_op_B-1)) {
+        //     	        if (row_i<cols_last_partial_band_matrix_op_B) {
+        //     	            arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+        //     	        } else {
+        //     	            arith_scratchpad = 0.0f;
+        //     	        }
+        //     	    } else {
+        //     	        arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
+        //     	    }
+        //     	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
+        //     	    	memcpy( aggregate_dma_memory +
+        //     	    		(row_band_i*fpga_bus_size*k) +
+        //     	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
+        //     	    		(fpga_bus_size*col_j) +
+        //     	    		(systolic_array_rows*sizeof(float)) + // offset
+        //     	    		(row_i*sizeof(float)), // end address calculation
+        //     	    		&arith_scratchpad,
+        //     	    		sizeof(float));
+        //     	    }
+        //         }
+        //     }
+        // }
     #endif
 
     for (uint64_t i=0 ; i < aggregate_dma_memory_size ; ++i) {
@@ -598,34 +648,34 @@ static int gemm_backend_test (
     // Write Matrix C to out
     #if defined(DOUBLE)
         double *C = (double*) c;
-        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_A ; ++vertical_band_j) {
-            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_B ; ++horizontal_block_i) {
+        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
+            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
                 for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
                     for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
 			char * c_tmp = mem_out +
-                                (vertical_band_j * entire_vertical_bands_matrix_B * fpga_bus_size * systolic_array_rows) +
+                                (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
                                 (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
                                 (fpga_bus_size * row_i) +
                                 (sizeof(double)*col_j);
 			if ( !(horizontal_padding_case &&
-			       vertical_band_j==entire_horizontal_bands_matrix_A-1 &&
-			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_A) &&
+			       vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
+			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
 			     !(vertical_padding_case   &&
-			       horizontal_block_i==entire_vertical_bands_matrix_B-1 &&
-			       col_j >= cols_last_partial_band_matrix_B)
+			       horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
+			       col_j >= cols_last_partial_band_matrix_op_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(double));
 			    if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
-			    	C[(vertical_band_j*n*systolic_array_rows)+
-			    	  (horizontal_block_i*systolic_array_columns)+
-			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	C[(vertical_band_j*ldc*systolic_array_columns)+
+			    	  (horizontal_block_i*systolic_array_rows)+
+			    	  ((systolic_array_rows-1-row_i)*ldc)+
 			    	  col_j
 			    	] = arith_scratchpad;
 			    } else if (*BETA == 1.0f) {
-			    	C[(vertical_band_j*n*systolic_array_rows)+
-			    	  (horizontal_block_i*systolic_array_columns)+
-			    	  ((systolic_array_rows-1-row_i)*n)+
-			    	  col_j
+			    	C[(vertical_band_j*ldc*systolic_array_columns)+
+			    	  (horizontal_block_i*systolic_array_rows)+
+			    	  ((systolic_array_rows-1-row_i)*ldc)
+			    	  +col_j
 			    	] += arith_scratchpad;
 			    }
 			}
@@ -638,59 +688,66 @@ static int gemm_backend_test (
         }
     #else
         float *C = (float*) c;
-        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_A ; ++vertical_band_j) {
-            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_B ; ++horizontal_block_i) {
+        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
+            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
                 for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
                     for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
 			char * c_tmp = mem_out +
-                                (vertical_band_j * entire_vertical_bands_matrix_B * fpga_bus_size * systolic_array_rows) +
+                                (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
                                 (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
                                 (fpga_bus_size * row_i) +
                                 (sizeof(float)*col_j);
 			if ( !(horizontal_padding_case &&
-			       vertical_band_j==entire_horizontal_bands_matrix_A-1 &&
-			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_A) &&
+			       vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
+			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
 			     !(vertical_padding_case   &&
-			       horizontal_block_i==entire_vertical_bands_matrix_B-1 &&
-			       col_j >= cols_last_partial_band_matrix_B)
+			       horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
+			       col_j >= cols_last_partial_band_matrix_op_B)
 			   ) {
                             memcpy(&arith_scratchpad, c_tmp, sizeof(float));
 			    if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
-			    	C[(vertical_band_j*n*systolic_array_rows)+
-			    	  (horizontal_block_i*systolic_array_columns)+
-			    	  ((systolic_array_rows-1-row_i)*n)+
+			    	C[(vertical_band_j*ldc*systolic_array_columns)+
+			    	  (horizontal_block_i*systolic_array_rows)+
+			    	  ((systolic_array_rows-1-row_i)*ldc)+
 			    	  col_j
 			    	] = arith_scratchpad;
-				VERBOSE2(stdout, "beta is 0\n");
-			    //} else if (*BETA == 1.0f) {
-			    } else {
-				float C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
-			    	  (horizontal_block_i*systolic_array_columns)+
-			    	  ((systolic_array_rows-1-row_i)*n)+
-			    	  col_j
-			    	];
-				// VERBOSE4(stdout, "beta is 1\n");
-				VERBOSE4(stdout, "old C is: %f\n", C_tmp);
-				VERBOSE4(stdout, "arith_scrat(A*B): %f\n", arith_scratchpad);
-				// VERBOSE4(stdout, "new C should be: %f\n", C_tmp+arith_scratchpad);
-
-			    	C[(vertical_band_j*n*systolic_array_rows)+
-			    	  (horizontal_block_i*systolic_array_columns)+
-			    	  ((systolic_array_rows-1-row_i)*n)+
-			    	  col_j
-			    	] *= (*BETA);
-				C[(vertical_band_j*n*systolic_array_rows)+
-			    	  (horizontal_block_i*systolic_array_columns)+
-			    	  ((systolic_array_rows-1-row_i)*n)+
-			    	  col_j
+			    } else if (*BETA == 1.0f) {
+			    	C[(vertical_band_j*ldc*systolic_array_columns)+
+			    	  (horizontal_block_i*systolic_array_rows)+
+			    	  ((systolic_array_rows-1-row_i)*ldc)
+			    	  +col_j
 			    	] += arith_scratchpad;
-			    	// C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
-			    	//   (horizontal_block_i*systolic_array_columns)+
-			    	//   ((systolic_array_rows-1-row_i)*n)+
-			    	//   col_j
-			    	// ];
-				// VERBOSE2(stdout, "new C is: %f\n", C_tmp);
 			    }
+			    // if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
+			    // 	C[(vertical_band_j*n*systolic_array_rows)+
+			    // 	  (horizontal_block_i*systolic_array_columns)+
+			    // 	  ((systolic_array_rows-1-row_i)*n)+
+			    // 	  col_j
+			    // 	] = arith_scratchpad;
+			    //     VERBOSE2(stdout, "beta is 0\n");
+			    // //} else if (*BETA == 1.0f) {
+			    // } else {
+			    //     float C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
+			    // 	  (horizontal_block_i*systolic_array_columns)+
+			    // 	  ((systolic_array_rows-1-row_i)*n)+
+			    // 	  col_j
+			    // 	];
+			    //     // VERBOSE4(stdout, "beta is 1\n");
+			    //     VERBOSE4(stdout, "old C is: %f\n", C_tmp);
+			    //     VERBOSE4(stdout, "arith_scrat(A*B): %f\n", arith_scratchpad);
+			    //     // VERBOSE4(stdout, "new C should be: %f\n", C_tmp+arith_scratchpad);
+
+			    // 	C[(vertical_band_j*n*systolic_array_rows)+
+			    // 	  (horizontal_block_i*systolic_array_columns)+
+			    // 	  ((systolic_array_rows-1-row_i)*n)+
+			    // 	  col_j
+			    // 	] *= (*BETA);
+			    //     C[(vertical_band_j*n*systolic_array_rows)+
+			    // 	  (horizontal_block_i*systolic_array_columns)+
+			    // 	  ((systolic_array_rows-1-row_i)*n)+
+			    // 	  col_j
+			    // 	] += arith_scratchpad;
+			    // }
 			}
                     }
                 }
@@ -712,12 +769,12 @@ static int gemm_backend_test (
 
 
     // Deallocate input and output matrices
-    if (transB==0) {
-    	free(B_T);
-    }
-    if (transA==1) {
-        free(A);
-    }
+    //if (transB==0) {
+    //	free(B_T);
+    //}
+    //if (transA==1) {
+    //    free(A);
+    //}
     free(mem_out);
     free(aggregate_dma_memory);
     //exit(EXIT_SUCCESS);
@@ -730,12 +787,12 @@ static int gemm_backend_test (
     out_error1:
         snap_card_free(card);
     out_error:
-    	if (transB==0) {
-    	    free(B_T);
-    	}
-        if (transA==1) {
-            free(A);
-        }
+    	// if (transB==0) {
+    	//     free(B_T);
+    	// }
+        // if (transA==1) {
+        //     free(A);
+        // }
         // exit(EXIT_FAILURE);
 	return 1;
 
