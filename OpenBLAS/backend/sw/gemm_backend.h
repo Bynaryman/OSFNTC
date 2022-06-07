@@ -220,11 +220,11 @@ static int gemm_backend_test (
 		uint64_t m,
 		uint64_t n,
 		uint64_t k,
-		void *alpha,
-		void *beta,
-		void *a,
-		void *b,
-		void *c,
+		IFLOAT *alpha,
+		IFLOAT *beta,
+		IFLOAT *a,
+		IFLOAT *b,
+		IFLOAT *c,
 		uint64_t lda,
 		uint64_t ldb,
 		uint64_t ldc,
@@ -283,50 +283,16 @@ static int gemm_backend_test (
         VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
     #endif
 
-    // int transA=-1;
-    // int transB=-1;
-    // if (TransA == 112) {transA = 1;}
-    // else {transA = 0;}
-    // if (TransB == 112) {transB = 1;}
-    // else {transB = 0;}
-
-    // Transposition of input matrix B
     #if defined(DOUBLE)
     	double *A     = (double*)a;
     	double *B     = (double*)b;
     	double *BETA  = (double*)beta;
     	double *ALPHA = (double*)alpha;
-	//double *B_T   = NULL;
-        //if (transB == 0) {
-	//    B_T = (double *)(alloc_mem(64, sizeof(double)*(k*n)));
-    	//    cblas_domatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
-	//} else {
-	//    B_T = B;
-	//}
-	//if (transA == 1){
-	//    A = (double *)(alloc_mem(64, sizeof(double)*(m*k)));
-	//    cblas_domatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (double *)a, k, A, m);
-	//} else {
-	//    A = (double *)a;
-	//}
     #else
     	float *A = (float*)a;
     	float *B = (float*)b;
     	float *BETA=(float*)beta;
     	float *ALPHA=(float*)alpha;
-	//float *B_T = NULL;
-        //if (transB == 0) {
-	//    B_T = (float *)(alloc_mem(64, sizeof(float)*(k*n)));
-    	//    cblas_somatcopy( CblasRowMajor, CblasTrans, k, n, *ALPHA, B, n, B_T, k);
-	//} else {
-	//    B_T = B;
-	//}
-	//if (transA == 1){
-	//    A = (float *)(alloc_mem(64, sizeof(float)*(m*k)));
-	//    cblas_somatcopy( CblasRowMajor, CblasTrans, m, k, *ALPHA, (float *)a, k, A, m);
-	//} else {
-	//    A = (float *)a;
-	//}
     #endif
 
 

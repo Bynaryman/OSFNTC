@@ -481,90 +481,41 @@ printf("order is:%d\n", order);
                 if (TransA == CblasTrans)       transa = 1;
                 if (TransB == CblasNoTrans)     transb = 0;
                 if (TransB == CblasTrans)       transb = 1;
-		printf("lda=%d, ldb=%d, ldc=%d\n", lda, ldb, ldc);
-		#if defined(DO_COMPARISON)
-			#if defined(DOUBLE)
-				double* C_original = (double*)malloc(m*n*sizeof(double));
-				memcpy(C_original,(double*)c,m*n*sizeof(double));
-			#else
-				float* C_original = (float*)malloc(m*n*sizeof(float));
-				memcpy(C_original,(float*)c,m*n*sizeof(float));
-			#endif
-		#endif
-		int fpga_return_code = gemm_backend_test(
-			(uint64_t) args.m,
-			(uint64_t) args.n,
-			(uint64_t) args.k,
-			(void*)    args.alpha,
-			(void*)    args.beta,
-			(void*)    args.a,
-			(void*)    args.b,
-			#if defined(DO_COMPARISON)
-			(void*)    C_original,
-			#else
-			(void*)    args.c,
-			#endif
-			(uint64_t) args.lda,
-			(uint64_t) args.ldb,
-			(uint64_t) args.ldc,
-			transa,
-			transb
-		);
-		#if defined(DO_COMPARISON)
-			#if defined(DOUBLE)
-				double* C_fpga = (double*)malloc(m*n*sizeof(double));
-				memcpy(C_fpga,(double*)C_original,m*n*sizeof(double));
-			#else
-				float* C_fpga = (float*)malloc(m*n*sizeof(float));
-				memcpy(C_fpga,(float*)C_original,m*n*sizeof(float));
-			#endif
-		#endif
 	#else
                 if (transA == 'N') transa = 0;
                 if (transA == 'T') transa = 1;
                 if (transB == 'N') transb = 0;
                 if (transB == 'T') transb = 1;
-		printf("lda=%d, ldb=%d, ldc=%d\n", *ldA, *ldB, *ldC);
+	#endif
+	#if defined(DO_COMPARISON)
+		IFLOAT* C_original = (IFLOAT*)malloc(args.m*args.n*sizeof(IFLOAT));
+		memcpy(C_original,(IFLOAT*)args.c,args.m*args.n*sizeof(IFLOAT));
+	#endif
+	int fpga_return_code = gemm_backend_test(
+		(uint64_t) args.m,
+		(uint64_t) args.n,
+		(uint64_t) args.k,
+		(IFLOAT*)    args.alpha,
+		(IFLOAT*)    args.beta,
+		(IFLOAT*)    args.a,
+		(IFLOAT*)    args.b,
 		#if defined(DO_COMPARISON)
-			#if defined(DOUBLE)
-				double* C_original = (double*)malloc((*M)*(*N)*sizeof(double));
-				memcpy(C_original,(double*)c,(*M)*(*N)*sizeof(double));
-			#else
-				float* C_original = (float*)malloc((*M)*(*N)*sizeof(float));
-				memcpy(C_original,(float*)c,(*M)*(*N)*sizeof(float));
-			#endif
+		(IFLOAT*)    C_original,
+		#else
+		(IFLOAT*)    args.c,
 		#endif
-		int fpga_return_code = gemm_backend_test(
-			(uint64_t) args.m,
-			(uint64_t) args.n,
-			(uint64_t) args.k,
-			(void*)    args.alpha,
-			(void*)    args.beta,
-			(void*)    args.a,
-			(void*)    args.b,
-			#if defined(DO_COMPARISON)
-			(void*)    C_original,
-			#else
-			(void*)    args.c,
-			#endif
-			(uint64_t) args.lda,
-			(uint64_t) args.ldb,
-			(uint64_t) args.ldc,
-			transa,
-			transb
-		);
-		#if defined(DO_COMPARISON)
-			#if defined(DOUBLE)
-				double* C_fpga = (double*)malloc((*M)*(*N)*sizeof(double));
-				memcpy(C_fpga,(double*)C_original,(*M)*(*N)*sizeof(double));
-			#else
-				float* C_fpga = (float*)malloc((*M)*(*N)*sizeof(float));
-				memcpy(C_fpga,(float*)C_original,(*M)*(*N)*sizeof(float));
-			#endif
-		#endif
+		(uint64_t) args.lda,
+		(uint64_t) args.ldb,
+		(uint64_t) args.ldc,
+		transa,
+		transb
+	);
+	#if defined(DO_COMPARISON)
+		IFLOAT* C_fpga = (IFLOAT*)malloc(args.m*args.n*sizeof(IFLOAT));
+		memcpy(C_fpga,(IFLOAT*)C_original,args.m*args.n*sizeof(IFLOAT));
 	#endif
 #endif
-#if (USE_OCAPI==1 && DO_COMPARISON==1) || USE_OCAPI!=1// we fall back on all other backends
+#if (USE_OCAPI==1 && DO_COMPARISON==1) || USE_OCAPI!=1  // we fall back on all other backends
 
 #if USE_SMALL_MATRIX_OPT
 #if !defined(COMPLEX)
