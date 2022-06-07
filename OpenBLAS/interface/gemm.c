@@ -615,32 +615,10 @@ printf("order is:%d\n", order);
 #endif // end non OCAPI code
 
 #if defined(DO_COMPARISON)
- 	#if defined(CBLAS)
-		#if defined(DOUBLE)
- 			VERBOSE3(stdout, "original\n");
-		        __hexdump(stdout, (double*)c, m*n*sizeof(double));
- 			VERBOSE3(stdout, "fpga\n");
-		        __hexdump(stdout, C_fpga, m*n*sizeof(double));
-		#else
- 			VERBOSE3(stdout, "original\n");
-		        __hexdump(stdout, (float*)c, m*n*sizeof(float));
- 			VERBOSE3(stdout, "fpga\n");
-		        __hexdump(stdout, C_fpga, m*n*sizeof(float));
-		#endif
-	#else
-		#if defined(DOUBLE)
- 			VERBOSE3(stdout, "original\n");
-		        __hexdump(stdout, (double*)c, (*M)*(*N)*sizeof(double));
- 			VERBOSE3(stdout, "fpga\n");
-		        __hexdump(stdout, C_fpga, (*M)*(*N)*sizeof(double));
-		#else
- 			VERBOSE3(stdout, "original\n");
-		        __hexdump(stdout, (float*)c, (*M)*(*N)*sizeof(float));
- 			VERBOSE3(stdout, "fpga\n");
-		        __hexdump(stdout, C_fpga, (*M)*(*N)*sizeof(float));
-		#endif
-
-	#endif
+	VERBOSE3(stdout, "original\n");
+	__hexdump(stdout, (IFLOAT*)args.c, args.m*args.n*sizeof(IFLOAT));
+	VERBOSE3(stdout, "fpga\n");
+	__hexdump(stdout, C_fpga, args.m*args.n*sizeof(IFLOAT));
 	free(C_fpga);
 	free(C_original);
 #endif
