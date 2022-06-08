@@ -525,11 +525,11 @@ static int gemm_backend_test (
 
     // print out the different times
     if (verbose_level > 2) {
-        uint64_t time_card_allocation timediff_usec(&etime_card_allocation,  &stime_card_allocation);
-        uint64_t time_attach_action timediff_usec(&etime_attach_action,  &stime_attach_action);
-        uint64_t time_memory_allocation timediff_usec(&etime_memory_allocation,  &stime_memory_allocation);
-        uint64_t time_prepare_action timediff_usec(&etime_prepare_action,  &stime_prepare_action);
-        uint64_t time_action_execute timediff_usec(&etime_action_execution,  &stime_action_execution);
+        uint64_t time_card_allocation = timediff_usec(&etime_card_allocation,  &stime_card_allocation);
+        uint64_t time_attach_action = timediff_usec(&etime_attach_action,  &stime_attach_action);
+        uint64_t time_memory_allocation = timediff_usec(&etime_memory_allocation,  &stime_memory_allocation);
+        uint64_t time_prepare_action = timediff_usec(&etime_prepare_action,  &stime_prepare_action);
+        uint64_t time_action_execute = timediff_usec(&etime_action_execution,  &stime_action_execution);
 	uint64_t time_total = time_card_allocation + time_attach_action + time_memory_allocation + time_prepare_action + time_action_execute;
 	VERBOSE3(stdout, "time card allocation (us): %lld, %lld\%\n",time_card_allocation, (time_card_allocation/time_total)*100);
 
