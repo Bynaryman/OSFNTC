@@ -259,29 +259,6 @@ static int gemm_backend_test (
 
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
-    //#if defined(DOUBLE)
-    //    VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(beta)));
-    //    VERBOSE3(stdout, "float type is DOUBLE\n");
-    //    VERBOSE2(stdout, "one element of C=%lf\n", *((double*)(c)));
-    //#else
-    //    VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(beta)));
-    //    VERBOSE3(stdout, "float type is SINGLE\n");
-    //    VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
-    //#endif
-
-    // #if defined(DOUBLE)
-    // 	double *A     = (double*)a;
-    // 	double *B     = (double*)b;
-    // 	double *BETA  = (double*)beta;
-    // 	double *ALPHA = (double*)alpha;
-    // #else
-    // 	float *A = (float*)a;
-    // 	float *B = (float*)b;
-    // 	float *BETA=(float*)beta;
-    // 	float *ALPHA=(float*)alpha;
-    // #endif
-
-
     // Allocate Card
     gettimeofday(&stime_card_allocation, NULL);
     if(card_no == 0) {
@@ -349,170 +326,65 @@ static int gemm_backend_test (
     char *aggregate_dma_memory = (char *)(alloc_mem(8192, sizeof(char)*aggregate_dma_memory_size));
     char *mem_out = (char*)(alloc_mem(8192, sizeof(char)*mem_out_size));
 
-
-    #if defined(DOUBLE)
     if (verbose_level > 3 ) {
-        __hexdump(stdout, (double*)A,m*k*sizeof(double));
-        __hexdump(stdout, (double*)B,k*n*sizeof(double));
-        __hexdump(stdout, (double*)C,m*n*sizeof(double));
+        __hexdump(stdout, (IFLOAT*)A,m*k*sizeof(IFLOAT));
+        __hexdump(stdout, (IFLOAT*)B,k*n*sizeof(IFLOAT));
+        __hexdump(stdout, (IFLOAT*)C,m*n*sizeof(IFLOAT));
     }
-        double arith_scratchpad;
-        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
-            for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
-                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
-            	        arith_scratchpad = 0.0f;
-            	    } else {
-			if (transA==0) {
-            	    		arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)]; // z order access per horizontal band in A in row major order and in native type
-			} else {
-            	    		arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-			}
-            	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
-            	    	memcpy( aggregate_dma_memory +
-            	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
-            	    		(rewrite_i*k*fpga_bus_size) +
-            	    		(fpga_bus_size*col_j) +
-            	    		(row_i*sizeof(double)), // end address calculation
-            	    		&arith_scratchpad,
-            	    		sizeof(double));
-            	    }
-                }
+    // take, cast and place elements of A
+    IFLOAT arith_scratchpad;
+    for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
+        for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
+            for (uint64_t col_j=0 ; col_j < k ; ++col_j) {
+        	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
+        	        arith_scratchpad = 0.0f;
+        	    } else {
+    		if (transA==0) {
+        	    		arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)];
+    		} else {
+        	    		arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
+    		}
+        	    }
+        	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
+        	    	memcpy( aggregate_dma_memory +
+        	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
+        	    		(rewrite_i*k*fpga_bus_size) +
+        	    		(fpga_bus_size*col_j) +
+        	    		(row_i*sizeof(IFLOAT)), // end address calculation
+        	    		&arith_scratchpad,
+        	    		sizeof(IFLOAT));
+        	    }
             }
         }
-        for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
-            for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
-                for (uint64_t row_j=0 ; row_j < k ; ++row_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-            	    if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
-            		arith_scratchpad = 0.0f;
-            	    } else {
-			if(transB==0) {
-            	        	arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-			} else {
-            	        	arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-			}
-            	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
-            	    	memcpy( aggregate_dma_memory +
-            	    		(col_band_i*fpga_bus_size*k) +
-            	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
-            	    		(fpga_bus_size*row_j) +
-            	    		(systolic_array_rows*sizeof(double)) + // offset
-            	    		(col_i*sizeof(double)), // end address calculation
-            	    		&arith_scratchpad,
-            	    		sizeof(double));
-            	    }
-                }
-            }
-        }
-    #else
-    if (verbose_level > 3 ) {
-        __hexdump(stdout, (float*)A,m*k*sizeof(float));
-        __hexdump(stdout, (float*)B,k*n*sizeof(float));
-        __hexdump(stdout, (float*)C,m*n*sizeof(float));
     }
-        float arith_scratchpad;
-        for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
-            for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
-                for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-            	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
-            	        arith_scratchpad = 0.0f;
-            	    } else {
-			if (transA==0) {
-            	    		arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)]; // z order access per horizontal band in A in row major order and in native type
-			} else {
-            	    		arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-			}
-            	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
-            	    	memcpy( aggregate_dma_memory +
-            	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
-            	    		(rewrite_i*k*fpga_bus_size) +
-            	    		(fpga_bus_size*col_j) +
-            	    		(row_i*sizeof(float)), // end address calculation
-            	    		&arith_scratchpad,
-            	    		sizeof(float));
-            	    }
-                }
+    // take, cast and place elements of B
+    for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
+        for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
+            for (uint64_t row_j=0 ; row_j < k ; ++row_j) {
+        	    if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
+        		arith_scratchpad = 0.0f;
+        	    } else {
+    		if(transB==0) {
+        	        	arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)];
+    		} else {
+        	        	arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
+    		}
+        	    }
+        	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
+        	    	memcpy( aggregate_dma_memory +
+        	    		(col_band_i*fpga_bus_size*k) +
+        	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
+        	    		(fpga_bus_size*row_j) +
+        	    		(systolic_array_rows*sizeof(IFLOAT)) + // offset
+        	    		(col_i*sizeof(IFLOAT)), // end address calculation
+        	    		&arith_scratchpad,
+        	    		sizeof(IFLOAT));
+        	    }
             }
         }
-        for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
-            for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
-                for (uint64_t row_j=0 ; row_j < k ; ++row_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-            	    if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
-            		arith_scratchpad = 0.0f;
-            	    } else {
-			if(transB==0) {
-            	        	arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-			} else {
-            	        	arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-			}
-            	    }
-            	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
-            	    	memcpy( aggregate_dma_memory +
-            	    		(col_band_i*fpga_bus_size*k) +
-            	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
-            	    		(fpga_bus_size*row_j) +
-            	    		(systolic_array_rows*sizeof(float)) + // offset
-            	    		(col_i*sizeof(float)), // end address calculation
-            	    		&arith_scratchpad,
-            	    		sizeof(float));
-            	    }
-                }
-            }
-        }
-        // for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
-        //     for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
-        //         for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all A band_i (k-rolling loop). adjacent element will be together in $
-        //     	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1)) {
-        //     	        if (row_i<rows_last_partial_band_matrix_op_A) {
-        //     	            arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-        //     	        } else {
-        //     	            arith_scratchpad = 0.0f;
-        //     	        }
-        //     	    } else {
-        //     	    	arith_scratchpad = A[(row_band_i*k*systolic_array_rows) + (k*row_i) + (col_j)]; // z order access per horizontal band in A in row major order and in native type
-        //     	    }
-        //     	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
-        //     	    	memcpy( aggregate_dma_memory +
-        //     	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
-        //     	    		(rewrite_i*k*fpga_bus_size) +
-        //     	    		(fpga_bus_size*col_j) +
-        //     	    		(row_i*sizeof(float)), // end address calculation
-        //     	    		&arith_scratchpad,
-        //     	    		sizeof(float));
-        //     	    }
-        //         }
-        //     }
-        // }
-        // for (uint64_t row_band_i=0 ; row_band_i < entire_vertical_bands_matrix_op_B ; ++row_band_i) {
-        //     for (uint64_t row_i=0 ; row_i < systolic_array_columns ; ++row_i) {
-        //         for (uint64_t col_j=0 ; col_j < k ; ++col_j) { // place all transposed B band_i (k-rolling loop). adjacent element will be together in $
-        //     	    if (vertical_padding_case && row_band_i==(entire_vertical_bands_matrix_op_B-1)) {
-        //     	        if (row_i<cols_last_partial_band_matrix_op_B) {
-        //     	            arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-        //     	        } else {
-        //     	            arith_scratchpad = 0.0f;
-        //     	        }
-        //     	    } else {
-        //     	        arith_scratchpad = B_T[(row_band_i*k*systolic_array_columns) + (k*row_i) + (col_j)]; // z order access per vertical band in B (horizontal in transposed B) in row major order and in native type
-        //     	    }
-        //     	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
-        //     	    	memcpy( aggregate_dma_memory +
-        //     	    		(row_band_i*fpga_bus_size*k) +
-        //     	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
-        //     	    		(fpga_bus_size*col_j) +
-        //     	    		(systolic_array_rows*sizeof(float)) + // offset
-        //     	    		(row_i*sizeof(float)), // end address calculation
-        //     	    		&arith_scratchpad,
-        //     	    		sizeof(float));
-        //     	    }
-        //         }
-        //     }
-        // }
-    #endif
+    }
 
+    // place Start Of Block (SOB) and End Of Block (EOB) bits
     for (uint64_t i=0 ; i < aggregate_dma_memory_size ; ++i) {
 	uint64_t bus_index = i % fpga_bus_size;
 	uint64_t col_index = (i/fpga_bus_size) % k;
