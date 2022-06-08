@@ -259,15 +259,15 @@ static int gemm_backend_test (
 
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
-    #if defined(DOUBLE)
-        VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(beta)));
-        VERBOSE3(stdout, "float type is DOUBLE\n");
-        VERBOSE2(stdout, "one element of C=%lf\n", *((double*)(c)));
-    #else
-        VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(beta)));
-        VERBOSE3(stdout, "float type is SINGLE\n");
-        VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
-    #endif
+    //#if defined(DOUBLE)
+    //    VERBOSE2(stdout, "alpha=%lf, beta=%lf\n", *((double*)(alpha)),*((double*)(beta)));
+    //    VERBOSE3(stdout, "float type is DOUBLE\n");
+    //    VERBOSE2(stdout, "one element of C=%lf\n", *((double*)(c)));
+    //#else
+    //    VERBOSE2(stdout, "alpha=%f, beta=%f\n", *((float*)(alpha)),*((float*)(beta)));
+    //    VERBOSE3(stdout, "float type is SINGLE\n");
+    //    VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
+    //#endif
 
     // #if defined(DOUBLE)
     // 	double *A     = (double*)a;
