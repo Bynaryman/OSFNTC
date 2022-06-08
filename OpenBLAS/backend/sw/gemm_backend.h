@@ -408,9 +408,9 @@ static int gemm_backend_test (
         }
     #else
     if (verbose_level > 3 ) {
-        __hexdump(stdout, (float*)a,m*k*sizeof(float));
-        __hexdump(stdout, (float*)b,k*n*sizeof(float));
-        __hexdump(stdout, (float*)c,m*n*sizeof(float));
+        __hexdump(stdout, (float*)A,m*k*sizeof(float));
+        __hexdump(stdout, (float*)B,k*n*sizeof(float));
+        __hexdump(stdout, (float*)C,m*n*sizeof(float));
     }
         float arith_scratchpad;
         for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
