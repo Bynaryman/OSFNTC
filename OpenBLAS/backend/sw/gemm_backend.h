@@ -532,6 +532,10 @@ static int gemm_backend_test (
         uint64_t time_action_execute = timediff_usec(&etime_action_execution,  &stime_action_execution);
 	uint64_t time_total = time_card_allocation + time_attach_action + time_memory_allocation + time_prepare_action + time_action_execute;
 	VERBOSE3(stdout, "time card allocation (us): %lld, %lld\%\n",time_card_allocation, (time_card_allocation/time_total)*100);
+	VERBOSE3(stdout, "time attach action (us): %lld, %lld\%\n",time_attach_action, (time_attach_action/time_total)*100);
+	VERBOSE3(stdout, "time memory allocation (us): %lld, %lld\%\n",time_memory_allocation, (time_memory_allocation/time_total)*100);
+	VERBOSE3(stdout, "time action prepare(us): %lld, %lld\%\n",time_prepare_action, (time_prepare_action/time_total)*100);
+	VERBOSE3(stdout, "time action execute(us): %lld, %lld\%\n",time_action_execute, (time_action_execute/time_total)*100);
 
     }
 
