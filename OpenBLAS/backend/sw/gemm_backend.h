@@ -613,7 +613,6 @@ static int gemm_backend_test (
 
     // Write Matrix C to out
     #if defined(DOUBLE)
-        double *C = (double*) c;
         for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
             for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
                 for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
@@ -653,7 +652,6 @@ static int gemm_backend_test (
             __hexdump(stdout, C, sizeof(double)*n*m);
         }
     #else
-        float *C = (float*) c;
         for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
             for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
                 for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
@@ -684,36 +682,6 @@ static int gemm_backend_test (
 			    	  col_j*ldc
 			    	] += arith_scratchpad;
 			    }
-			    // if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
-			    // 	C[(vertical_band_j*n*systolic_array_rows)+
-			    // 	  (horizontal_block_i*systolic_array_columns)+
-			    // 	  ((systolic_array_rows-1-row_i)*n)+
-			    // 	  col_j
-			    // 	] = arith_scratchpad;
-			    //     VERBOSE2(stdout, "beta is 0\n");
-			    // //} else if (*BETA == 1.0f) {
-			    // } else {
-			    //     float C_tmp = C[(vertical_band_j*n*systolic_array_rows)+
-			    // 	  (horizontal_block_i*systolic_array_columns)+
-			    // 	  ((systolic_array_rows-1-row_i)*n)+
-			    // 	  col_j
-			    // 	];
-			    //     // VERBOSE4(stdout, "beta is 1\n");
-			    //     VERBOSE4(stdout, "old C is: %f\n", C_tmp);
-			    //     VERBOSE4(stdout, "arith_scrat(A*B): %f\n", arith_scratchpad);
-			    //     // VERBOSE4(stdout, "new C should be: %f\n", C_tmp+arith_scratchpad);
-
-			    // 	C[(vertical_band_j*n*systolic_array_rows)+
-			    // 	  (horizontal_block_i*systolic_array_columns)+
-			    // 	  ((systolic_array_rows-1-row_i)*n)+
-			    // 	  col_j
-			    // 	] *= (*BETA);
-			    //     C[(vertical_band_j*n*systolic_array_rows)+
-			    // 	  (horizontal_block_i*systolic_array_columns)+
-			    // 	  ((systolic_array_rows-1-row_i)*n)+
-			    // 	  col_j
-			    // 	] += arith_scratchpad;
-			    // }
 			}
                     }
                 }
