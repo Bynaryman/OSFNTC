@@ -220,11 +220,11 @@ static int gemm_backend_test (
 		uint64_t m,
 		uint64_t n,
 		uint64_t k,
-		IFLOAT *alpha,
-		IFLOAT *beta,
-		IFLOAT *a,
-		IFLOAT *b,
-		IFLOAT *c,
+		IFLOAT *ALPHA,
+		IFLOAT *BETA,
+		IFLOAT *A,
+		IFLOAT *B,
+		IFLOAT *C,
 		uint64_t lda,
 		uint64_t ldb,
 		uint64_t ldc,
@@ -238,20 +238,6 @@ static int gemm_backend_test (
     if (( pTmp = getenv( "VERBOSITY" )) != NULL )
         verbose_level = atoi(pTmp);
 
-    if (is_aligned(a, 4096)) {printf("4096 aligned\n");}
-    else {printf("not 4096 aligned\n");}
-    if (is_aligned(a, 2048)) {printf("2048 aligned\n");}
-    else {printf("not 2048 aligned\n");}
-    if (is_aligned(a, 1024)) {printf("1024 aligned\n");}
-    else {printf("not 1024 aligned\n");}
-    if (is_aligned(a, 512)) {printf("512 aligned\n");}
-    else {printf("not 512 aligned\n");}
-    if (is_aligned(a, 256)) {printf("256 aligned\n");}
-    else {printf("not 256 aligned\n");}
-    if (is_aligned(a, 128)) {printf("128 aligned\n");}
-    else {printf("not 128 aligned\n");}
-    if (is_aligned(a, 64)) {printf("64 aligned\n");}
-    else {printf("not 64 aligned\n");}
     VERBOSE2(stdout, "m=%lld, n=%lld, k=%lld\n", m, n, k);
     VERBOSE2(stdout, "transA=%d, transB=%d\n", transA, transB);
 
@@ -283,17 +269,17 @@ static int gemm_backend_test (
         VERBOSE2(stdout, "one element of C=%f\n", *((float*)(c)));
     #endif
 
-    #if defined(DOUBLE)
-    	double *A     = (double*)a;
-    	double *B     = (double*)b;
-    	double *BETA  = (double*)beta;
-    	double *ALPHA = (double*)alpha;
-    #else
-    	float *A = (float*)a;
-    	float *B = (float*)b;
-    	float *BETA=(float*)beta;
-    	float *ALPHA=(float*)alpha;
-    #endif
+    // #if defined(DOUBLE)
+    // 	double *A     = (double*)a;
+    // 	double *B     = (double*)b;
+    // 	double *BETA  = (double*)beta;
+    // 	double *ALPHA = (double*)alpha;
+    // #else
+    // 	float *A = (float*)a;
+    // 	float *B = (float*)b;
+    // 	float *BETA=(float*)beta;
+    // 	float *ALPHA=(float*)alpha;
+    // #endif
 
 
     // Allocate Card
@@ -334,6 +320,7 @@ static int gemm_backend_test (
     if (k < systolic_array_rows) exit(EXIT_FAILURE);
 
     // Allocate memories (in and out)
+    // Reallocation is needed for alignment and data conversion
     uint16_t fpga_bus_size = 128; // in bytes, 128 for opencapi, 64 for capi1 and capi2
     uint64_t entire_horizontal_bands_matrix_op_A = m / systolic_array_rows;
     uint8_t rows_last_partial_band_matrix_op_A = m % systolic_array_rows;
@@ -344,7 +331,6 @@ static int gemm_backend_test (
     VERBOSE3(stdout, "rows last band matrix A: %d\n", rows_last_partial_band_matrix_op_A);
     VERBOSE3(stdout, "columns last band matrix b: %d\n", cols_last_partial_band_matrix_op_B);
 
-    // TODO(lledoux): add border pad band
     bool horizontal_padding_case         = (rows_last_partial_band_matrix_op_A>0);
     entire_horizontal_bands_matrix_op_A += horizontal_padding_case? 1 : 0;
     bool vertical_padding_case           = (cols_last_partial_band_matrix_op_B>0);
@@ -360,8 +346,8 @@ static int gemm_backend_test (
 
     gettimeofday(&stime_memory_allocation, NULL);
     // we perform 8192 bytes alignment to match arsize / arlen of fpga logic. bursts of 64 transfers of 128B
-    char *aggregate_dma_memory = (char *)(alloc_mem(8192, sizeof(char)*aggregate_dma_memory_size));
-    char *mem_out = (char*)(alloc_mem(8192, sizeof(char)*mem_out_size));
+    char *aggregate_dma_memory = (char *)(alloc_mem(64, sizeof(char)*aggregate_dma_memory_size));
+    char *mem_out = (char*)(alloc_mem(64, sizeof(char)*mem_out_size));
 
 
     #if defined(DOUBLE)
