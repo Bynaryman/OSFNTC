@@ -346,8 +346,8 @@ static int gemm_backend_test (
 
     gettimeofday(&stime_memory_allocation, NULL);
     // we perform 8192 bytes alignment to match arsize / arlen of fpga logic. bursts of 64 transfers of 128B
-    char *aggregate_dma_memory = (char *)(alloc_mem(64, sizeof(char)*aggregate_dma_memory_size));
-    char *mem_out = (char*)(alloc_mem(64, sizeof(char)*mem_out_size));
+    char *aggregate_dma_memory = (char *)(alloc_mem(8192, sizeof(char)*aggregate_dma_memory_size));
+    char *mem_out = (char*)(alloc_mem(8192, sizeof(char)*mem_out_size));
 
 
     #if defined(DOUBLE)
@@ -612,85 +612,44 @@ static int gemm_backend_test (
 
 
     // Write Matrix C to out
-    #if defined(DOUBLE)
-        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
-            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
-                for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
-                    for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
-			char * c_tmp = mem_out +
-                                (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
-                                (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
-                                (fpga_bus_size * row_i) +
-                                (sizeof(double)*col_j);
-			if ( !(horizontal_padding_case &&
-			       vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
-			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
-			     !(vertical_padding_case   &&
-			       horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
-			       col_j >= cols_last_partial_band_matrix_op_B)
-			   ) {
-                            memcpy(&arith_scratchpad, c_tmp, sizeof(double));
-			    if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
-			    	C[(vertical_band_j*ldc*systolic_array_columns)+
-			    	  (horizontal_block_i*systolic_array_rows)+
-			    	  ((systolic_array_rows-1-row_i)*ldc)+
-			    	  col_j
-			    	] = arith_scratchpad;
-			    } else if (*BETA == 1.0f) {
-			    	C[(vertical_band_j*ldc*systolic_array_columns)+
-			    	  (horizontal_block_i*systolic_array_rows)+
-			    	  ((systolic_array_rows-1-row_i)*ldc)
-			    	  +col_j
-			    	] += arith_scratchpad;
-			    }
-			}
-                    }
+    for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
+        for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
+            for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
+                for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
+    		char * c_tmp = mem_out +
+                            (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
+                            (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
+                            (fpga_bus_size * row_i) +
+                            (sizeof(IFLOAT)*col_j);
+    		if ( !(horizontal_padding_case &&
+    		       vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
+    		       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
+    		     !(vertical_padding_case   &&
+    		       horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
+    		       col_j >= cols_last_partial_band_matrix_op_B)
+    		   ) {
+                        memcpy(&arith_scratchpad, c_tmp, sizeof(IFLOAT));
+    		    if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
+    		    	C[(horizontal_block_i*ldc*systolic_array_columns)+
+    		    	  (vertical_band_j*systolic_array_rows)+
+    		    	  ((systolic_array_rows-1-row_i))+
+    		    	  col_j*ldc
+    		    	] = arith_scratchpad;
+    		    } else if (*BETA == 1.0f) {
+    		    	C[(horizontal_block_i*ldc*systolic_array_columns)+
+    		    	  (vertical_band_j*systolic_array_rows)+
+    		    	  ((systolic_array_rows-1-row_i))+
+    		    	  col_j*ldc
+    		    	] += arith_scratchpad;
+    		    }
+    		}
                 }
-	    }
-	}
-        if (verbose_level > 3 ) {
-            __hexdump(stdout, C, sizeof(double)*n*m);
+            }
         }
-    #else
-        for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
-            for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
-                for (uint32_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {  // row_i is reversed as the array exits from the bottom
-                    for (uint32_t col_j=0 ; col_j < systolic_array_columns ; ++col_j) {
-			char * c_tmp = mem_out +
-                                (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
-                                (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
-                                (fpga_bus_size * row_i) +
-                                (sizeof(float)*col_j);
-			if ( !(horizontal_padding_case &&
-			       vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
-			       row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
-			     !(vertical_padding_case   &&
-			       horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
-			       col_j >= cols_last_partial_band_matrix_op_B)
-			   ) {
-                            memcpy(&arith_scratchpad, c_tmp, sizeof(float));
-			    if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
-			    	C[(horizontal_block_i*ldc*systolic_array_columns)+
-			    	  (vertical_band_j*systolic_array_rows)+
-			    	  ((systolic_array_rows-1-row_i))+
-			    	  col_j*ldc
-			    	] = arith_scratchpad;
-			    } else if (*BETA == 1.0f) {
-			    	C[(horizontal_block_i*ldc*systolic_array_columns)+
-			    	  (vertical_band_j*systolic_array_rows)+
-			    	  ((systolic_array_rows-1-row_i))+
-			    	  col_j*ldc
-			    	] += arith_scratchpad;
-			    }
-			}
-                    }
-                }
-	    }
-	}
-        if (verbose_level > 3 ) {
-            __hexdump(stdout, C, sizeof(float)*n*m);
-        }
-    #endif
+    }
+    if (verbose_level > 3 ) {
+        __hexdump(stdout, C, sizeof(IFLOAT)*n*m);
+    }
 
 
 
