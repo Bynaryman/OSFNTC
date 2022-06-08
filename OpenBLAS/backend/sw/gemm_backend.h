@@ -352,9 +352,9 @@ static int gemm_backend_test (
 
     #if defined(DOUBLE)
     if (verbose_level > 3 ) {
-        __hexdump(stdout, (double*)a,m*k*sizeof(double));
-        __hexdump(stdout, (double*)b,k*n*sizeof(double));
-        __hexdump(stdout, (double*)c,m*n*sizeof(double));
+        __hexdump(stdout, (double*)A,m*k*sizeof(double));
+        __hexdump(stdout, (double*)B,k*n*sizeof(double));
+        __hexdump(stdout, (double*)C,m*n*sizeof(double));
     }
         double arith_scratchpad;
         for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
