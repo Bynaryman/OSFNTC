@@ -238,6 +238,11 @@ static int gemm_backend_test (
     if (( pTmp = getenv( "VERBOSITY" )) != NULL )
         verbose_level = atoi(pTmp);
 
+    if (is_aligned(A, 4096)) {
+        printf("4096 aligned\n");
+    } else {
+        printf("4096 aligned\n");
+    }
     VERBOSE2(stdout, "m=%lld, n=%lld, k=%lld\n", m, n, k);
     VERBOSE2(stdout, "transA=%d, transB=%d\n", transA, transB);
 
