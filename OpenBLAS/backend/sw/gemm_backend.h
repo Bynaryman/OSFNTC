@@ -305,12 +305,16 @@ static int gemm_backend_test (
 
 
     // Retrieve HW-accelerated kernel informations
-    int reg=0;
-    //snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
-    VERBOSE3(stdout, "test version SA from register polling %d\n", reg);
+    uint32_t reg=0;
+    snap_action_read32 (card, ACTION_TYPE_REG, &reg);
+    VERBOSE3(stdout, "test TYPE SA from register polling %u\n", reg);
+    snap_action_read32 (card, ACTION_RELEASE_REG, &reg);
+    VERBOSE3(stdout, "test RELEASE SA from register polling %u\n", reg);
     // TODO(lledoux): pull such numbers at runtime from fpga register polling
-    uint8_t systolic_array_rows    = 16;
-    uint8_t systolic_array_columns = 15;
+    uint8_t systolic_array_rows    = (reg & 0xFF000000) >> 24;
+    uint8_t systolic_array_columns = (reg & 0x00FF0000) >> 16;
+    VERBOSE3(stdout, "SA rows: %u\n", systolic_array_rows);
+    VERBOSE3(stdout, "SA cols: %u\n", systolic_array_columns);
 
     if (k < systolic_array_rows) exit(EXIT_FAILURE);
 

@@ -1,0 +1,7 @@
+.snap*
+hardware/
+software/*/*.o
+software/*/*.d
+software/*/*.so
+*.jou
+*.log

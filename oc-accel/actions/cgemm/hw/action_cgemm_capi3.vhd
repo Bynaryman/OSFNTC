@@ -273,8 +273,8 @@ action_axi_slave_inst : entity work.action_axi_slave
     port map (
         -- User ports begin
         o_int_enable            => int_enable,
-        i_Action_Type           => x"8600_0003",  -- B3=action type; B2=undefined; B1=arith type; B0=accum type
-        i_Action_VER            => x"0807_1152",  -- B3=N; B2=M; B1=param1 arith; B0=param2 arith)
+        i_Action_Type           => x"8600_0003",  -- B3=action type; B2=undefined; B1=arith type (0 ieee, 1 tfp, 2 bf16, 3 posit); B0=accum type (0 alpha,1 beta,2 gamma,3 custom)
+        i_Action_VER            => x"100F_0817",  -- B3=N; B2=M; B1=param1 arith; B0=param2 arith)
         o_Context_ID            => s_Context_ID,
 
         o_app_start             => app_start,

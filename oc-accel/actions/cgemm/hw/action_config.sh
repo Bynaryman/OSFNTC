@@ -1,12 +1,12 @@
 #!/bin/bash
-N=8
-M=7
-arithmetic_in="ieee:11:52"
+N=16
+M=15
+arithmetic_in="ieee:8:23"
 arithmetic_out="same"
-# msb="254"
-# lsb="-298"
-msb="40"
-lsb="-50"
+#msb="254"
+#lsb="-252"
+msb="7"
+lsb="-15"
 bits_ovf="9"
 has_HSSD="true"
 chunk_size="-1"
