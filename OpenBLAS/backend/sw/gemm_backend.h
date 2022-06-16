@@ -270,7 +270,8 @@ static int gemm_backend_test (
     struct timeval etime_card_allocation, stime_card_allocation,
 		   etime_attach_action, stime_attach_action,
 		   etime_memory_allocation, stime_memory_allocation,
-		   etime_prepare_action, stime_prepare_action,
+		   etime_memory_prepare, stime_memory_prepare,
+		   etime_action_prepare, stime_action_prepare,
 		   etime_action_execution, stime_action_execution;
 
 
@@ -342,13 +343,16 @@ static int gemm_backend_test (
     // we perform 8192 bytes alignment to match arsize / arlen of fpga logic. bursts of 64 transfers of 128B
     char *aggregate_dma_memory = (char *)(alloc_mem(8192, sizeof(char)*aggregate_dma_memory_size));
     char *mem_out = (char*)(alloc_mem(8192, sizeof(char)*mem_out_size));
+    gettimeofday(&etime_memory_allocation, NULL);
 
     if (verbose_level > 3 ) {
         __hexdump(stdout, (IFLOAT*)A,m*k*sizeof(IFLOAT));
         __hexdump(stdout, (IFLOAT*)B,k*n*sizeof(IFLOAT));
         __hexdump(stdout, (IFLOAT*)C,m*n*sizeof(IFLOAT));
     }
+
     // take, cast and place elements of A
+    gettimeofday(&stime_memory_prepare, NULL);
     IFLOAT arith_scratchpad;
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
@@ -415,7 +419,7 @@ static int gemm_backend_test (
 	    }
 	}
     }
-    gettimeofday(&etime_memory_allocation, NULL);
+    gettimeofday(&etime_memory_prepare, NULL);
     if (verbose_level > 3 ) {
         __hexdump(stdout, aggregate_dma_memory, aggregate_dma_memory_size);
     }
@@ -427,7 +431,7 @@ static int gemm_backend_test (
     uint32_t read_burst_num  = 64; // fpga has logic only for 7 arlen
     uint32_t write_burst_num = 64; // fpga has logic only for 7 awlen
     uint32_t transfer_type = 4; // host to host
-    gettimeofday(&stime_prepare_action, NULL);
+    gettimeofday(&stime_action_prepare, NULL);
     uint64_t addr_in = 0x0ull;
     uint64_t addr_out = 0x0ull;
     addr_in  = (unsigned long)aggregate_dma_memory;
@@ -444,7 +448,7 @@ static int gemm_backend_test (
                         write_burst_num,
                         transfer_type
     );
-    gettimeofday(&etime_prepare_action, NULL);
+    gettimeofday(&etime_action_prepare, NULL);
 
 
     // Execute Action
@@ -545,12 +549,14 @@ static int gemm_backend_test (
         uint64_t time_card_allocation = timediff_usec(&etime_card_allocation,  &stime_card_allocation);
         uint64_t time_attach_action = timediff_usec(&etime_attach_action,  &stime_attach_action);
         uint64_t time_memory_allocation = timediff_usec(&etime_memory_allocation,  &stime_memory_allocation);
-        uint64_t time_prepare_action = timediff_usec(&etime_prepare_action,  &stime_prepare_action);
+        uint64_t time_memory_preparation = timediff_usec(&etime_memory_prepare,  &stime_memory_prepare);
+        uint64_t time_prepare_action = timediff_usec(&etime_action_prepare,  &stime_action_prepare);
         uint64_t time_action_execute = timediff_usec(&etime_action_execution,  &stime_action_execution);
 	uint64_t time_total = time_card_allocation + time_attach_action + time_memory_allocation + time_prepare_action + time_action_execute;
 	VERBOSE3(stdout, "time card allocation (us): %lld, %lld\%\n",time_card_allocation, (100*time_card_allocation/time_total));
 	VERBOSE3(stdout, "time attach action (us): %lld, %lld\%\n",time_attach_action, (100*time_attach_action/time_total));
 	VERBOSE3(stdout, "time memory allocation (us): %lld, %lld\%\n",time_memory_allocation, (100*time_memory_allocation/time_total));
+	VERBOSE3(stdout, "time memory preparation (us): %lld, %lld\%\n",time_memory_preparation, (100*time_memory_preparation/time_total));
 	VERBOSE3(stdout, "time action prepare(us): %lld, %lld\%\n",time_prepare_action, (100*time_prepare_action/time_total));
 	VERBOSE3(stdout, "time action execute(us): %lld, %lld\%\n",time_action_execute, (100*time_action_execute/time_total));
 
