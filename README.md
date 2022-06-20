@@ -30,9 +30,10 @@ our modified PySigmoid to handle any kind of accumulators.
 Among other things, we use  the library to generate input matrices
 
 # OpenNMT Ctranslate2
+need open blas installed in /usr
 git clone --recursive https://github.com/OpenNMT/CTranslate2.git
 mkdir build && cd build
-cmake -DWITH_MKL=OFF -DWITH_OPENBLAS=ON -DOPENMP_RUNTIME=COMP ..
+cmake -DWITH_MKL=OFF -DWITH_OPENBLAS=ON -DOPENMP_RUNTIME=COMP -DENABLE_CPU_DISPATCH=OFF ..
 make -j8
 sudo make install
 
