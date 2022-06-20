@@ -11,15 +11,17 @@ def double_to_hex(f):
 #
 #np.matmul(a, b)
 
-m=65
-n=64
-k=15
+m=123
+n=57
+k=30
 
 np.random.seed(123)
 
 a = np.random.random((m,k)).astype(np.float32)
 b = np.random.random((k,n)).astype(np.float32)
-#print(a)
+a = 150*a
+b = 50*b
+print(a)
 #print(b)
 #print(a[0][0])
 

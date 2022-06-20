@@ -476,17 +476,17 @@ printf("order is:%d\n", order);
   FUNCTION_PROFILE_START();
 
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
-	#if defined(CBLAS)
-                if (TransA == CblasNoTrans)     transa = 0;
-                if (TransA == CblasTrans)       transa = 1;
-                if (TransB == CblasNoTrans)     transb = 0;
-                if (TransB == CblasTrans)       transb = 1;
-	#else
-                if (transA == 'N') transa = 0;
-                if (transA == 'T') transa = 1;
-                if (transB == 'N') transb = 0;
-                if (transB == 'T') transb = 1;
-	#endif
+	// #if defined(CBLAS)
+        //         if (TransA == CblasNoTrans)     transa = 0;
+        //         if (TransA == CblasTrans)       transa = 1;
+        //         if (TransB == CblasNoTrans)     transb = 0;
+        //         if (TransB == CblasTrans)       transb = 1;
+	// #else
+        //         if (transA == 'N') transa = 0;
+        //         if (transA == 'T') transa = 1;
+        //         if (transB == 'N') transb = 0;
+        //         if (transB == 'T') transb = 1;
+	// #endif
 	#if defined(DO_COMPARISON)
 		IFLOAT* C_original = (IFLOAT*)malloc(args.m*args.n*sizeof(IFLOAT));
 		memcpy(C_original,(IFLOAT*)args.c,args.m*args.n*sizeof(IFLOAT));

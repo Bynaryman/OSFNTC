@@ -258,6 +258,12 @@ static int gemm_backend_test (
     VERBOSE2(stdout, "m=%lld, n=%lld, k=%lld\n", m, n, k);
     VERBOSE2(stdout, "transA=%d, transB=%d\n", transA, transB);
 
+#if defined(DOUBLE)
+    VERBOSE3(stdout, "float type is double\n");
+#else
+    VERBOSE3(stdout, "float type is single\n");
+#endif
+
     int rc = 0;
     int card_no = 0;
     struct snap_card *card = NULL;
@@ -361,50 +367,51 @@ static int gemm_backend_test (
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) {
-        	    if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
-        	        arith_scratchpad = 0.0f;
-        	    } else {
-    		if (transA==0) {
-        	    		arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)];
-    		} else {
-        	    		arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
-    		}
-        	    }
-        	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
-        	    	memcpy( aggregate_dma_memory +
-        	    		(row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
-        	    		(rewrite_i*k*fpga_bus_size) +
-        	    		(fpga_bus_size*col_j) +
-        	    		(row_i*sizeof(IFLOAT)), // end address calculation
-        	    		&arith_scratchpad,
-        	    		sizeof(IFLOAT));
-        	    }
+                if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
+                    arith_scratchpad = 0.0f;
+                } else {
+                    if (transA==0) {
+                                arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)];
+                    } else {
+                                arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
+                    }
+                }
+                for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
+                    memcpy( aggregate_dma_memory +
+                        (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
+                        (rewrite_i*k*fpga_bus_size) +
+                        (fpga_bus_size*col_j) +
+                        (row_i*sizeof(IFLOAT)), // end address calculation
+                        &arith_scratchpad,
+                        sizeof(IFLOAT));
+                }
             }
         }
     }
+    VERBOSE3(stdout, "tmp to remove, we reach B mem working\n");
     // take, cast and place elements of B
     for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
         for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
             for (uint64_t row_j=0 ; row_j < k ; ++row_j) {
-        	    if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
-        		arith_scratchpad = 0.0f;
-        	    } else {
-    		if(transB==0) {
-        	        	arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)];
-    		} else {
-        	        	arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
-    		}
-        	    }
-        	    for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
-        	    	memcpy( aggregate_dma_memory +
-        	    		(col_band_i*fpga_bus_size*k) +
-        	    		(rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
-        	    		(fpga_bus_size*row_j) +
-        	    		(systolic_array_rows*sizeof(IFLOAT)) + // offset
-        	    		(col_i*sizeof(IFLOAT)), // end address calculation
-        	    		&arith_scratchpad,
-        	    		sizeof(IFLOAT));
-        	    }
+                if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
+                    arith_scratchpad = 0.0f;
+                } else {
+                    if(transB==0) {
+                        arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)];
+                    } else {
+                        arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
+                    }
+                }
+                for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
+                    memcpy( aggregate_dma_memory +
+                        (col_band_i*fpga_bus_size*k) +
+                        (rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
+                        (fpga_bus_size*row_j) +
+                        (systolic_array_rows*sizeof(IFLOAT)) + // offset
+                        (col_i*sizeof(IFLOAT)), // end address calculation
+                        &arith_scratchpad,
+                        sizeof(IFLOAT));
+                }
             }
         }
     }

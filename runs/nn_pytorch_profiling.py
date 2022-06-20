@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
 import torch
+import random
 import torchvision.models as models
 from torch.profiler import profile, record_function, ProfilerActivity
 model = models.resnet101()
+random.seed(0)
+torch.manual_seed(0)
 inputs = torch.randn(50, 3, 224, 224)
 
 with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
