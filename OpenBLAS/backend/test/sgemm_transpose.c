@@ -28,8 +28,9 @@ int main()
   // m = 20000, k = 2000, n = 1000;
   m = 784, k = 25, n = 6;
 
-  alpha = 1.0; beta = 1.0;
+  alpha = 1.0f; beta = 1.0f;
 
+  printf("alpha, beta: %f, %f\n", alpha, beta);
   posix_memalign((void**) &A, 64, m*k*sizeof( float ));
   posix_memalign((void**) &B, 64, k*n*sizeof( float ));
   posix_memalign((void**) &C, 64, m*n*sizeof( float ));
@@ -44,14 +45,25 @@ int main()
 
   for (i = 0; i < (m*k); i++) {
     A[i] = (float)(i+1);
+    // A[i] = 2.0f;
   }
 
   for (i = 0; i < (k*n); i++) {
     B[i] = (float)(-i-1);
   }
 
+  // for (i = 0; i < k; i++) {
+  //     for (j = 0; j < n ; j++) {
+  //       if (i==j) {
+  //           B[i*n+j] = 1.0f;
+  //       } else {
+  //           B[i*n+j] = 0.0f;
+  //       }
+  //     }
+  // }
+
   for (i = 0; i < (m*n); i++) {
-    C[i] = 3.0;
+    C[i] = 0.050333f;
   }
   // double *B_T;
   // posix_memalign((void**) &B_T, 64, k*n*sizeof( double ));
