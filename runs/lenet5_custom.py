@@ -204,13 +204,13 @@ class LeNet5(nn.Module):
 
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1),
-			PrintLayer(),
+			#PrintLayer(),
             nn.Tanh(),
-			PrintLayer(),
+			#PrintLayer(),
             nn.AvgPool2d(kernel_size=2),
-			PrintLayer(),
+			#PrintLayer(),
             nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5, stride=1),
-			PrintLayer(),
+			#PrintLayer(),
             nn.Tanh(),
             nn.AvgPool2d(kernel_size=2),
             nn.Conv2d(in_channels=16, out_channels=120, kernel_size=5, stride=1),
