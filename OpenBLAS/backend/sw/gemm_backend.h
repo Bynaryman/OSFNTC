@@ -283,7 +283,6 @@ static int gemm_backend_test (
 
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
-    if (k < systolic_array_rows) return 0x86; //  signal interface we can't
 
     // Allocate Card
     gettimeofday(&stime_card_allocation, NULL);
@@ -323,6 +322,10 @@ static int gemm_backend_test (
     uint8_t systolic_array_columns = (reg & 0x00FF0000) >> 16;
     VERBOSE3(stdout, "SA rows: %u\n", systolic_array_rows);
     VERBOSE3(stdout, "SA cols: %u\n", systolic_array_columns);
+    if (k < systolic_array_rows) {
+        rc = 0x86;
+        goto out_error2; //  signal interface we can't
+    }
 
 
     // Allocate memories (in and out)
@@ -472,7 +475,7 @@ static int gemm_backend_test (
     gettimeofday(&etime_action_execution, NULL);
     if (rc != 0) {
         VERBOSE0(stderr, "err: job execution %d: %s!\n", rc, strerror(errno));
-        goto out_error2;
+        goto out_error3;
     }
     if (cjob.retc == SNAP_RETC_SUCCESS) {
         VERBOSE3(stdout, "SUCCESS\n");
@@ -480,7 +483,7 @@ static int gemm_backend_test (
     else {
         VERBOSE3(stdout, "FAILED\n");
         VERBOSE0(stderr, "err: Unexpected RETC=%x!\n", cjob.retc);
-        goto out_error2;
+        goto out_error3;
     }
 
 
@@ -595,10 +598,11 @@ static int gemm_backend_test (
     //exit(EXIT_SUCCESS);
     return 0;
 
-    out_error2:
-        snap_detach_action(action);
+    out_error3:
 	free(aggregate_dma_memory);
         free(mem_out);
+    out_error2:
+        snap_detach_action(action);
     out_error1:
         snap_card_free(card);
     out_error:
@@ -609,7 +613,7 @@ static int gemm_backend_test (
         //     free(A);
         // }
         // exit(EXIT_FAILURE);
-	return 1;
+	return rc;
 
 }
 
