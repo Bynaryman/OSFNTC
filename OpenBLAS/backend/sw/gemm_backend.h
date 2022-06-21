@@ -283,6 +283,8 @@ static int gemm_backend_test (
 
     snap_action_flag_t action_irq = 0; //(SNAP_ACTION_DONE_IRQ | SNAP_ATTACH_IRQ); //no irq for now; snap_action_flag_t is an enum defined in snaplib
 
+    if (k < systolic_array_rows) return 0x86; //  signal interface we can't
+
     // Allocate Card
     gettimeofday(&stime_card_allocation, NULL);
     if(card_no == 0) {
@@ -324,7 +326,6 @@ static int gemm_backend_test (
     VERBOSE3(stdout, "SA rows: %u\n", systolic_array_rows);
     VERBOSE3(stdout, "SA cols: %u\n", systolic_array_columns);
 
-    if (k < systolic_array_rows) return 0x86; //  signal interface we can't
 
     // Allocate memories (in and out)
     // Reallocation is needed for alignment and data conversion
