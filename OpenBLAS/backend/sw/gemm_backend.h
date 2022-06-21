@@ -324,7 +324,7 @@ static int gemm_backend_test (
     VERBOSE3(stdout, "SA rows: %u\n", systolic_array_rows);
     VERBOSE3(stdout, "SA cols: %u\n", systolic_array_columns);
 
-    if (k < systolic_array_rows) exit(EXIT_FAILURE);
+    if (k < systolic_array_rows) return 0x86; //  signal interface we can't
 
     // Allocate memories (in and out)
     // Reallocation is needed for alignment and data conversion

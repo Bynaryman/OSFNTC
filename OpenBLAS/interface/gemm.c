@@ -475,6 +475,8 @@ printf("order is:%d\n", order);
 
   FUNCTION_PROFILE_START();
 
+int fpga_return_code = 0;
+
 #if USE_OCAPI == 1 // we go on ocse or oc-accel depending on the machine architecture
 	// #if defined(CBLAS)
         //         if (TransA == CblasNoTrans)     transa = 0;
@@ -491,7 +493,7 @@ printf("order is:%d\n", order);
 		IFLOAT* C_original = (IFLOAT*)malloc(args.m*args.n*sizeof(IFLOAT));
 		memcpy(C_original,(IFLOAT*)args.c,args.m*args.n*sizeof(IFLOAT));
 	#endif
-	int fpga_return_code = gemm_backend_test(
+	fpga_return_code = gemm_backend_test(
 		(uint64_t) args.m,
 		(uint64_t) args.n,
 		(uint64_t) args.k,
@@ -515,7 +517,11 @@ printf("order is:%d\n", order);
 		memcpy(C_fpga,(IFLOAT*)C_original,args.m*args.n*sizeof(IFLOAT));
 	#endif
 #endif
-#if (USE_OCAPI==1 && DO_COMPARISON==1) || USE_OCAPI!=1  // we fall back on all other backends
+//#elif (USE_OCAPI==1 && DO_COMPARISON==1) || USE_OCAPI!=1  // we fall back on all other backends
+
+#if USE_OCAPI==1
+if (fpga_return_code == 0x86) {
+#endif
 
 #if USE_SMALL_MATRIX_OPT
 #if !defined(COMPLEX)
@@ -611,8 +617,11 @@ printf("order is:%d\n", order);
 #endif
 
  blas_memory_free(buffer);
+#if USE_OCAPI==1
+}
+#endif
 
-#endif // end non OCAPI code
+//#endif // end non OCAPI code
 
 #if defined(DO_COMPARISON)
 	VERBOSE3(stdout, "original\n");
