@@ -390,7 +390,6 @@ static int gemm_backend_test (
             }
         }
     }
-    VERBOSE3(stdout, "tmp to remove, we reach B mem working\n");
     // take, cast and place elements of B
     for (uint64_t col_band_i=0 ; col_band_i < entire_vertical_bands_matrix_op_B ; ++col_band_i) {
         for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
