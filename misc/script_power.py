@@ -8,9 +8,7 @@ def main():
 	seconds = 4.0
 	while True:
 		os.system(cmd_get_volt_ampere)
-	    time.sleep(seconds - ((time.time() - starttime) % seconds))
-
-	pass
+		time.sleep(seconds - ((time.time() - starttime) % seconds))
 
 if __name__ == '__main__':
 	main()
