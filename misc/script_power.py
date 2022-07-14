@@ -9,7 +9,7 @@ def main():
 	seconds = 1.0
 	while True:
 		result = subprocess.check_output(cmd_get_volt_ampere, shell=True, stderr=subprocess.STDOUT)
-		array_result = result.split("\n")[0]
+		array_result = result.split("\n")
 		volts = float(array_result[0])
 		amperes = float(array_result[1])
 		watts = volts*amperes
