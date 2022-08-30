@@ -17,26 +17,32 @@ def parse_args():
 	parser.add_argument('--chunk_size', required=True, type=str)
 	return parser.parse_args()
 
-def get_bitwidths_from_ariths(args, arithmetic_in, arithmetic_out):
+def get_bitwidths_and_type_from_ariths(args, arithmetic_in, arithmetic_out):
 	array_arith_in = arithmetic_in.split(":")
 	array_arith_out = arithmetic_out.split(":")
+	arith_type = -1
 	if array_arith_in[0] == "posit":
-			bitwidth_in  = int(array_arith_in[1])
+		bitwidth_in  = int(array_arith_in[1])
+		arith_type = 3
 	elif array_arith_in[0] == "ieee":
 		bitwidth_in  = int(array_arith_in[1]) + int(array_arith_in[2]) + 1
+		arith_type = 0
 	elif array_arith_in[0] == "tfp":
 		bitwidth_in  = int(array_arith_in[1]) + int(array_arith_in[2]) + 1
+		arith_type = 1
 	elif array_arith_in[0] == "bfloat16":
 		bitwidth_in  = 16
+		arith_type = 2
 	else:
 		bitwidth_in = 8
+		arith_type = 4
 	if array_arith_out[0] == "exact":
 		bitwidth_out = int(args.msb) - int(args.lsb) + 1 + int(args.bits_ovf) + 1
 	elif array_arith_out[0] == "same":
 		bitwidth_out = bitwidth_in
 	else:
 		if array_arith_out[0] == "posit":
-				bitwidth_out  = int(array_arith_out[1])
+			bitwidth_out  = int(array_arith_out[1])
 		elif array_arith_out[0] == "ieee":
 			bitwidth_out  = int(array_arith_out[1]) + int(array_arith_out[2]) + 1
 		elif array_arith_out[0] == "tfp":
@@ -46,7 +52,7 @@ def get_bitwidths_from_ariths(args, arithmetic_in, arithmetic_out):
 		else:
 			bitwidth_out = 8
 
-	return bitwidth_in, bitwidth_out
+	return bitwidth_in, bitwidth_out, arith_type
 
 """
 	@brief call flopoco and creates a SA depending on HW needed
@@ -66,7 +72,33 @@ def create_SA(args):
 		LAICPT2_to_arith_ppDepth = "0"
 	return S3FDP_ppDepth, LAICPT2_to_arith_ppDepth
 
-def replace_SV_template(args, S3FDP_ppDepth, LAICPT2_to_arith_ppDepth, bitwidth_in, bitwidth_out):
+'''
+	@brief build strings of hexadecimal to inject as description registers to be fetch by software
+'''
+def create_hexstrings(arith_type, N, M):
+	str_action_type = ""
+	str_action_version = ""
+	str_arith_type = f"{arith_type:02x}"
+
+
+	str_action_type += "86" # B3 action type is cgemm
+	str_action_type += "00" # B2 is undefined
+	str_action_type += "_"  #
+	str_action_type += str_arith_type # B1 arith type
+	str_action_type += "00" # B0 accum type
+
+	str_action_version += f"{N:02x}"
+	str_action_version += f"{M:02x}"
+	str_action_version += "_"
+	str_action_version += "00"
+	str_action_version += "00"
+
+	print(str_action_type, str_action_version)
+	return str_action_type, str_action_version
+
+
+
+def replace_templates(args, S3FDP_ppDepth, LAICPT2_to_arith_ppDepth, bitwidth_in, bitwidth_out, arith_type):
 	today = date.today()
 	d1 = today.strftime("%d/%m/%Y")
 	with open("./my_sv_wrapper.sv.template", "r") as orig_file:
@@ -83,11 +115,20 @@ def replace_SV_template(args, S3FDP_ppDepth, LAICPT2_to_arith_ppDepth, bitwidth_
 		with open("./my_sv_wrapper.sv", "w") as dest_file:
 			dest_file.write(dest_content)
 
+	action_type, action_version = create_hexstrings(arith_type, int(args.N), int(args.M))
+	with open("./action_cgemm_capi3.vhd.template") as orig_file:
+		orig_content = orig_file.read()
+		orig_content = orig_content.replace('[[HW_CONFIG_ACTION_TYPE]]', action_type)
+		orig_content = orig_content.replace('[[HW_CONFIG_ACTION_VERSION]]', action_version)
+		dest_content = orig_content
+		with open("./action_cgemm_capi3.vhd", "w") as dest_file:
+			dest_file.write(dest_content)
+
 def main():
 	args = parse_args()
-	bitwidth_in, bitwidth_out = get_bitwidths_from_ariths(args, args.arithmetic_in, args.arithmetic_out)
+	bitwidth_in, bitwidth_out, arith_type = get_bitwidths_and_type_from_ariths(args, args.arithmetic_in, args.arithmetic_out)
 	S3FDP_ppDepth, LAICPT2_to_arith_ppDepth = create_SA(args)
-	replace_SV_template(args, S3FDP_ppDepth, LAICPT2_to_arith_ppDepth,bitwidth_in, bitwidth_out)
+	replace_templates(args, S3FDP_ppDepth, LAICPT2_to_arith_ppDepth,bitwidth_in, bitwidth_out, arith_type)
 
 if __name__ == '__main__':
 	main()
