@@ -1,0 +1,31 @@
+digraph DSPBlock_2x2_F200_uid35
+{
+	//graph drawing options
+	label=DSPBlock_2x2_F200_uid35;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator DSPBlock_2x2_F200_uid35
+	X__DSPBlock_2x2_F200_uid35 [ label="X\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	Y__DSPBlock_2x2_F200_uid35 [ label="Y\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	R__DSPBlock_2x2_F200_uid35 [ label="R\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=3 ];
+	{rank=same X__DSPBlock_2x2_F200_uid35, Y__DSPBlock_2x2_F200_uid35};
+	{rank=same R__DSPBlock_2x2_F200_uid35};
+	//internal signals of operator DSPBlock_2x2_F200_uid35
+	Mint__DSPBlock_2x2_F200_uid35 [ label="Mint\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	M__DSPBlock_2x2_F200_uid35 [ label="M\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	Rtmp__DSPBlock_2x2_F200_uid35 [ label="Rtmp\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+
+	//subcomponents of operator DSPBlock_2x2_F200_uid35
+
+	//input and internal signal connections of operator DSPBlock_2x2_F200_uid35
+	X__DSPBlock_2x2_F200_uid35 -> Mint__DSPBlock_2x2_F200_uid35 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Y__DSPBlock_2x2_F200_uid35 -> Mint__DSPBlock_2x2_F200_uid35 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Mint__DSPBlock_2x2_F200_uid35 -> M__DSPBlock_2x2_F200_uid35 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	M__DSPBlock_2x2_F200_uid35 -> Rtmp__DSPBlock_2x2_F200_uid35 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	Rtmp__DSPBlock_2x2_F200_uid35 -> R__DSPBlock_2x2_F200_uid35 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

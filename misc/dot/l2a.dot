@@ -1,0 +1,294 @@
+digraph l2a
+{
+	//graph drawing options
+	label=l2a;
+	labelloc=bottom;
+	labeljust=right;
+	ratio=auto;
+	nodesep=0.25;
+	ranksep=0.5;
+
+	//input/output signals of operator l2a
+	A__l2a [ label="A\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	isNaN__l2a [ label="isNaN\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+	arith_o__l2a [ label="arith_o\ndT = 0\n(2, 5.02644e-10)", shape=box, color=black, style="bold, filled", fillcolor=cyan, peripheries=3 ];
+	{rank=same A__l2a, isNaN__l2a};
+	{rank=same arith_o__l2a};
+	//internal signals of operator l2a
+	rippled_carry__l2a [ label="rippled_carry\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count_bit__l2a [ label="count_bit\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	count_lzoc_o__l2a [ label="count_lzoc_o\ndT = 0\n(1, 2.25302e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	frac_lzoc_o__l2a [ label="frac_lzoc_o\ndT = 0\n(1, 2.46802e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	sticky_lzoc_o__l2a [ label="sticky_lzoc_o\ndT = 0\n(1, 2.58289e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	unbiased_exp__l2a [ label="unbiased_exp\ndT = 4.72e-10\n(1, 2.72502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	fraction__l2a [ label="fraction\ndT = 0\n(1, 2.46802e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	bin_regime__l2a [ label="bin_regime\ndT = 0\n(1, 2.72502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	first_regime__l2a [ label="first_regime\ndT = 0\n(1, 2.72502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	regime__l2a [ label="regime\ndT = 2.15e-10\n(1, 2.94002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	pad__l2a [ label="pad\ndT = 2.15e-10\n(1, 2.94002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	start_regime__l2a [ label="start_regime\ndT = 2.15e-10\n(1, 3.15502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	in_shift__l2a [ label="in_shift\ndT = 0\n(1, 3.15502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	extended_posit__l2a [ label="extended_posit\ndT = 0\n(1, 3.37002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	pre_sticky__l2a [ label="pre_sticky\ndT = 0\n(1, 4.45064e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	truncated_posit__l2a [ label="truncated_posit\ndT = 0\n(1, 3.37002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	lsb__l2a [ label="lsb\ndT = 0\n(1, 3.37002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	guard__l2a [ label="guard\ndT = 0\n(1, 3.37002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	sticky__l2a [ label="sticky\ndT = 0\n(1, 4.45064e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	round_bit__l2a [ label="round_bit\ndT = 2.15e-10\n(1, 4.66564e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	is_NAR__l2a [ label="is_NAR\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+	rounded_reg_exp_frac__l2a [ label="rounded_reg_exp_frac\ndT = 4.72e-10\n(2, 2.87644e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	rounded_posit__l2a [ label="rounded_posit\ndT = 0\n(2, 2.87644e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+	is_zero__l2a [ label="is_zero\ndT = 0\n(1, 2.46802e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+	rounded_posit_zero__l2a [ label="rounded_posit_zero\ndT = 2.15e-10\n(2, 5.02644e-10)", shape=box, color=black, style=filled, fillcolor=cyan, peripheries=1 ];
+
+	//subcomponents of operator l2a
+
+	subgraph cluster_LZOCShifterSticky_100_to_3_counting_128_F200_uid22
+	{
+		//graph drawing options
+		label=LZOCShifterSticky_100_to_3_counting_128_F200_uid22;
+		labelloc=bottom;
+		labeljust=right;
+		style="bold, dotted";
+		ratio=auto;
+		nodesep=0.25;
+		ranksep=0.5;
+
+		//input/output signals of operator LZOCShifterSticky_100_to_3_counting_128_F200_uid22
+		I__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="I\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		OZb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="OZb\ndT = 0\n(0, 0)", shape=box, color=black, style="bold, filled", fillcolor=coral, peripheries=2 ];
+		Count__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="Count\ndT = 0\n(1, 2.25302e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+		O__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="O\ndT = 0\n(1, 2.46802e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+		Sticky__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="Sticky\ndT = 0\n(1, 2.58289e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+		{rank=same I__LZOCShifterSticky_100_to_3_counting_128_F200_uid22, OZb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22};
+		{rank=same Count__LZOCShifterSticky_100_to_3_counting_128_F200_uid22, O__LZOCShifterSticky_100_to_3_counting_128_F200_uid22, Sticky__LZOCShifterSticky_100_to_3_counting_128_F200_uid22};
+		//internal signals of operator LZOCShifterSticky_100_to_3_counting_128_F200_uid22
+		level7__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level7\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sozb\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky7__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky7\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		count6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count6\ndT = 1.90771e-09\n(0, 1.90771e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level6\ndT = 2.15e-10\n(0, 2.12271e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_high_6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_6\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_low_6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_6\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky6\ndT = 3.29875e-10\n(0, 2.23759e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		count5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count5\ndT = 1.31786e-09\n(0, 3.44057e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level5\ndT = 2.15e-10\n(0, 3.65557e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_high_5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_5\ndT = 0\n(0, 2.12271e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_low_5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_5\ndT = 0\n(0, 2.12271e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky5\ndT = 3.52375e-10\n(0, 3.79294e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		count4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count4\ndT = 8.16173e-10\n(0, 4.47174e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level4\ndT = 2.15e-10\n(0, 4.68674e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_high_4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_4\ndT = 0\n(0, 3.65557e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_low_4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_4\ndT = 0\n(0, 3.65557e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky4\ndT = 3.48625e-10\n(0, 4.82037e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		count3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count3\ndT = 5.64394e-10\n(1, 4.01135e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level3\ndT = 2.15e-10\n(1, 6.16135e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_high_3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_3\ndT = 0\n(0, 4.68674e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky_low_3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_3\ndT = 0\n(0, 4.68674e-09)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky3\ndT = 3.3925e-10\n(1, 7.40385e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		count2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count2\ndT = 4.39442e-10\n(1, 1.05558e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level2\ndT = 2.15e-10\n(1, 1.27058e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_high_2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_2\ndT = 0\n(1, 6.16135e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_low_2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_2\ndT = 0\n(1, 6.16135e-10)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky2\ndT = 3.33625e-10\n(1, 1.3892e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		count1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count1\ndT = 3.91413e-10\n(1, 1.66199e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level1\ndT = 2.15e-10\n(1, 1.87699e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_high_1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_1\ndT = 0\n(1, 1.27058e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_low_1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_1\ndT = 0\n(1, 1.27058e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky1\ndT = 3.29875e-10\n(1, 1.99187e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		count0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="count0\ndT = 3.76029e-10\n(1, 2.25302e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="level0\ndT = 2.15e-10\n(1, 2.46802e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_high_0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_high_0\ndT = 0\n(1, 1.87699e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sticky_low_0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky_low_0\ndT = 0\n(0, 0)", shape=box, color=black, style=filled, fillcolor=coral, peripheries=1 ];
+		sticky0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sticky0\ndT = 3.29875e-10\n(1, 2.58289e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ label="sCount\ndT = 0\n(1, 2.25302e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+
+		//subcomponents of operator LZOCShifterSticky_100_to_3_counting_128_F200_uid22
+
+		//input and internal signal connections of operator LZOCShifterSticky_100_to_3_counting_128_F200_uid22
+		I__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level7__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		OZb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level7__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level7__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sozb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky7__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_high_5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_low_5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky6__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_high_4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_low_4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky5__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_high_3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_low_3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky4__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_high_2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_low_2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky3__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_high_1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_low_1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky2__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_high_0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky1__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> level0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		count0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> O__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_high_0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky_low_0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sticky0__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> Sticky__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		sCount__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> Count__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	}
+
+		//output signal connections of operator LZOCShifterSticky_100_to_3_counting_128_F200_uid22
+		Count__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> count_lzoc_o__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		O__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> frac_lzoc_o__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		Sticky__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 -> sticky_lzoc_o__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+
+	subgraph cluster_RightShifterSticky4_by_max_4_F200_uid24
+	{
+		//graph drawing options
+		label=RightShifterSticky4_by_max_4_F200_uid24;
+		labelloc=bottom;
+		labeljust=right;
+		style="bold, dotted";
+		ratio=auto;
+		nodesep=0.25;
+		ranksep=0.5;
+
+		//input/output signals of operator RightShifterSticky4_by_max_4_F200_uid24
+		X__RightShifterSticky4_by_max_4_F200_uid24 [ label="X\ndT = 0\n(1, 3.15502e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=2 ];
+		S__RightShifterSticky4_by_max_4_F200_uid24 [ label="S\ndT = 0\n(1, 2.94002e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=2 ];
+		padBit__RightShifterSticky4_by_max_4_F200_uid24 [ label="padBit\ndT = 0\n(1, 2.94002e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=2 ];
+		R__RightShifterSticky4_by_max_4_F200_uid24 [ label="R\ndT = 0\n(1, 3.37002e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+		Sticky__RightShifterSticky4_by_max_4_F200_uid24 [ label="Sticky\ndT = 0\n(1, 4.45064e-09)", shape=box, color=black, style="bold, filled", fillcolor=chartreuse, peripheries=3 ];
+		{rank=same X__RightShifterSticky4_by_max_4_F200_uid24, S__RightShifterSticky4_by_max_4_F200_uid24, padBit__RightShifterSticky4_by_max_4_F200_uid24};
+		{rank=same R__RightShifterSticky4_by_max_4_F200_uid24, Sticky__RightShifterSticky4_by_max_4_F200_uid24};
+		//internal signals of operator RightShifterSticky4_by_max_4_F200_uid24
+		ps__RightShifterSticky4_by_max_4_F200_uid24 [ label="ps\ndT = 0\n(1, 2.94002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level3__RightShifterSticky4_by_max_4_F200_uid24 [ label="level3\ndT = 0\n(1, 3.15502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		stk2__RightShifterSticky4_by_max_4_F200_uid24 [ label="stk2\ndT = 4.31875e-10\n(1, 3.58689e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level2__RightShifterSticky4_by_max_4_F200_uid24 [ label="level2\ndT = 0\n(1, 3.15502e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		stk1__RightShifterSticky4_by_max_4_F200_uid24 [ label="stk1\ndT = 4.31875e-10\n(1, 4.01877e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level1__RightShifterSticky4_by_max_4_F200_uid24 [ label="level1\ndT = 2.15e-10\n(1, 3.37002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		stk0__RightShifterSticky4_by_max_4_F200_uid24 [ label="stk0\ndT = 4.31875e-10\n(1, 4.45064e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+		level0__RightShifterSticky4_by_max_4_F200_uid24 [ label="level0\ndT = 0\n(1, 3.37002e-09)", shape=box, color=black, style=filled, fillcolor=chartreuse, peripheries=1 ];
+
+		//subcomponents of operator RightShifterSticky4_by_max_4_F200_uid24
+
+		//input and internal signal connections of operator RightShifterSticky4_by_max_4_F200_uid24
+		X__RightShifterSticky4_by_max_4_F200_uid24 -> level3__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		S__RightShifterSticky4_by_max_4_F200_uid24 -> ps__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__RightShifterSticky4_by_max_4_F200_uid24 -> level2__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__RightShifterSticky4_by_max_4_F200_uid24 -> level1__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		padBit__RightShifterSticky4_by_max_4_F200_uid24 -> level0__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__RightShifterSticky4_by_max_4_F200_uid24 -> stk2__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__RightShifterSticky4_by_max_4_F200_uid24 -> level2__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__RightShifterSticky4_by_max_4_F200_uid24 -> stk1__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__RightShifterSticky4_by_max_4_F200_uid24 -> level1__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__RightShifterSticky4_by_max_4_F200_uid24 -> stk0__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		ps__RightShifterSticky4_by_max_4_F200_uid24 -> level0__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__RightShifterSticky4_by_max_4_F200_uid24 -> stk2__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level3__RightShifterSticky4_by_max_4_F200_uid24 -> level2__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		stk2__RightShifterSticky4_by_max_4_F200_uid24 -> stk1__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__RightShifterSticky4_by_max_4_F200_uid24 -> stk1__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level2__RightShifterSticky4_by_max_4_F200_uid24 -> level1__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		stk1__RightShifterSticky4_by_max_4_F200_uid24 -> stk0__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level1__RightShifterSticky4_by_max_4_F200_uid24 -> stk0__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level1__RightShifterSticky4_by_max_4_F200_uid24 -> level0__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		stk0__RightShifterSticky4_by_max_4_F200_uid24 -> Sticky__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		level0__RightShifterSticky4_by_max_4_F200_uid24 -> R__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	}
+
+		//output signal connections of operator RightShifterSticky4_by_max_4_F200_uid24
+		R__RightShifterSticky4_by_max_4_F200_uid24 -> extended_posit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+		Sticky__RightShifterSticky4_by_max_4_F200_uid24 -> pre_sticky__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+
+	//input and internal signal connections of operator l2a
+	A__l2a -> rippled_carry__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	isNaN__l2a -> is_NAR__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	rippled_carry__l2a -> count_bit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	rippled_carry__l2a -> I__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count_bit__l2a -> OZb__LZOCShifterSticky_100_to_3_counting_128_F200_uid22 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count_bit__l2a -> pad__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count_bit__l2a -> rounded_posit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count_lzoc_o__l2a -> unbiased_exp__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	count_lzoc_o__l2a -> is_zero__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	frac_lzoc_o__l2a -> fraction__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sticky_lzoc_o__l2a -> sticky__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	unbiased_exp__l2a -> bin_regime__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	unbiased_exp__l2a -> first_regime__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	fraction__l2a -> in_shift__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	fraction__l2a -> sticky__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	fraction__l2a -> is_zero__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	bin_regime__l2a -> regime__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	first_regime__l2a -> regime__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	first_regime__l2a -> pad__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	regime__l2a -> S__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	pad__l2a -> start_regime__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	pad__l2a -> padBit__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	start_regime__l2a -> in_shift__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	in_shift__l2a -> X__RightShifterSticky4_by_max_4_F200_uid24 [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	extended_posit__l2a -> truncated_posit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	extended_posit__l2a -> lsb__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	extended_posit__l2a -> guard__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	pre_sticky__l2a -> sticky__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	truncated_posit__l2a -> rounded_reg_exp_frac__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	lsb__l2a -> round_bit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	guard__l2a -> round_bit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	sticky__l2a -> round_bit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	round_bit__l2a -> rounded_reg_exp_frac__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	is_NAR__l2a -> arith_o__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	rounded_reg_exp_frac__l2a -> rounded_posit__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	rounded_posit__l2a -> rounded_posit_zero__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	is_zero__l2a -> rounded_posit_zero__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+	rounded_posit_zero__l2a -> arith_o__l2a [ arrowhead=normal, arrowsize=1.0, arrowtail=normal, color=black, dir=forward  ];
+}
+

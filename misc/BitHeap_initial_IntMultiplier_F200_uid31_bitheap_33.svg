@@ -1,0 +1,70 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="430" height="50" length="50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" onload="init(evt)" >
+
+<style>
+   .caption{
+      font-size: 15px;
+      font-family: Georgia, serif;
+   }
+   .tooltip{
+      font-size: 12px;
+   }
+   .tooltip_bg{
+      fill: white;
+      stroke: black;
+      stroke-width: 1;
+      opacity: 0.85;
+   }
+</style>
+
+<script type="text/ecmascript"> <![CDATA[  
+
+   var svg = document.querySelector('svg');
+
+   var pt = svg.createSVGPoint();
+
+   function cursorLocation(evt){
+      pt.x = evt.clientX; pt.y = evt.clientY;
+      return pt.matrixTransform(svg.getScreenCTM().inverse());
+   }
+
+   function init(evt) {
+      if ( window.svgDocument == null ) {
+         svgDocument = evt.target.ownerDocument;
+      }
+      tooltip = svgDocument.getElementById('tooltip');
+      tooltip_bg = svgDocument.getElementById('tooltip_bg');
+   }
+
+   function ShowTooltip(evt, mouseovertext) {
+      var loc = cursorLocation(evt);
+
+      tooltip.setAttributeNS(null,"x",loc.x+10);
+      tooltip.setAttributeNS(null,"y",loc.y+30);
+      tooltip.firstChild.data = mouseovertext;
+      tooltip.setAttributeNS(null,"visibility","visible");
+
+      length = tooltip.getComputedTextLength();
+      tooltip_bg.setAttributeNS(null,"width",length+8);
+      tooltip_bg.setAttributeNS(null,"x",loc.x+7);
+      tooltip_bg.setAttributeNS(null,"y",loc.y+18);
+      tooltip_bg.setAttributeNS(null,"visibility","visible");
+   }
+
+   function HideTooltip(evt) {
+      tooltip.setAttributeNS(null,"visibility","hidden");
+      tooltip_bg.setAttributeNS(null,"visibility","hidden");
+   }]]>
+</script>
+
+<line x1="270" y1="40" x2="30" y2="40" style="stroke:lightsteelblue;stroke-width:1" />
+<circle cx="115" cy="25" r="3" fill="darkblue" stroke="black" stroke-width="0.5" onmousemove="ShowTooltip(evt, 'bh33_w0_0, 0 : 0.000 ns')" onmouseout="HideTooltip(evt)" />
+<circle cx="105" cy="25" r="3" fill="darkblue" stroke="black" stroke-width="0.5" onmousemove="ShowTooltip(evt, 'bh33_w1_0, 0 : 0.000 ns')" onmouseout="HideTooltip(evt)" />
+<circle cx="95" cy="25" r="3" fill="darkblue" stroke="black" stroke-width="0.5" onmousemove="ShowTooltip(evt, 'bh33_w2_0, 0 : 0.000 ns')" onmouseout="HideTooltip(evt)" />
+<circle cx="85" cy="25" r="3" fill="darkblue" stroke="black" stroke-width="0.5" onmousemove="ShowTooltip(evt, 'bh33_w3_0, 0 : 0.000 ns')" onmouseout="HideTooltip(evt)" />
+<line x1="150" y1="20" x2="150" y2="60" style="stroke:midnightblue;stroke-width:1" />
+<rect class="tooltip_bg" id="tooltip_bg" x="0" y="0" rx="4" ry="4" width="55" height="17" visibility="hidden"/>
+<text class="tooltip" id="tooltip" x="0" y="0" visibility="hidden">Tooltip</text>
+</svg>
