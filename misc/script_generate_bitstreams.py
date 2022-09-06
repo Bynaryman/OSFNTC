@@ -19,7 +19,7 @@ for c in configs:
     fct_implem_snap = "fct_implem_ocaccel_"+ str(N) + "_" + str(M) + "_" + str(c[1]).replace(":","_")+"_"+str(c[7])+"_m"+str(-c[8])+"_" + str(c[9])
     exec(
         'def {}():'.format(fct_implem_snap) +
-		'\n\tos.system("{}")'.format(cmd_implem_snap.format(N,M,c[1].replace(":","\:"),c[7],-c[8],c[9]))
+		'\n\tos.system("{}")'.format(cmd_implem_snap.format(N,M,c[1].replace(":","\\:"),c[7],-c[8],c[9]))
     )
     actions_push[fct_implem_snap] = eval(fct_implem_snap)
     dependencies_push[fct_implem_snap]=[]
