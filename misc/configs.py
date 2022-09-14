@@ -114,11 +114,11 @@ configs_proposal2 = [
         (200,"ieee:11:52"     ,6  ,   6,1023,11,52,2046,-2148,7 ),  # IEEE 754 DP x exact (kulisch)
 
 		# others
-		(200,"tfp:4:3"        ,48 ,  48,   7, 4, 3,   6,   -7,6 ),  # FP8 E4M3 x approximate
-		(200,"tfp:4:3"        ,48 ,  48,   7, 4, 3,  14,  -12,13),  # FP8 E4M3 x exact (kulisch)
+		(200,"ieee:4:3"       ,48 ,  48,   7, 4, 3,   6,   -7,6 ),  # FP8 E4M3 x approximate
+		(200,"ieee:4:3"       ,48 ,  48,   7, 4, 3,  14,  -18,13),  # FP8 E4M3 x exact (kulisch)
 
-		(200,"tfp:5:2"        ,48 ,  48,   15, 5, 2,   6,  -7,6 ),  # FP8 E5M2 x approximate
-		(200,"tfp:5:2"        ,48 ,  48,   15, 5, 2,  30, -28, 5),  # FP8 E5M2 x exact (kulisch)
+		(200,"ieee:5:2"       ,48 ,  48,  15, 5, 2,   6,  -7, 6),  # FP8 E5M2 x approximate
+		(200,"ieee:5:2"       ,48 ,  48,  15, 5, 2,  30, -32, 5),  # FP8 E5M2 x exact (kulisch)
 
         (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -24, 2 ),  # bfloat16 x approximate
         (200,"bfloat16"       ,16 ,  16, 127, 8, 7, 254,-266, 7 ),  # bfloat16 x exact (kulisch)
