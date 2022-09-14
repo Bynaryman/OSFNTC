@@ -60,7 +60,7 @@ def get_bitwidths_and_type_from_ariths(args, arithmetic_in, arithmetic_out):
 	@param the parameters as namespace
 """
 def create_SA(args):
-	cmd = os.path.dirname(__file__) + "/libs/systolic_array/flopoco SystolicArray N={} M={} arithmetic_in={} arithmetic_out={} msb_summand={} lsb_summand={} nb_bits_ovf={} has_HSSD={} chunk_size={} frequency=200 target=VirtexUltrascalePlus name=SystolicArray".format(args.N,args.M,args.arithmetic_in,args.arithmetic_out,args.msb,args.lsb,args.bits_ovf,args.has_HSSD,args.chunk_size)
+	cmd = os.path.dirname(__file__) + "/libs/systolic_array/flopoco SystolicArray N={} M={} arithmetic_in={} arithmetic_out={} msb_summand={} lsb_summand={} nb_bits_ovf={} has_HSSD={} chunk_size={} frequency=250 target=VirtexUltrascalePlus name=SystolicArray".format(args.N,args.M,args.arithmetic_in,args.arithmetic_out,args.msb,args.lsb,args.bits_ovf,args.has_HSSD,args.chunk_size)
 	result = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 	# print(result)
 	a = re.search("Entity l2a\n.*?(\d+)", result.decode("utf-8"), re.M)
