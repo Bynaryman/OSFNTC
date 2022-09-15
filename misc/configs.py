@@ -92,7 +92,7 @@ configs_proposal2 = [
         (200,"posit:4:0"      , 64,  64,  4 , 3, 1,  6 , -4 , 6 ),  # posit<4,0> x enhanced intuition
 
         (200,"posit:8:2"      ,48 ,  48,  24, 6, 3,   6,  -8, 6 ),  # posit<8,2> x approximate
-        (200,"posit:8:2"      ,32 ,  32,  24, 6, 3,  48, -48, 31),  # posit<8,2> x exact (quire)
+        (200,"posit:8:2"      ,28 ,  28,  24, 6, 3,  48, -48, 31),  # posit<8,2> x exact (quire)
 
         (200,"posit:16:2"     ,32 ,  31,  56, 7,11,   6, -24, 9 ),  # posit<16,2> x approximate
         (200,"posit:16:2"     ,16 ,  16,  56, 7,11, 112,-112,31 ),  # posit<16,2> x exact (quire)
@@ -105,23 +105,23 @@ configs_proposal2 = [
 
 		# IEEE
 		(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   6, -24, 9 ),  # IEEE 754 HP x approximate
-        (200,"ieee:5:10"      ,32 ,  31,  15, 5,10,  30, -48, 7 ),  # IEEE 754 HP x exact (kulisch)
+        (200,"ieee:5:10"      ,28 ,  28,  15, 5,10,  30, -48, 7 ),  # IEEE 754 HP x exact (kulisch)
 
 		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 9 ),  # IEEE 754 SP x approximate
 		(200,"ieee:8:23"      ,10 ,  10, 127, 8,23, 254,-298, 7 ),  # IEEE 754 SP x exact (kulisch)
 
 		(200,"ieee:11:52"     ,8  ,   7,1023,11,52,   6, -112,9 ),  # IEEE 754 DP x approximate
-        (200,"ieee:11:52"     ,6  ,   6,1023,11,52,2046,-2148,7 ),  # IEEE 754 DP x exact (kulisch)
+        (200,"ieee:11:52"     ,4  ,   4,1023,11,52,2046,-2148,7 ),  # IEEE 754 DP x exact (kulisch)
 
 		# others
 		(200,"ieee:4:3"       ,48 ,  48,   7, 4, 3,   6,   -7,6 ),  # FP8 E4M3 x approximate
 		(200,"ieee:4:3"       ,48 ,  48,   7, 4, 3,  14,  -18,13),  # FP8 E4M3 x exact (kulisch)
 
 		(200,"ieee:5:2"       ,48 ,  48,  15, 5, 2,   6,  -7, 6),  # FP8 E5M2 x approximate
-		(200,"ieee:5:2"       ,48 ,  48,  15, 5, 2,  30, -32, 5),  # FP8 E5M2 x exact (kulisch)
+		(200,"ieee:5:2"       ,48 ,  48,  15, 5, 2,  30, -40, 5),  # FP8 E5M2 x exact (kulisch)
 
         (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -24, 2 ),  # bfloat16 x approximate
-        (200,"bfloat16"       ,16 ,  16, 127, 8, 7, 254,-266, 7 ),  # bfloat16 x exact (kulisch)
+        (200,"bfloat16"       ,10 ,  10, 127, 8, 7, 254,-266, 7 ),  # bfloat16 x exact (kulisch)
 
 ]
 
