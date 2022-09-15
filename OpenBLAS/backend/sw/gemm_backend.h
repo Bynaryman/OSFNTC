@@ -322,11 +322,12 @@ static int gemm_backend_test (
     VERBOSE3(stdout, "SA rows: %u\n", systolic_array_rows);
     VERBOSE3(stdout, "SA cols: %u\n", systolic_array_columns);
     if (systolic_array_rows == 0) {
+	    rc = 0x86;
 	    goto out_error2;  // certainly a bad bistream
     }
     if (k < systolic_array_rows) {
         rc = 0x86;
-        goto out_error2; //  signal interface we can't to continue process in cpu
+        goto out_error2; //  signal interface we can't ; to continue process in cpu
     }
 
 
