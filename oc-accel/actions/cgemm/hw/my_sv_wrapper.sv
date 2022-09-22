@@ -5,7 +5,7 @@
 // Company: BSC
 // Engineer: LEDOUX Louis
 //
-// Create Date: 30/08/2022
+// Create Date: 22/09/2022
 // Description: axi stream sv wrapper +
 //  assuming N + M arithmetic dense words fit in the 512b bus or 1024. Depending CAPI2 or CAPI3
 //
