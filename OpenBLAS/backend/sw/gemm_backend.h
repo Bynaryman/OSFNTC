@@ -400,6 +400,7 @@ static int gemm_backend_test (
 
     // take, cast and place elements of A
     gettimeofday(&stime_memory_prepare, NULL);
+    uint16_t scratchpad_out = 0;
     IFLOAT arith_scratchpad;
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
@@ -413,6 +414,7 @@ static int gemm_backend_test (
                                 arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
                     }
                 }
+                scratchpad_out = float_to_half((float)arith_scratchpad);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
@@ -420,8 +422,7 @@ static int gemm_backend_test (
                         (fpga_bus_size*col_j) +
                         //(row_i*sizeof(IFLOAT)), // end address calculation
                         (row_i*sizeof(uint16_t)), // end address calculation
-                        //&arith_scratchpad,
-                        &(float_to_half((float)arith_scratchpad)),
+                        &scratchpad_out,
                         //sizeof(IFLOAT));
                         sizeof(uint16_t));
                 }
@@ -559,7 +560,6 @@ static int gemm_backend_test (
     }
 
 
-    uint16_t scratchpad_out = 0;
     // Write Matrix C to out
     for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
         for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
