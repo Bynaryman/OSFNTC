@@ -442,6 +442,7 @@ static int gemm_backend_test (
                         arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
                     }
                 }
+                scratchpad_out = float_to_half((float)arith_scratchpad);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (col_band_i*fpga_bus_size*k) +
@@ -452,8 +453,7 @@ static int gemm_backend_test (
                         //(col_i*sizeof(IFLOAT)), // end address calculation
                         (col_i*sizeof(uint16_t)), // end address calculation
                         //&arith_scratchpad,
-                        //&arith_scratchpad,
-                        &(float_to_half((float)arith_scratchpad)),
+                        &scratchpad_out,
                         //sizeof(IFLOAT));
                         sizeof(uint16_t));
                 }
