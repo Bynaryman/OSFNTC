@@ -418,9 +418,12 @@ static int gemm_backend_test (
                         (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
                         (rewrite_i*k*fpga_bus_size) +
                         (fpga_bus_size*col_j) +
-                        (row_i*sizeof(IFLOAT)), // end address calculation
-                        &arith_scratchpad,
-                        sizeof(IFLOAT));
+                        //(row_i*sizeof(IFLOAT)), // end address calculation
+                        (row_i*sizeof(uint16_t)), // end address calculation
+                        //&arith_scratchpad,
+                        &(float_to_half((float)arith_scratchpad)),
+                        //sizeof(IFLOAT));
+                        sizeof(uint16_t));
                 }
             }
         }
@@ -443,10 +446,15 @@ static int gemm_backend_test (
                         (col_band_i*fpga_bus_size*k) +
                         (rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
                         (fpga_bus_size*row_j) +
-                        (systolic_array_rows*sizeof(IFLOAT)) + // offset
-                        (col_i*sizeof(IFLOAT)), // end address calculation
-                        &arith_scratchpad,
-                        sizeof(IFLOAT));
+                        //(systolic_array_rows*sizeof(IFLOAT)) + // offset
+                        (systolic_array_rows*sizeof(uint16_t)) + // offset
+                        //(col_i*sizeof(IFLOAT)), // end address calculation
+                        (col_i*sizeof(uint16_t)), // end address calculation
+                        //&arith_scratchpad,
+                        //&arith_scratchpad,
+                        &(float_to_half((float)arith_scratchpad)),
+                        //sizeof(IFLOAT));
+                        sizeof(uint16_t));
                 }
             }
         }
@@ -551,6 +559,7 @@ static int gemm_backend_test (
     }
 
 
+    uint16_t scratchpad_out = 0;
     // Write Matrix C to out
     for (uint32_t vertical_band_j=0 ; vertical_band_j < entire_horizontal_bands_matrix_op_A ; ++vertical_band_j) {
         for (uint32_t horizontal_block_i=0 ; horizontal_block_i < entire_vertical_bands_matrix_op_B ; ++horizontal_block_i) {
@@ -560,7 +569,8 @@ static int gemm_backend_test (
                                 (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
                                 (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
                                 (fpga_bus_size * row_i) +
-                                (sizeof(IFLOAT)*col_j);
+                                //(sizeof(IFLOAT)*col_j);
+                                (sizeof(uint16_t)*col_j);
     		    if ( !(horizontal_padding_case &&
     		           vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
     		           row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
@@ -568,7 +578,9 @@ static int gemm_backend_test (
     		           horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
     		           col_j >= cols_last_partial_band_matrix_op_B)
     		       ) {
-                            memcpy(&arith_scratchpad, c_tmp, sizeof(IFLOAT));
+                            //memcpy(&arith_scratchpad, c_tmp, sizeof(IFLOAT));
+                            memcpy(&scratchpad_out, c_tmp, sizeof(uint16_t));
+			    arith_scratchpad = half_to_float(scratchpad_out);
     		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
