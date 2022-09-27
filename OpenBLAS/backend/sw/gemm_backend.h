@@ -226,6 +226,100 @@ static uint16_t float_to_half(const float x) { // IEEE-754 16-bit floating-point
     return (b&0x80000000)>>16 | (e>112)*((((e-112)<<10)&0x7C00)|m>>13) | ((e<113)&(e>101))*((((0x007FF000+m)>>(125-e))+1)>>1) | (e>143)*0x7FFF; // sign : normalized : denormalized : saturate
 }
 
+static void* from_IFLOAT_to_bytes(
+		IFLOAT arith_in,
+		uint8_t arith_type,
+		uint8_t arithmetic_bitwidth,
+		uint8_t arithmetic_param1,
+		uint8_t arithmetic_param2) {
+	if (arith_type == 0) {  // ieee
+		if (arithmetic_bitwidth == 1) {
+			if (sizeof(IFLOAT)==4) { // from single to ieee8
+					return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to ieee8
+				return (void*)(&arith_in);
+			}
+		}
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) { // from single to half
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to half
+				return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 4) {
+			if (sizeof(IFLOAT)==4) { // from single to single
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to single
+				return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 8) {
+			if (sizeof(IFLOAT)==4) { // from single to double
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to double
+				return (void*)(&arith_in);
+			}
+
+		}
+	}
+	if (arith_type == 1) {  // tfp
+		return NULL;  // we do not implement tfp for the moment
+	}
+	if (arith_type == 2) {  // bfloat16
+		if (sizeof(IFLOAT)==4) { // from single to bfloat16
+			return (void*)(&arith_in);
+		}
+		if (sizeof(IFLOAT)==8) { // from double to bfloat16
+			return (void*)(&arith_in);
+		}
+	}
+	if (arith_type == 3) {  // posit
+		if (arithmetic_bitwidth == 1) {
+			if (sizeof(IFLOAT)==4) { // from single to posit82
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit82
+			return (void*)(&arith_in);
+			}
+		}
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) { // from single to posit162
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit162
+			return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 4) {
+			if (sizeof(IFLOAT)==4) { // from single to posit322
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit322
+			return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 8) {
+			if (sizeof(IFLOAT)==4) { // from single to posit642
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit642
+			return (void*)(&arith_in);
+			}
+
+		}
+
+	}
+}
+
 /**
   @param void *a: pointer to input matrix A(where op( A ) is m*k)
   @param void *b: pointer to input matrix B(where op( B ) is k*n)
@@ -346,7 +440,10 @@ static int gemm_backend_test (
     // fetch fromm HW registers the arithmetic type of the systolic kernel
     snap_action_read32 (card, ACTION_TYPE_REG, &reg);
     VERBOSE3(stdout, "test TYPE SA from register polling %u\n", reg);
-    uint8_t arithmetic_type        = (reg & 0x0000FF00) >> 8; // ieee=0;tfp=1;bf16=2;posit=3
+    uint8_t arithmetic_bitwidth_bits = (reg & 0x00FF0000) >> 16; // in bits
+    uint8_t arithmetic_bitwidth      = arithmetic_bitwidth_bits >> 3;
+    uint8_t arithmetic_type          = (reg & 0x0000FF00) >> 8;  // ieee=0;tfp=1;bf16=2;posit=3
+    VERBOSE3(stdout, "Arith bitwidth in bits is: %u\n", arithmetic_bitwidth);
     VERBOSE3(stdout, "Arith type is: %u\n", arithmetic_type);
 
     // fetch fromm HW registers the dimensions of the systolic kernel
@@ -354,8 +451,12 @@ static int gemm_backend_test (
     VERBOSE3(stdout, "test RELEASE SA from register polling %u\n", reg);
     uint8_t systolic_array_rows    = (reg & 0xFF000000) >> 24;
     uint8_t systolic_array_columns = (reg & 0x00FF0000) >> 16;
+    uint8_t arithmetic_param1      = (reg & 0x0000FF00) >>  8;
+    uint8_t arithmetic_param2      = (reg & 0x000000FF) >>  0;
     VERBOSE3(stdout, "SA rows: %u\n", systolic_array_rows);
     VERBOSE3(stdout, "SA cols: %u\n", systolic_array_columns);
+    VERBOSE3(stdout, "arithmetic param1: %u\n", arithmetic_param1);
+    VERBOSE3(stdout, "arithmetic param2: %u\n", arithmetic_param2);
     if (systolic_array_rows == 0) {
 	    rc = 0x86;
 	    goto out_error2;  // certainly a bad bistream
@@ -403,15 +504,17 @@ static int gemm_backend_test (
         __hexdump(stdout, (IFLOAT*)C,m*n*sizeof(IFLOAT));
     }
 
-    IFLOAT arith_scratchpad;
+    IFLOAT arith_scratchpad;  // incoming arithmetic word from high level software (generally single or double precision float)
+    void* arithmetic_bytes_scratchpad;
+
+    // tmp to remove
     posit16_t pA = convertDoubleToP16(1.02783203125 );
     uint16_t u16_p=0;
     u16_p = castUI(pA);
-    printf("cast from soft posit is: %d\n", u16_p);
+    VERBOSE2(stdout,"cast from soft posit is: %d\n", u16_p);
 
     // take, cast and place elements of A
     gettimeofday(&stime_memory_prepare, NULL);
-    uint16_t scratchpad_out = 0;
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) {
@@ -424,17 +527,15 @@ static int gemm_backend_test (
                                 arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
                     }
                 }
-                scratchpad_out = float_to_half((float)arith_scratchpad);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
                         (rewrite_i*k*fpga_bus_size) +
                         (fpga_bus_size*col_j) +
-                        //(row_i*sizeof(IFLOAT)), // end address calculation
-                        (row_i*sizeof(uint16_t)), // end address calculation
-                        &scratchpad_out,
-                        //sizeof(IFLOAT));
-                        sizeof(uint16_t));
+                        (row_i*arithmetic_bitwidth), // end address calculation
+                        &arithmetic_bytes_scratchpad,
+                        arithmetic_bitwidth);
                 }
             }
         }
@@ -452,20 +553,16 @@ static int gemm_backend_test (
                         arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
                     }
                 }
-                scratchpad_out = float_to_half((float)arith_scratchpad);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (col_band_i*fpga_bus_size*k) +
                         (rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
                         (fpga_bus_size*row_j) +
-                        //(systolic_array_rows*sizeof(IFLOAT)) + // offset
-                        (systolic_array_rows*sizeof(uint16_t)) + // offset
-                        //(col_i*sizeof(IFLOAT)), // end address calculation
-                        (col_i*sizeof(uint16_t)), // end address calculation
-                        //&arith_scratchpad,
-                        &scratchpad_out,
-                        //sizeof(IFLOAT));
-                        sizeof(uint16_t));
+                        (systolic_array_rows*arithmetic_bitwidth) + // offset
+                        (col_i*arithmetic_bitwidth), // end address calculation
+                        &arithmetic_bytes_scratchpad,
+                        arithmetic_bitwidth);
                 }
             }
         }
@@ -579,8 +676,7 @@ static int gemm_backend_test (
                                 (vertical_band_j * entire_vertical_bands_matrix_op_B * fpga_bus_size * systolic_array_rows) +
                                 (horizontal_block_i * fpga_bus_size * systolic_array_rows) +
                                 (fpga_bus_size * row_i) +
-                                //(sizeof(IFLOAT)*col_j);
-                                (sizeof(uint16_t)*col_j);
+                                (arithmetic_bitwidth*col_j);
     		    if ( !(horizontal_padding_case &&
     		           vertical_band_j==entire_horizontal_bands_matrix_op_A-1 &&
     		           row_i <= systolic_array_rows-1-rows_last_partial_band_matrix_op_A) &&
@@ -589,8 +685,8 @@ static int gemm_backend_test (
     		           col_j >= cols_last_partial_band_matrix_op_B)
     		       ) {
                             //memcpy(&arith_scratchpad, c_tmp, sizeof(IFLOAT));
-                            memcpy(&scratchpad_out, c_tmp, sizeof(uint16_t));
-			    arith_scratchpad = half_to_float(scratchpad_out);
+                            memcpy(&arithmetic_bytes_scratchpad, c_tmp, arithmetic_bitwidth);
+			    arith_scratchpad = half_to_float(arithmetic_bytes_scratchpad);
     		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
