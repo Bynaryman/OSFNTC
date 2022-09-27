@@ -1336,6 +1336,7 @@ CFLAGS += -DUSE_OCAPI=1
 $(info $(SNAP_ROOT))
 $(info $(OCSE_ROOT))
 LDFLAGS += -L$(SNAP_ROOT)/software/lib
+LDFLAGS += -L$(SNAP_ROOT)/../SoftPosit/build/Linux-x86_64-GCC
 ifndef OCSE_ROOT
 OCSE_ROOT=$(abspath $(TOPDIR)/../ocse)
 endif
@@ -1351,6 +1352,8 @@ LDFLAGS += -L$(OCSE_ROOT)/libocxl -Wl,-rpath,$(OCSE_ROOT)/libocxl
 EXTRALIB += $(OCSE_ROOT)/libocxl/libocxl.so
 endif
 EXTRALIB += $(SNAP_ROOT)/software/lib/libosnap.so
+EXTRALIB += $(SNAP_ROOT)/../SoftPosit/build/Linux-x86_64-GCC/softposit.a
+#EXTRALIB += -lsoftposit
 endif
 
 ifeq ($(BIGNUMA), 1)

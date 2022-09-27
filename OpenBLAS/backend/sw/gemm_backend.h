@@ -15,6 +15,7 @@
 #include <getopt.h>
 #include <ctype.h>
 
+
 // #include <osnap_tools.h>
 // #include <osnap_hls_if.h>
 // #include <libosnap.h>
@@ -30,10 +31,14 @@ extern "C" {
 #define is_aligned(POINTER, BYTE_COUNT) \
 	(((uintptr_t)(const void *)(POINTER)) % (BYTE_COUNT) == 0)
 
+// add our oc-accel
 #include "../../../oc-accel/software/include/osnap_tools.h"
 #include "../../../oc-accel/software/include/osnap_hls_if.h"
 #include "../../../oc-accel/software/include/libosnap.h"
 #include "../../../oc-accel/software/include/osnap_types.h"
+
+// add soft posit from cerlane to get the cast functions
+#include "../../../SoftPosit/source/include/softposit.h"
 
 /**
 	@brief performs gemm blas3 routine
@@ -398,10 +403,15 @@ static int gemm_backend_test (
         __hexdump(stdout, (IFLOAT*)C,m*n*sizeof(IFLOAT));
     }
 
+    IFLOAT arith_scratchpad;
+    posit16_t pA = convertDoubleToP16(1.02783203125 );
+    uint16_t u16_p=0;
+    u16_p = castUI(pA);
+    printf("cast from soft posit is: %d\n", u16_p);
+
     // take, cast and place elements of A
     gettimeofday(&stime_memory_prepare, NULL);
     uint16_t scratchpad_out = 0;
-    IFLOAT arith_scratchpad;
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) {
