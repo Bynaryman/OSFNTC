@@ -282,7 +282,7 @@ static char* from_IFLOAT_to_bytes(
 		}
 		if (sizeof(IFLOAT)==8) { // from double to bfloat16
 			float tmp_f = (float)(*arith_in);
-			memcpy(bytes_out, tmp_f, 2); // truncate taking the first half
+			memcpy(bytes_out, &tmp_f, 2); // truncate taking the first half
 		}
 	}
 	// if (arith_type == 3) {  // posit
