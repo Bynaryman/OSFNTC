@@ -252,6 +252,7 @@ static void from_IFLOAT_to_bytes(
 
 		//}
 		if (arithmetic_bitwidth == 4) {
+			VERBOSE3(stdout, "casting single to single");
 			if (sizeof(IFLOAT)==4) { // from single to single
 				bytes_out = (void*)(arith_in);
 			}
