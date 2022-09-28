@@ -234,7 +234,6 @@ static char* from_IFLOAT_to_bytes(
 		uint8_t arithmetic_param2,
 		char* bytes_out) {
 	if (arith_type == 0) {  // ieee
-	VERBOSE3(stdout, "%u %u\n", arith_type, arithmetic_bitwidth);
 		//if (arithmetic_bitwidth == 1) {
 		//	if (sizeof(IFLOAT)==4) { // from single to ieee8
 		//		return (void*)(arith_in);
@@ -243,35 +242,36 @@ static char* from_IFLOAT_to_bytes(
 		//		return (void*)(arith_in);
 		//	}
 		//}
-		//if (arithmetic_bitwidth == 2) {
-		//	if (sizeof(IFLOAT)==4) { // from single to half
-		//		return (void*)(arith_in);
-		//	}
-		//	if (sizeof(IFLOAT)==8) { // from double to half
-		//		return (void*)(arith_in);
-		//	}
-
-		//}
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) { // from single to half
+				uint16_t tmp = float_to_half(arith_in);
+				memcpy(bytes_out, &tmp, 2);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to half
+				float f_tmp = (float)(*arith_in);
+				uint16_t tmp = float_to_half(f_tmp);
+				memcpy(bytes_out, &tmp, 2);
+			}
+		}
 		if (arithmetic_bitwidth == 4) {
-			VERBOSE3(stdout, "casting single to single\n");
-			//if (sizeof(IFLOAT)==4) { // from single to single
+			if (sizeof(IFLOAT)==4) { // from single to single
 				memcpy(bytes_out, arith_in, 4);
-				//bytes_out = (char*)(arith_in);
-			//}
-			//if (sizeof(IFLOAT)==8) { // from double to single
-			//	return (void*)(arith_in);
-			//}
+			}
+			if (sizeof(IFLOAT)==8) { // from double to single
+				float tmp = (float)(*arith_in);  // cast IFLOAT to float
+				memcpy(bytes_out, &tmp, 4);
+			}
 
 		}
-		//if (arithmetic_bitwidth == 8) {
-		//	if (sizeof(IFLOAT)==4) { // from single to double
-		//		return (void*)(arith_in);
-		//	}
-		//	if (sizeof(IFLOAT)==8) { // from double to double
-		//		return (void*)(arith_in);
-		//	}
-
-		//}
+		if (arithmetic_bitwidth == 8) {
+			if (sizeof(IFLOAT)==4) { // from single to double
+				double tmp = (double)(*arith_in);
+				memcpy(bytes_out, &tmp, 8);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to double
+				memcpy(bytes_out, arith_in, 8);
+			}
+		}
 	}
 	// if (arith_type == 1) {  // tfp
 	// 	return NULL;  // we do not implement tfp for the moment
@@ -333,38 +333,49 @@ static IFLOAT from_bytes_to_IFLOAT(
 		uint8_t arithmetic_param2) {
 	if (arith_type == 0) {  // ieee
 		//if (arithmetic_bitwidth == 1) {
-		//	if (sizeof(IFLOAT)==4) { // from single to ieee8
+		//	if (sizeof(IFLOAT)==4) {
 		//		return (IFLOAT*)arith_in;
 		//	}
-		//	if (sizeof(IFLOAT)==8) { // from double to ieee8
+		//	if (sizeof(IFLOAT)==8) {
 		//		return (IFLOAT*)(arith_in);
 		//	}
 		//}
-		//if (arithmetic_bitwidth == 2) {
-		//	if (sizeof(IFLOAT)==4) { // from single to half
-		//		return (IFLOAT*)(arith_in);
-		//	}
-		//	if (sizeof(IFLOAT)==8) { // from double to half
-		//		return (IFLOAT*)(arith_in);
-		//	}
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) {
+				uint16_t tmp_u16;
+				memcpy(&tmp_u16, bytes_in, 2);
+				float tmp_f = half_to_float(tmp_u16);
+				return tmp_f;
+			}
+			if (sizeof(IFLOAT)==8) {
+				uint16_t tmp_u16;
+				memcpy(&tmp_u16, bytes_in, 2);
+				float tmp_f = half_to_float(tmp_u16);
+				double tmp_d = (double)tmp_f;
+				return tmp_d;
+			}
 
-		//}
+		}
 		if (arithmetic_bitwidth == 4) {
-			if (sizeof(IFLOAT)==4) { // from single to single
+			if (sizeof(IFLOAT)==4) {
 				IFLOAT tmp=0.0f;
-				memcpy( &tmp, bytes_in, 4);
+				memcpy(&tmp, bytes_in, 4);
 				return tmp;
 			}
-			//if (sizeof(IFLOAT)==8) { // from double to single
-			//	return (IFLOAT*)(arith_in);
-			//}
+			if (sizeof(IFLOAT)==8) { // from single to double
+				float tmp_f;
+				double tmp_d;
+				memcpy(&tmp_f, bytes_in, 4);
+				tmp_d=(double)tmp_f;
+				return tmp_d;
+			}
 
 		}
 		//if (arithmetic_bitwidth == 8) {
-		//	if (sizeof(IFLOAT)==4) { // from single to double
+		//	if (sizeof(IFLOAT)==4) {
 		//		return (IFLOAT*)(arith_in);
 		//	}
-		//	if (sizeof(IFLOAT)==8) { // from double to double
+		//	if (sizeof(IFLOAT)==8) {
 		//		return (IFLOAT*)(arith_in);
 		//	}
 
@@ -374,48 +385,45 @@ static IFLOAT from_bytes_to_IFLOAT(
 	// 	return NULL;  // we do not implement tfp for the moment
 	// }
 	// if (arith_type == 2) {  // bfloat16
-	// 	if (sizeof(IFLOAT)==4) { // from single to bfloat16
+	// 	if (sizeof(IFLOAT)==4) {
 	// 		return (IFLOAT*)(arith_in);
 	// 	}
-	// 	if (sizeof(IFLOAT)==8) { // from double to bfloat16
+	// 	if (sizeof(IFLOAT)==8) {
 	// 		return (IFLOAT*)(arith_in);
 	// 	}
 	// }
 	// if (arith_type == 3) {  // posit
 	// 	if (arithmetic_bitwidth == 1) {
-	// 		if (sizeof(IFLOAT)==4) { // from single to posit82
+	// 		if (sizeof(IFLOAT)==4) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-	// 		if (sizeof(IFLOAT)==8) { // from double to posit82
+	// 		if (sizeof(IFLOAT)==8) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
 	// 	}
 	// 	if (arithmetic_bitwidth == 2) {
-	// 		if (sizeof(IFLOAT)==4) { // from single to posit162
+	// 		if (sizeof(IFLOAT)==4) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-	// 		if (sizeof(IFLOAT)==8) { // from double to posit162
+	// 		if (sizeof(IFLOAT)==8) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-
 	// 	}
 	// 	if (arithmetic_bitwidth == 4) {
-	// 		if (sizeof(IFLOAT)==4) { // from single to posit322
+	// 		if (sizeof(IFLOAT)==4) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-	// 		if (sizeof(IFLOAT)==8) { // from double to posit322
+	// 		if (sizeof(IFLOAT)==8) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-
 	// 	}
 	// 	if (arithmetic_bitwidth == 8) {
-	// 		if (sizeof(IFLOAT)==4) { // from single to posit642
+	// 		if (sizeof(IFLOAT)==4) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-	// 		if (sizeof(IFLOAT)==8) { // from double to posit642
+	// 		if (sizeof(IFLOAT)==8) {
 	// 		return (IFLOAT*)(arith_in);
 	// 		}
-
 	// 	}
 
 	// }
