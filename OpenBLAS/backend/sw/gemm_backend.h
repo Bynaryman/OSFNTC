@@ -325,13 +325,12 @@ static char* from_IFLOAT_to_bytes(
 	return bytes_out;
 }
 
-static void from_bytes_to_FLOAT(
+static IFLOAT from_bytes_to_IFLOAT(
 		char* bytes_in,
 		uint8_t arith_type,
 		uint8_t arithmetic_bitwidth,
 		uint8_t arithmetic_param1,
-		uint8_t arithmetic_param2,
-		IFLOAT* arithmetic_out) {
+		uint8_t arithmetic_param2) {
 	if (arith_type == 0) {  // ieee
 		//if (arithmetic_bitwidth == 1) {
 		//	if (sizeof(IFLOAT)==4) { // from single to ieee8
@@ -352,7 +351,9 @@ static void from_bytes_to_FLOAT(
 		//}
 		if (arithmetic_bitwidth == 4) {
 			if (sizeof(IFLOAT)==4) { // from single to single
-				arithmetic_out = (IFLOAT*)(bytes_in);
+				IFLOAT tmp=0.0f;
+				memcpy( &tmp, bytes_in, 4);
+				return tmp;
 			}
 			//if (sizeof(IFLOAT)==8) { // from double to single
 			//	return (IFLOAT*)(arith_in);
@@ -785,7 +786,7 @@ static int gemm_backend_test (
     		           horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
     		           col_j >= cols_last_partial_band_matrix_op_B)
     		       ) {
-    		            from_bytes_to_FLOAT(c_tmp , arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, &arith_scratchpad);
+    		            arith_scratchpad = from_bytes_to_IFLOAT(c_tmp, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
 		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
