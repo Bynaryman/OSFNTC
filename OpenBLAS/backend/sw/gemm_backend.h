@@ -276,14 +276,15 @@ static char* from_IFLOAT_to_bytes(
 	// if (arith_type == 1) {  // tfp
 	// 	return NULL;  // we do not implement tfp for the moment
 	// }
-	// if (arith_type == 2) {  // bfloat16
-	// 	if (sizeof(IFLOAT)==4) { // from single to bfloat16
-	// 		return (void*)(arith_in);
-	// 	}
-	// 	if (sizeof(IFLOAT)==8) { // from double to bfloat16
-	// 		return (void*)(arith_in);
-	// 	}
-	// }
+	if (arith_type == 2) {  // bfloat16
+		if (sizeof(IFLOAT)==4) { // from single to bfloat16
+			memcpy(bytes_out, arith_in, 2); // truncate taking the first half
+		}
+		if (sizeof(IFLOAT)==8) { // from double to bfloat16
+			float tmp_f = (float)(*arith_in);
+			memcpy(bytes_out, tmp_f, 2); // truncate taking the first half
+		}
+	}
 	// if (arith_type == 3) {  // posit
 	// 	if (arithmetic_bitwidth == 1) {
 	// 		if (sizeof(IFLOAT)==4) { // from single to posit82
@@ -384,14 +385,19 @@ static IFLOAT from_bytes_to_IFLOAT(
 	// if (arith_type == 1) {  // tfp
 	// 	return NULL;  // we do not implement tfp for the moment
 	// }
-	// if (arith_type == 2) {  // bfloat16
-	// 	if (sizeof(IFLOAT)==4) {
-	// 		return (IFLOAT*)(arith_in);
-	// 	}
-	// 	if (sizeof(IFLOAT)==8) {
-	// 		return (IFLOAT*)(arith_in);
-	// 	}
-	// }
+	if (arith_type == 2) {  // bfloat16
+		if (sizeof(IFLOAT)==4) {
+			float tmp_f=0.0f;
+			memcpy(&tmp_f,bytes_in,2);
+			return tmp_f;
+		}
+		if (sizeof(IFLOAT)==8) {
+			float tmp_f=0.0f;
+			memcpy(&tmp_f,bytes_in,2);
+			double tmp_d=(double)tmp_f;
+			return tmp_d;
+		}
+	}
 	// if (arith_type == 3) {  // posit
 	// 	if (arithmetic_bitwidth == 1) {
 	// 		if (sizeof(IFLOAT)==4) {
@@ -636,7 +642,6 @@ static int gemm_backend_test (
                                 arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
                     }
                 }
-		VERBOSE3(stdout, "arith_scratchpad is: %f\n", arith_scratchpad);
                 from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, arithmetic_bytes_scratchpad);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
