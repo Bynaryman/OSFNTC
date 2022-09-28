@@ -601,7 +601,7 @@ static int gemm_backend_test (
         __hexdump(stdout, (IFLOAT*)C,m*n*sizeof(IFLOAT));
     }
 
-    IFLOAT arith_scratchpad;  // incoming arithmetic word from high level software (generally single or double precision float)
+    IFLOAT arith_scratchpad=0.0f;  // incoming arithmetic word from high level software (generally single or double precision float)
     void* arithmetic_bytes_scratchpad;
 
     // tmp to remove
@@ -615,6 +615,7 @@ static int gemm_backend_test (
     for (uint64_t row_band_i=0 ; row_band_i < entire_horizontal_bands_matrix_op_A ; ++row_band_i) {
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) {
+		    VERBOSE3(stdout, "arith_scratchpad is: %f\n", arith_scratchpad);
                 if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
                     arith_scratchpad = 0.0f;
                 } else {
