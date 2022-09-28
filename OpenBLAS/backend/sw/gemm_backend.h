@@ -232,7 +232,7 @@ static void from_IFLOAT_to_bytes(
 		uint8_t arithmetic_bitwidth,
 		uint8_t arithmetic_param1,
 		uint8_t arithmetic_param2,
-		void* bytes_out) {
+		char* bytes_out) {
 	if (arith_type == 0) {  // ieee
 		//if (arithmetic_bitwidth == 1) {
 		//	if (sizeof(IFLOAT)==4) { // from single to ieee8
@@ -254,7 +254,7 @@ static void from_IFLOAT_to_bytes(
 		if (arithmetic_bitwidth == 4) {
 			VERBOSE3(stdout, "casting single to single");
 			if (sizeof(IFLOAT)==4) { // from single to single
-				bytes_out = (void*)(arith_in);
+				bytes_out = (char*)(arith_in);
 			}
 			//if (sizeof(IFLOAT)==8) { // from double to single
 			//	return (void*)(arith_in);
@@ -323,7 +323,7 @@ static void from_IFLOAT_to_bytes(
 }
 
 static void from_bytes_to_FLOAT(
-		void* bytes_in,
+		char* bytes_in,
 		uint8_t arith_type,
 		uint8_t arithmetic_bitwidth,
 		uint8_t arithmetic_param1,
@@ -602,7 +602,7 @@ static int gemm_backend_test (
     }
 
     IFLOAT arith_scratchpad=0.0f;  // incoming arithmetic word from high level software (generally single or double precision float)
-    void* arithmetic_bytes_scratchpad;
+    char* arithmetic_bytes_scratchpad;
 
     // tmp to remove
     posit16_t pA = convertDoubleToP16(1.02783203125 );
@@ -782,7 +782,7 @@ static int gemm_backend_test (
     		           horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
     		           col_j >= cols_last_partial_band_matrix_op_B)
     		       ) {
-    		            from_bytes_to_FLOAT(arithmetic_bytes_scratchpad , arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, &arith_scratchpad);
+    		            from_bytes_to_FLOAT(c_tmp , arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, &arith_scratchpad);
 		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
