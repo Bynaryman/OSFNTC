@@ -598,7 +598,7 @@ static int gemm_backend_test (
         __hexdump(stdout, (IFLOAT*)C,m*n*sizeof(IFLOAT));
     }
 
-    IFLOAT arith_scratchpad;  // incoming arithmetic word from high level software (generally single or double precision float)
+    IFLOAT* arith_scratchpad;  // incoming arithmetic word from high level software (generally single or double precision float)
     void* arithmetic_bytes_scratchpad;
 
     // tmp to remove
@@ -613,22 +613,22 @@ static int gemm_backend_test (
         for (uint64_t row_i=0 ; row_i < systolic_array_rows ; ++row_i) {
             for (uint64_t col_j=0 ; col_j < k ; ++col_j) {
                 if (horizontal_padding_case && row_band_i==(entire_horizontal_bands_matrix_op_A-1) && (row_i>=rows_last_partial_band_matrix_op_A)) {
-                    arith_scratchpad = 0.0f;
+                    *arith_scratchpad = 0.0f;
                 } else {
                     if (transA==0) {
-                                arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)];
+                                *arith_scratchpad = A[(row_band_i*systolic_array_rows) + (col_j*lda) + (row_i)];
                     } else {
-                                arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
+                                *arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
                     }
                 }
-                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
                         (rewrite_i*k*fpga_bus_size) +
                         (fpga_bus_size*col_j) +
                         (row_i*arithmetic_bitwidth), // end address calculation
-                        &arithmetic_bytes_scratchpad,
+                        arithmetic_bytes_scratchpad,
                         arithmetic_bitwidth);
                 }
             }
@@ -639,15 +639,15 @@ static int gemm_backend_test (
         for (uint64_t col_i=0 ; col_i < systolic_array_columns ; ++col_i) {
             for (uint64_t row_j=0 ; row_j < k ; ++row_j) {
                 if (vertical_padding_case && col_band_i==(entire_vertical_bands_matrix_op_B-1) && (col_i>=cols_last_partial_band_matrix_op_B)) {
-                    arith_scratchpad = 0.0f;
+                    *arith_scratchpad = 0.0f;
                 } else {
                     if(transB==0) {
-                        arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)];
+                        *arith_scratchpad = B[(col_band_i*ldb*systolic_array_columns) + (ldb*col_i) + (row_j)];
                     } else {
-                        arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
+                        *arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
                     }
                 }
-                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (col_band_i*fpga_bus_size*k) +
@@ -655,7 +655,7 @@ static int gemm_backend_test (
                         (fpga_bus_size*row_j) +
                         (systolic_array_rows*arithmetic_bitwidth) + // offset
                         (col_i*arithmetic_bitwidth), // end address calculation
-                        &arithmetic_bytes_scratchpad,
+                        arithmetic_bytes_scratchpad,
                         arithmetic_bitwidth);
                 }
             }
@@ -778,21 +778,19 @@ static int gemm_backend_test (
     		           horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
     		           col_j >= cols_last_partial_band_matrix_op_B)
     		       ) {
-                            //memcpy(&arith_scratchpad, c_tmp, sizeof(IFLOAT));
-                            memcpy(&arithmetic_bytes_scratchpad, c_tmp, arithmetic_bitwidth);
-			    arith_scratchpad = half_to_float(arithmetic_bytes_scratchpad);
-    		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
+    		            arith_scratchpad = from_bytes_to_FLOAT(arithmetic_bytes_scratchpad , arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
+		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
     		            	  ((systolic_array_rows-1-row_i))+
     		            	  col_j*ldc
-    		            	] = arith_scratchpad;
+    		            	] = *arith_scratchpad;
     		            } else if (*BETA == 1.0f) {
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
     		            	  ((systolic_array_rows-1-row_i))+
     		            	  col_j*ldc
-    		            	] += arith_scratchpad;
+    		            	] += *arith_scratchpad;
     		            }
     		    }
                 }
