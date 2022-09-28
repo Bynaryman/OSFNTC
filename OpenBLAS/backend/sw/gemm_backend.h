@@ -226,14 +226,14 @@ static uint16_t float_to_half(const float x) { // IEEE-754 16-bit floating-point
     return (b&0x80000000)>>16 | (e>112)*((((e-112)<<10)&0x7C00)|m>>13) | ((e<113)&(e>101))*((((0x007FF000+m)>>(125-e))+1)>>1) | (e>143)*0x7FFF; // sign : normalized : denormalized : saturate
 }
 
-static void from_IFLOAT_to_bytes(
+static char* from_IFLOAT_to_bytes(
 		IFLOAT* arith_in,
 		uint8_t arith_type,
 		uint8_t arithmetic_bitwidth,
 		uint8_t arithmetic_param1,
-		uint8_t arithmetic_param2,
-		char* bytes_out) {
+		uint8_t arithmetic_param2) {
 	VERBOSE3(stdout, "%u %u\n", arith_type, arithmetic_bitwidth);
+	char* bytes_out = NULL;
 	if (arith_type == 0) {  // ieee
 	VERBOSE3(stdout, "%u %u\n", arith_type, arithmetic_bitwidth);
 		//if (arithmetic_bitwidth == 1) {
@@ -255,9 +255,10 @@ static void from_IFLOAT_to_bytes(
 		//}
 		if (arithmetic_bitwidth == 4) {
 			VERBOSE3(stdout, "casting single to single\n");
-			bytes_out = malloc(arithmetic_bitwidth);
+			bytes_out = (char*)malloc(arithmetic_bitwidth*sizeof(char));
 			//if (sizeof(IFLOAT)==4) { // from single to single
-				bytes_out = (char*)(arith_in);
+				memcpy(bytes_out, arith_in, 4);
+				//bytes_out = (char*)(arith_in);
 			//}
 			//if (sizeof(IFLOAT)==8) { // from double to single
 			//	return (void*)(arith_in);
@@ -323,6 +324,7 @@ static void from_IFLOAT_to_bytes(
 	// 	}
 
 	// }
+	return bytes_out;
 }
 
 static void from_bytes_to_FLOAT(
@@ -628,7 +630,7 @@ static int gemm_backend_test (
                     }
                 }
 		VERBOSE3(stdout, "arith_scratchpad is: %f\n", arith_scratchpad);
-                from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, arithmetic_bytes_scratchpad);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
@@ -638,6 +640,7 @@ static int gemm_backend_test (
                         arithmetic_bytes_scratchpad,
                         arithmetic_bitwidth);
                 }
+		free(arithmetic_bytes_scratchpad);
             }
         }
     }
@@ -654,7 +657,7 @@ static int gemm_backend_test (
                         arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
                     }
                 }
-                from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, arithmetic_bytes_scratchpad);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (col_band_i*fpga_bus_size*k) +
@@ -665,6 +668,7 @@ static int gemm_backend_test (
                         arithmetic_bytes_scratchpad,
                         arithmetic_bitwidth);
                 }
+		free(arithmetic_bytes_scratchpad);
             }
         }
     }
