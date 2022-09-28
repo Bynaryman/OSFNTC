@@ -39,12 +39,28 @@ sudo make install
 
 for python wrapper
 set CTRANSLATE2_ROOT to build folder
+export CTRANSLATE2_ROOT="$(pwd)"
 cd python
 pip install -r install_requirements.txt
 python setup.py bdist_wheel
 pip install dist/*.whl
 
-to run, then export LD_LIBRARY_PATH to build path
+for runtime
+export LD_LIBRARY_PATH to build path
+pip install  OpenNMT-py sentencepiece
+wget https://s3.amazonaws.com/opennmt-models/transformer-ende-wmt-pyOnmt.tar.gz
+tar xf transformer-ende-wmt-pyOnmt.tar.gz
+ct2-opennmt-py-converter --model_path averaged-10-epoch.pt --output_dir ende_ctranslate2
 
 # misc
 some pre-made configuration files for installation of other repositories
+
+## oc-accel_template
+
+
+# script
+
+## create bitstreams
+as flopoco does not compile in EPI servers we generate the vhdls locally and send them in the corresponding scratchpad folders in EPI server.
+Those folders are generated from a base template and duplicated according to a list of config to be evaluated
+The folder names differ like action_config.sh that will generate my_sv_wrapper.sv and action_cgemm_capi3.vhd according to the config

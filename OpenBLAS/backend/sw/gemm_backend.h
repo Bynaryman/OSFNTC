@@ -320,6 +320,100 @@ static void* from_IFLOAT_to_bytes(
 	}
 }
 
+static IFLOAT from_bytes_to_FLOAT(
+		void* arith_in,
+		uint8_t arith_type,
+		uint8_t arithmetic_bitwidth,
+		uint8_t arithmetic_param1,
+		uint8_t arithmetic_param2) {
+	if (arith_type == 0) {  // ieee
+		if (arithmetic_bitwidth == 1) {
+			if (sizeof(IFLOAT)==4) { // from single to ieee8
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to ieee8
+				return (void*)(&arith_in);
+			}
+		}
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) { // from single to half
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to half
+				return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 4) {
+			if (sizeof(IFLOAT)==4) { // from single to single
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to single
+				return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 8) {
+			if (sizeof(IFLOAT)==4) { // from single to double
+				return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to double
+				return (void*)(&arith_in);
+			}
+
+		}
+	}
+	if (arith_type == 1) {  // tfp
+		return NULL;  // we do not implement tfp for the moment
+	}
+	if (arith_type == 2) {  // bfloat16
+		if (sizeof(IFLOAT)==4) { // from single to bfloat16
+			return (void*)(&arith_in);
+		}
+		if (sizeof(IFLOAT)==8) { // from double to bfloat16
+			return (void*)(&arith_in);
+		}
+	}
+	if (arith_type == 3) {  // posit
+		if (arithmetic_bitwidth == 1) {
+			if (sizeof(IFLOAT)==4) { // from single to posit82
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit82
+			return (void*)(&arith_in);
+			}
+		}
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) { // from single to posit162
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit162
+			return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 4) {
+			if (sizeof(IFLOAT)==4) { // from single to posit322
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit322
+			return (void*)(&arith_in);
+			}
+
+		}
+		if (arithmetic_bitwidth == 8) {
+			if (sizeof(IFLOAT)==4) { // from single to posit642
+			return (void*)(&arith_in);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit642
+			return (void*)(&arith_in);
+			}
+
+		}
+
+	}
+}
+
 /**
   @param void *a: pointer to input matrix A(where op( A ) is m*k)
   @param void *b: pointer to input matrix B(where op( B ) is k*n)
