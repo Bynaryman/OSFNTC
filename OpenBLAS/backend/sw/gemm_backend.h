@@ -233,6 +233,7 @@ static void from_IFLOAT_to_bytes(
 		uint8_t arithmetic_param1,
 		uint8_t arithmetic_param2,
 		char* bytes_out) {
+	VERBOSE3(stdout, "%u %u\n", arith_type, arithmetic_bitwidth);
 	if (arith_type == 0) {  // ieee
 		//if (arithmetic_bitwidth == 1) {
 		//	if (sizeof(IFLOAT)==4) { // from single to ieee8
@@ -253,6 +254,7 @@ static void from_IFLOAT_to_bytes(
 		//}
 		if (arithmetic_bitwidth == 4) {
 			VERBOSE3(stdout, "casting single to single");
+			bytes_out = malloc(arithmetic_bitwidth);
 			if (sizeof(IFLOAT)==4) { // from single to single
 				bytes_out = (char*)(arith_in);
 			}
