@@ -621,7 +621,7 @@ static int gemm_backend_test (
                                 arith_scratchpad = A[(row_band_i*lda*systolic_array_rows) + (lda*row_i) + (col_j)];
                     }
                 }
-                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_vertical_bands_matrix_op_B ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (row_band_i*entire_vertical_bands_matrix_op_B*fpga_bus_size*k) +
@@ -647,7 +647,7 @@ static int gemm_backend_test (
                         arith_scratchpad = B[(col_band_i*systolic_array_columns) + (ldb*row_j) + (col_i)];
                     }
                 }
-                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
+                arithmetic_bytes_scratchpad = from_IFLOAT_to_bytes(&arith_scratchpad, arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2);
                 for (uint64_t rewrite_i=0 ; rewrite_i < entire_horizontal_bands_matrix_op_A ; ++rewrite_i) {
                     memcpy( aggregate_dma_memory +
                         (col_band_i*fpga_bus_size*k) +
