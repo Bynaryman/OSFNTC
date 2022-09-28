@@ -780,19 +780,19 @@ static int gemm_backend_test (
     		           horizontal_block_i==entire_vertical_bands_matrix_op_B-1 &&
     		           col_j >= cols_last_partial_band_matrix_op_B)
     		       ) {
-    		            from_bytes_to_FLOAT(arithmetic_bytes_scratchpad , arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, arith_scratchpad);
+    		            from_bytes_to_FLOAT(arithmetic_bytes_scratchpad , arithmetic_type, arithmetic_bitwidth, arithmetic_param1, arithmetic_param2, &arith_scratchpad);
 		            if (*BETA == 0.0f) {  // we consider beta is 0 or 1 to avoid a multiplication
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
     		            	  ((systolic_array_rows-1-row_i))+
     		            	  col_j*ldc
-    		            	] = *arith_scratchpad;
+    		            	] = arith_scratchpad;
     		            } else if (*BETA == 1.0f) {
     		            	C[(horizontal_block_i*ldc*systolic_array_columns)+
     		            	  (vertical_band_j*systolic_array_rows)+
     		            	  ((systolic_array_rows-1-row_i))+
     		            	  col_j*ldc
-    		            	] += *arith_scratchpad;
+    		            	] += arith_scratchpad;
     		            }
     		    }
                 }
