@@ -244,7 +244,7 @@ static char* from_IFLOAT_to_bytes(
 		//}
 		if (arithmetic_bitwidth == 2) {
 			if (sizeof(IFLOAT)==4) { // from single to half
-				uint16_t tmp = float_to_half(arith_in);
+				uint16_t tmp = float_to_half(*arith_in);
 				memcpy(bytes_out, &tmp, 2);
 			}
 			if (sizeof(IFLOAT)==8) { // from double to half
