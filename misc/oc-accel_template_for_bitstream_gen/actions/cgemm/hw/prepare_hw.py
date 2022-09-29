@@ -34,6 +34,8 @@ def get_bitwidths_and_type_from_ariths(args, arithmetic_in, arithmetic_out):
 	elif array_arith_in[0] == "bfloat16":
 		bitwidth_in  = 16
 		arith_type = 2
+		array_arith_in.append("8")
+		array_arith_in.append("7")
 	else:
 		bitwidth_in = 8
 		arith_type = 4
