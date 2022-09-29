@@ -31,8 +31,8 @@ model_names = sorted(name for name in models.__dict__
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 #parser.add_argument('data', metavar='DIR', default='imagenet',
 #                    help='path to dataset (default: imagenet)')
-parser.add_argument('data_set', metavar='model name', default='imagenet',
-                    help='dataset (default: imagenet)' +
+parser.add_argument('--data_set', metavar='model name', default='imagenet',
+                    help='dataset between' +
                           ' | '.join(supported_data_sets))
 parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     choices=model_names,
