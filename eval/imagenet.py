@@ -144,7 +144,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if args.data_set=="imagenet":
 
-        base_path = "~/Downloads/ILSVRC/Data/CLS-LOC/"
+        base_path = "/home/lledoux/Downloads/ILSVRC/Data/CLS-LOC/"
         # Data loading code
         traindir = os.path.join(base_path, 'train/')
         valdir = os.path.join(base_path, 'val/')
