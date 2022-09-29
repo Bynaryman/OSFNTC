@@ -22,13 +22,18 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 from torch.utils.data import Subset
 
+supported_data_sets = ['CIFAR10', 'CIFAR100', 'ImageNet']
+
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-parser.add_argument('data', metavar='DIR', default='imagenet',
-                    help='path to dataset (default: imagenet)')
+#parser.add_argument('data', metavar='DIR', default='imagenet',
+#                    help='path to dataset (default: imagenet)')
+parser.add_argument('data_set', metavar='model name', default='imagenet',
+                    help='dataset (default: imagenet)' +
+                          ' | '.join(supported_data_sets))
 parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     choices=model_names,
                     help='model architecture: ' +
@@ -170,6 +175,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if args.data_set=="imagenet":
 
+        base_path = "~/Downloads/ILSVRC/Data/CLS-LOC/"
         # Data loading code
         traindir = os.path.join(args.data, 'train')
         valdir = os.path.join(args.data, 'val')
