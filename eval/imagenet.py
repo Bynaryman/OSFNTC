@@ -177,10 +177,10 @@ def main_worker(gpu, ngpus_per_node, args):
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
                                 weight_decay=args.weight_decay)
-    
+
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-    
+
     # optionally resume from a checkpoint
     if args.resume:
         if os.path.isfile(args.resume):
@@ -221,14 +221,14 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize,
         ]))
 
-    val_dataset = datasets.ImageFolder(
-        valdir,
-        transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            normalize,
-        ]))
+    #val_dataset = datasets.ImageFolder(
+    #    valdir,
+    #    transforms.Compose([
+    #        transforms.Resize(256),
+    #        transforms.CenterCrop(224),
+    #        transforms.ToTensor(),
+    #        normalize,
+    #    ]))
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -241,8 +241,11 @@ def main_worker(gpu, ngpus_per_node, args):
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler)
 
+	dataloader=datasets.IMAGENET
+	test_set = dataloader(root='./data', train=False, download=True, transform=transform_test)
+
     val_loader = torch.utils.data.DataLoader(
-        val_dataset, batch_size=args.batch_size, shuffle=False,
+        test_set, batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True, sampler=val_sampler)
 
     if args.evaluate:
@@ -258,10 +261,10 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # evaluate on validation set
         acc1 = validate(val_loader, model, criterion, args)
-        
+
         scheduler.step()
 
-        
+
         # remember best acc@1 and save checkpoint
         is_best = acc1 > best_acc1
         best_acc1 = max(acc1, best_acc1)
@@ -424,7 +427,7 @@ class AverageMeter(object):
     def __str__(self):
         fmtstr = '{name} {val' + self.fmt + '} ({avg' + self.fmt + '})'
         return fmtstr.format(**self.__dict__)
-    
+
     def summary(self):
         fmtstr = ''
         if self.summary_type is Summary.NONE:
@@ -437,7 +440,7 @@ class AverageMeter(object):
             fmtstr = '{name} {count:.3f}'
         else:
             raise ValueError('invalid summary type %r' % self.summary_type)
-        
+
         return fmtstr.format(**self.__dict__)
 
 
@@ -451,7 +454,7 @@ class ProgressMeter(object):
         entries = [self.prefix + self.batch_fmtstr.format(batch)]
         entries += [str(meter) for meter in self.meters]
         print('\t'.join(entries))
-        
+
     def display_summary(self):
         entries = [" *"]
         entries += [meter.summary() for meter in self.meters]
