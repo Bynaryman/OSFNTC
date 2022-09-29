@@ -275,6 +275,9 @@ def main_worker(gpu, ngpus_per_node, args):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
 
+    if args.data_set=="CIFAR10":
+        model = models.__dict__[args.arch](num_classes=10)
+
     if args.evaluate:
         validate(val_loader, model, criterion, args)
         return
