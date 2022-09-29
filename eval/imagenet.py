@@ -132,6 +132,84 @@ def main_worker(gpu, ngpus_per_node, args):
             args.rank = args.rank * ngpus_per_node + gpu
         dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
                                 world_size=args.world_size, rank=args.rank)
+
+    # define loss function (criterion), optimizer, and learning rate scheduler
+    criterion = nn.CrossEntropyLoss().cuda(args.gpu)
+
+    optimizer = torch.optim.SGD(model.parameters(), args.lr,
+                                momentum=args.momentum,
+                                weight_decay=args.weight_decay)
+
+    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
+    scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
+
+    # optionally resume from a checkpoint
+    if args.resume:
+        if os.path.isfile(args.resume):
+            print("=> loading checkpoint '{}'".format(args.resume))
+            if args.gpu is None:
+                checkpoint = torch.load(args.resume)
+            else:
+                # Map model to be loaded to specified single gpu.
+                loc = 'cuda:{}'.format(args.gpu)
+                checkpoint = torch.load(args.resume, map_location=loc)
+            args.start_epoch = checkpoint['epoch']
+            best_acc1 = checkpoint['best_acc1']
+            if args.gpu is not None:
+                # best_acc1 may be from a checkpoint from a different GPU
+                best_acc1 = best_acc1.to(args.gpu)
+            model.load_state_dict(checkpoint['state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer'])
+            scheduler.load_state_dict(checkpoint['scheduler'])
+            print("=> loaded checkpoint '{}' (epoch {})"
+                  .format(args.resume, checkpoint['epoch']))
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
+
+    cudnn.benchmark = True
+
+    if args.data_set=="imagenet":
+
+        # Data loading code
+        traindir = os.path.join(args.data, 'train')
+        valdir = os.path.join(args.data, 'val')
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+
+        train_dataset = datasets.ImageFolder(
+            traindir,
+            transforms.Compose([
+                transforms.RandomResizedCrop(224),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                normalize,
+            ]))
+
+        val_dataset = datasets.ImageFolder(
+            valdir,
+            transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                normalize,
+            ]))
+
+    if args.distributed:
+        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+        val_sampler = torch.utils.data.distributed.DistributedSampler(val_dataset, shuffle=False, drop_last=True)
+    else:
+        train_sampler = None
+        val_sampler = None
+
+    train_loader = torch.utils.data.DataLoader(
+        train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
+        num_workers=args.workers, pin_memory=True, sampler=train_sampler)
+
+
+    val_loader = torch.utils.data.DataLoader(
+        val_dataset, batch_size=args.batch_size, shuffle=False,
+        num_workers=args.workers, pin_memory=True, sampler=val_sampler)
+
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
@@ -170,83 +248,6 @@ def main_worker(gpu, ngpus_per_node, args):
             model.cuda()
         else:
             model = torch.nn.DataParallel(model).cuda()
-
-    # define loss function (criterion), optimizer, and learning rate scheduler
-    criterion = nn.CrossEntropyLoss().cuda(args.gpu)
-
-    optimizer = torch.optim.SGD(model.parameters(), args.lr,
-                                momentum=args.momentum,
-                                weight_decay=args.weight_decay)
-
-    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-
-    # optionally resume from a checkpoint
-    if args.resume:
-        if os.path.isfile(args.resume):
-            print("=> loading checkpoint '{}'".format(args.resume))
-            if args.gpu is None:
-                checkpoint = torch.load(args.resume)
-            else:
-                # Map model to be loaded to specified single gpu.
-                loc = 'cuda:{}'.format(args.gpu)
-                checkpoint = torch.load(args.resume, map_location=loc)
-            args.start_epoch = checkpoint['epoch']
-            best_acc1 = checkpoint['best_acc1']
-            if args.gpu is not None:
-                # best_acc1 may be from a checkpoint from a different GPU
-                best_acc1 = best_acc1.to(args.gpu)
-            model.load_state_dict(checkpoint['state_dict'])
-            optimizer.load_state_dict(checkpoint['optimizer'])
-            scheduler.load_state_dict(checkpoint['scheduler'])
-            print("=> loaded checkpoint '{}' (epoch {})"
-                  .format(args.resume, checkpoint['epoch']))
-        else:
-            print("=> no checkpoint found at '{}'".format(args.resume))
-
-    cudnn.benchmark = True
-
-    # Data loading code
-    traindir = os.path.join(args.data, 'train')
-    valdir = os.path.join(args.data, 'val')
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
-
-    train_dataset = datasets.ImageFolder(
-        traindir,
-        transforms.Compose([
-            transforms.RandomResizedCrop(224),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            normalize,
-        ]))
-
-    #val_dataset = datasets.ImageFolder(
-    #    valdir,
-    #    transforms.Compose([
-    #        transforms.Resize(256),
-    #        transforms.CenterCrop(224),
-    #        transforms.ToTensor(),
-    #        normalize,
-    #    ]))
-
-    if args.distributed:
-        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
-        val_sampler = torch.utils.data.distributed.DistributedSampler(val_dataset, shuffle=False, drop_last=True)
-    else:
-        train_sampler = None
-        val_sampler = None
-
-    train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
-        num_workers=args.workers, pin_memory=True, sampler=train_sampler)
-
-    dataloader=datasets.ImageNet
-    test_set = dataloader(root='./data', train=False, download=True, transform=transform_test)
-
-    val_loader = torch.utils.data.DataLoader(
-        test_set, batch_size=args.batch_size, shuffle=False,
-        num_workers=args.workers, pin_memory=True, sampler=val_sampler)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
