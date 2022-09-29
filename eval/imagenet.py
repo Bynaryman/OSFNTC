@@ -146,8 +146,8 @@ def main_worker(gpu, ngpus_per_node, args):
 
         base_path = "~/Downloads/ILSVRC/Data/CLS-LOC/"
         # Data loading code
-        traindir = os.path.join(base_path, 'train')
-        valdir = os.path.join(base_path, 'val')
+        traindir = os.path.join(base_path, 'train/')
+        valdir = os.path.join(base_path, 'val/')
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
