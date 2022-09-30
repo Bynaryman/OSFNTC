@@ -316,6 +316,9 @@ def main_worker(gpu, ngpus_per_node, args):
     if args.data_set=="CIFAR10":
         model = models.__dict__[args.arch](num_classes=10)
 
+    if args.data_set=="CIFAR100":
+        model = models.__dict__[args.arch](num_classes=100)
+
     if args.evaluate:
         validate(val_loader, model, criterion, args)
         return
