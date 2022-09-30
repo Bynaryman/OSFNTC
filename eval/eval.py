@@ -201,7 +201,7 @@ def main_worker(gpu, ngpus_per_node, args):
         testset = dataloader(root='./data', train=False, download=True, transform=transform_test)
         trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
         num_classes = 10
-        train_loader= torch.utils.data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
+        train_loader= torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=args.workers, pin_memory=True)
         val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers, pin_memory=True)
 
     elif args.data_set=="CIFAR100":
