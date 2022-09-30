@@ -316,7 +316,7 @@ def main_worker(gpu, ngpus_per_node, args):
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
 
     if args.data_set=="CIFAR10":
-        model = models.__dict__[args.arch](num_classes=10)
+        model = models.__dict__[args.arch](num_classes=10,deth=18)
 
     if args.data_set=="CIFAR100":
         model = models.__dict__[args.arch](num_classes=100)
