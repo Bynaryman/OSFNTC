@@ -22,7 +22,7 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 from torch.utils.data import Subset
 
-supported_data_sets = ['CIFAR10', 'CIFAR100', 'ImageNet']
+supported_data_sets = ['CIFAR10', 'CIFAR100', 'ImageNet', 'FashionMNIST']
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -218,6 +218,25 @@ def main_worker(gpu, ngpus_per_node, args):
         testset = dataloader(root='./data', train=False, download=True, transform=transform_test)
         #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
         num_classes = 100
+		#trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
+        val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
+
+    elif args.data_set=="FashionMNIST":
+        #transform_train = transforms.Compose([
+        #    transforms.RandomCrop(32, padding=4),
+        #    transforms.RandomHorizontalFlip(),
+        #    transforms.ToTensor(),
+        #    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        #])
+
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
+        dataloader = datasets.FashionMNIST
+        testset = dataloader(root='./data', train=False, download=True, transform=transform_test)
+        #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
+        num_classes = 10
 		#trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
         val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
 
