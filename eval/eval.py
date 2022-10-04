@@ -23,6 +23,11 @@ import torchvision.datasets as datasets
 import models.cifar as models
 from torch.utils.data import Subset
 
+# try this hack to avoid too many open files
+import torch.multiprocessing
+torch.multiprocessing.set_sharing_strategy('file_system')
+
+
 supported_data_sets = ['CIFAR10', 'CIFAR100', 'ImageNet', 'FashionMNIST']
 
 model_names = sorted(name for name in models.__dict__
