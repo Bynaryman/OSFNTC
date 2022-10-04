@@ -253,7 +253,7 @@ def main_worker(gpu, ngpus_per_node, args):
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
-        model = models.__dict__[args.arch](pretrained=True)
+        model = models.__dict__[args.arch](pretrained=True, num_classes=num_classes)
     else:
         print("=> creating model '{}'".format(args.arch))
         model = models.__dict__[args.arch](depth=20, num_classes=10)
@@ -323,7 +323,7 @@ def main_worker(gpu, ngpus_per_node, args):
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
 
     if args.data_set=="CIFAR10":
-        model = models.__dict__[args.arch](num_classes=10)
+        model = models.__dict__[args.arch](num_classes=10, pretrained=True)
 
     if args.data_set=="CIFAR100":
         model = models.__dict__[args.arch](num_classes=100)
