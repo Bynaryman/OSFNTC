@@ -20,7 +20,8 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 #import torchvision.models as models
-import models.cifar as models
+#import models.cifar as models
+import PyTorch_CIFAR10.cifar10_models as models
 from torch.utils.data import Subset
 
 # try this hack to avoid too many open files
@@ -321,7 +322,7 @@ def main_worker(gpu, ngpus_per_node, args):
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
 
     if args.data_set=="CIFAR10":
-        model = models.__dict__[args.arch](num_classes=10,depth=18)
+        model = models.__dict__[args.arch](num_classes=10)
 
     if args.data_set=="CIFAR100":
         model = models.__dict__[args.arch](num_classes=100)
