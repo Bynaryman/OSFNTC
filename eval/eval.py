@@ -249,7 +249,7 @@ def main_worker(gpu, ngpus_per_node, args):
         model = models.__dict__[args.arch](pretrained=True)
     else:
         print("=> creating model '{}'".format(args.arch))
-        model = models.__dict__[args.arch]()
+        model = models.__dict__[args.arch](depth=20, num_classes=10)
 
     if not torch.cuda.is_available():
         print('using CPU, this will be slow')
@@ -316,7 +316,7 @@ def main_worker(gpu, ngpus_per_node, args):
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
 
     if args.data_set=="CIFAR10":
-        model = models.__dict__[args.arch](num_classes=10,depth=18)
+        model = models.__dict__[args.arch](num_classes=10,depth=20)
 
     if args.data_set=="CIFAR100":
         model = models.__dict__[args.arch](num_classes=100)
