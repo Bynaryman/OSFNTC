@@ -309,6 +309,7 @@ static char* from_IFLOAT_to_bytes(
 				VERBOSE3(stdout, "incoming float as double: %f\n", tmp_d);
 				posit_2_t tmp_px2 = convertDoubleToPX2(tmp_d, 32);
 				uint64_t tmp_ui64 = pX2_int(tmp_px2);
+				VERBOSE3(stdout, "posit32 2 as uint32 in struct: %u\n", tmp_px2.v);
 				VERBOSE3(stdout, "posit32 2 as uint64: %lu\n", tmp_ui64);
 				memcpy(bytes_out, arith_in, 4);
 			}
