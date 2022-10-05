@@ -29,7 +29,7 @@ import torch.multiprocessing
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
-supported_data_sets = ['CIFAR10', 'CIFAR100', 'ImageNet', 'FashionMNIST']
+supported_data_sets = ['CIFAR10', 'CIFAR100', 'imagenet']
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -182,14 +182,15 @@ def main_worker(gpu, ngpus_per_node, args):
             train_sampler = None
             val_sampler = None
 
+        num_classes = 1000
         train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
             num_workers=args.workers, pin_memory=True, sampler=train_sampler)
 
-
         val_loader = torch.utils.data.DataLoader(
             val_dataset, batch_size=args.batch_size, shuffle=False,
             num_workers=args.workers, pin_memory=True, sampler=val_sampler)
+
     elif args.data_set=="CIFAR10":
         transform_train = transforms.Compose([
             transforms.RandomCrop(32, padding=4),
@@ -199,9 +200,7 @@ def main_worker(gpu, ngpus_per_node, args):
         ])
 
         transform_test = transforms.Compose([
-            #transforms.Resize(254),
             transforms.ToTensor(),
-            #transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2471, 0.2435, 0.2612)),
         ])
         dataloader = datasets.CIFAR10
@@ -211,43 +210,24 @@ def main_worker(gpu, ngpus_per_node, args):
         train_loader= torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=args.workers, pin_memory=True)
         val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers, pin_memory=True, drop_last=True)
 
-    elif args.data_set=="CIFAR100":
-        #transform_train = transforms.Compose([
-        #    transforms.RandomCrop(32, padding=4),
-        #    transforms.RandomHorizontalFlip(),
-        #    transforms.ToTensor(),
-        #    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        #])
+    #elif args.data_set=="CIFAR100":
+    #    #transform_train = transforms.Compose([
+    #    #    transforms.RandomCrop(32, padding=4),
+    #    #    transforms.RandomHorizontalFlip(),
+    #    #    transforms.ToTensor(),
+    #    #    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    #    #])
 
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        ])
-        dataloader = datasets.CIFAR100
-        testset = dataloader(root='./data', train=False, download=True, transform=transform_test)
-        #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
-        num_classes = 100
-		#trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
-        val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
-
-    elif args.data_set=="FashionMNIST":
-        #transform_train = transforms.Compose([
-        #    transforms.RandomCrop(32, padding=4),
-        #    transforms.RandomHorizontalFlip(),
-        #    transforms.ToTensor(),
-        #    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        #])
-
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        ])
-        dataloader = datasets.FashionMNIST
-        testset = dataloader(root='./data', train=False, download=True, transform=transform_test)
-        #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
-        num_classes = 10
-		#trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
-        val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
+    #    transform_test = transforms.Compose([
+    #        transforms.ToTensor(),
+    #        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    #    ])
+    #    dataloader = datasets.CIFAR100
+    #    testset = dataloader(root='./data', train=False, download=True, transform=transform_test)
+    #    #trainset = dataloader(root='./data', train=True, download=True, transform=transform_train)
+    #    num_classes = 100
+	#	#trainloader = data.DataLoader(trainset, batch_size=args.train_batch, shuffle=True, num_workers=args.workers)
+    #    val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
 
 
     # create model
@@ -256,7 +236,7 @@ def main_worker(gpu, ngpus_per_node, args):
         model = models.__dict__[args.arch](pretrained=True, num_classes=num_classes)
     else:
         print("=> creating model '{}'".format(args.arch))
-        model = models.__dict__[args.arch](depth=20, num_classes=10)
+        model = models.__dict__[args.arch](num_classes=num_classes)
 
     if not torch.cuda.is_available():
         print('using CPU, this will be slow')
@@ -322,11 +302,6 @@ def main_worker(gpu, ngpus_per_node, args):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
 
-    if args.data_set=="CIFAR10":
-        model = models.__dict__[args.arch](num_classes=10, pretrained=True)
-
-    if args.data_set=="CIFAR100":
-        model = models.__dict__[args.arch](num_classes=100)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
