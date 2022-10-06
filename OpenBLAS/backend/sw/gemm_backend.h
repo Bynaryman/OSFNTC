@@ -250,7 +250,7 @@ static char* from_IFLOAT_to_bytes(
 				VERBOSE3(stdout, "half float in as uint16: %u\n", tmp);
 			}
 			if (sizeof(IFLOAT)==8) { // from double to half
-				VERBOSE3(stdout, "incoming float as double: %f\n", *arith_in;
+				VERBOSE3(stdout, "incoming float as double: %f\n", *arith_in);
 				float f_tmp = (float)(*arith_in);
 				uint16_t tmp = float_to_half(f_tmp);
 				VERBOSE3(stdout, "half float in as uint16: %u\n", tmp);
