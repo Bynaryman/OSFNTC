@@ -362,7 +362,9 @@ static IFLOAT from_bytes_to_IFLOAT(
 			if (sizeof(IFLOAT)==4) {
 				uint16_t tmp_u16;
 				memcpy(&tmp_u16, bytes_in, 2);
+				VERBOSE3(stdout, "incoming bytes as uint16: %u\n", tmp_u16);
 				float tmp_f = half_to_float(tmp_u16);
+				VERBOSE3(stdout, "outgoing float: %f\n", tmp_f);
 				return tmp_f;
 			}
 			if (sizeof(IFLOAT)==8) {
