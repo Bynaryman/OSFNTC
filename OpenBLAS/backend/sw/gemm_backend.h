@@ -424,16 +424,16 @@ static IFLOAT from_bytes_to_IFLOAT(
 		// }
 		if (arithmetic_bitwidth == 4) {
 			if (sizeof(IFLOAT)==4) {
-				posit_2_t tmp_pX2 = { .v = 0 };
+				posit_2_t tmp_px2 = { .v = 0 };
 				memcpy(&(tmp_px2.v), bytes_in, 4);
-				double tmp_d = convertPX2ToDouble(tmp_pX2);
+				double tmp_d = convertPX2ToDouble(tmp_px2);
 				float tmp_f = (float)tmp_d;
 				return tmp_f;
 			}
 			if (sizeof(IFLOAT)==8) {
-				posit_2_t tmp_pX2 = { .v = 0 };
+				posit_2_t tmp_px2 = { .v = 0 };
 				memcpy(&(tmp_px2.v), bytes_in, 4);
-				double tmp_d = convertPX2ToDouble(tmp_pX2);
+				double tmp_d = convertPX2ToDouble(tmp_px2);
 				return tmp_d;
 			}
 		}
