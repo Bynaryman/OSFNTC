@@ -244,12 +244,16 @@ static char* from_IFLOAT_to_bytes(
 		//}
 		if (arithmetic_bitwidth == 2) {
 			if (sizeof(IFLOAT)==4) { // from single to half
+				VERBOSE3(stdout, "incoming float: %f\n", *arith_in);
 				uint16_t tmp = float_to_half(*arith_in);
 				memcpy(bytes_out, &tmp, 2);
+				VERBOSE3(stdout, "half float in as uint16: %u\n", tmp);
 			}
 			if (sizeof(IFLOAT)==8) { // from double to half
+				VERBOSE3(stdout, "incoming float as double: %f\n", tmp_d);
 				float f_tmp = (float)(*arith_in);
 				uint16_t tmp = float_to_half(f_tmp);
+				VERBOSE3(stdout, "half float in as uint16: %u\n", tmp);
 				memcpy(bytes_out, &tmp, 2);
 			}
 		}
