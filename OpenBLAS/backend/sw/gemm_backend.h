@@ -694,8 +694,8 @@ static int gemm_backend_test (
                         (col_band_i*fpga_bus_size*k) +
                         (rewrite_i*entire_vertical_bands_matrix_op_B*k*fpga_bus_size) +
                         (fpga_bus_size*row_j) +
-                        //(systolic_array_rows*arithmetic_bitwidth) + // offset
-                        (fpga_bus_size >> 1) + // offset
+                        (systolic_array_rows*arithmetic_bitwidth) + // offset
+                        //(fpga_bus_size >> 1) + // offset
                         (col_i*arithmetic_bitwidth), // end address calculation
                         arithmetic_bytes_scratchpad,
                         arithmetic_bitwidth);
