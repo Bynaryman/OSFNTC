@@ -431,7 +431,10 @@ static IFLOAT from_bytes_to_IFLOAT(
 				return tmp_f;
 			}
 			if (sizeof(IFLOAT)==8) {
-			return (IFLOAT*)(arith_in);
+				posit tmp_pX2 = { .v = 0 };
+				memcpy(&(tmp_px2.v), bytes_in, 4);
+				double tmp_d = convertPX2ToDouble(tmp_pX2);
+				return tmp_d;
 			}
 		}
 		// if (arithmetic_bitwidth == 8) {
