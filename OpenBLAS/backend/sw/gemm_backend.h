@@ -424,14 +424,14 @@ static IFLOAT from_bytes_to_IFLOAT(
 		// }
 		if (arithmetic_bitwidth == 4) {
 			if (sizeof(IFLOAT)==4) {
-				posit tmp_pX2 = { .v = 0 };
+				posit_2_t tmp_pX2 = { .v = 0 };
 				memcpy(&(tmp_px2.v), bytes_in, 4);
 				double tmp_d = convertPX2ToDouble(tmp_pX2);
 				float tmp_f = (float)tmp_d;
 				return tmp_f;
 			}
 			if (sizeof(IFLOAT)==8) {
-				posit tmp_pX2 = { .v = 0 };
+				posit_2_t tmp_pX2 = { .v = 0 };
 				memcpy(&(tmp_px2.v), bytes_in, 4);
 				double tmp_d = convertPX2ToDouble(tmp_pX2);
 				return tmp_d;
@@ -635,11 +635,6 @@ static int gemm_backend_test (
     IFLOAT arith_scratchpad=0.0f;  // incoming arithmetic word from high level software (generally single or double precision float)
     char* arithmetic_bytes_scratchpad = (char*)malloc(arithmetic_bitwidth*sizeof(char));
 
-    // tmp to remove
-    posit16_t pA = convertDoubleToP16(1.02783203125 );
-    uint16_t u16_p=0;
-    u16_p = castUI(pA);
-    VERBOSE2(stdout,"cast from soft posit is: %d\n", u16_p);
 
     // take, cast and place elements of A
     gettimeofday(&stime_memory_prepare, NULL);
