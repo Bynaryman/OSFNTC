@@ -282,11 +282,14 @@ static char* from_IFLOAT_to_bytes(
 	// }
 	if (arith_type == 2) {  // bfloat16
 		if (sizeof(IFLOAT)==4) { // from single to bfloat16
-			memcpy(bytes_out, arith_in, 2); // truncate taking the first half
+			VERBOSE3(stdout, "incoming float is: %f\n", *arith_in);
+			//memcpy(bytes_out, arith_in+2, 2); // truncate taking the first half
+			memcpy(bytes_out, (char *)(arith_in) + 2, 2);
+			VERBOSE3(stdout, "outgoing bytes is: %.2s\n", bytes_out);
 		}
 		if (sizeof(IFLOAT)==8) { // from double to bfloat16
 			float tmp_f = (float)(*arith_in);
-			memcpy(bytes_out, &tmp_f, 2); // truncate taking the first half
+			memcpy(bytes_out, (&tmp_f)+2, 2); // truncate taking the first half
 		}
 	}
 	if (arith_type == 3) {  // posit
@@ -407,7 +410,7 @@ static IFLOAT from_bytes_to_IFLOAT(
 	if (arith_type == 2) {  // bfloat16
 		if (sizeof(IFLOAT)==4) {
 			float tmp_f=0.0f;
-			memcpy(&tmp_f,bytes_in,2);
+			memcpy(((char*)(&tmp_f))+2,bytes_in,2);
 			return tmp_f;
 		}
 		if (sizeof(IFLOAT)==8) {
