@@ -303,10 +303,10 @@ static char* from_IFLOAT_to_bytes(
 				//uint64_t tmp_ui64_2 = pX2_int(tmp_px2_2);
 				//uint64_t tmp_ui64_3 = pX2_int(tmp_px2_3);
 				VERBOSE4(stdout, "posit8 2 as uint32 in struct: %u\n", tmp_px2.v);
-				memcpy(bytes_out, &(tmp_px2.v), 1);
+				memcpy(bytes_out, ((char*)(&(tmp_px2.v))+3), 1);
 
 				posit_2_t tmp_px2_2 = { .v = 0 };
-				memcpy(&(tmp_px2_2.v), bytes_out, 1);
+				memcpy(((char*)(&(tmp_px2_2.v)))+3, bytes_out, 1);
 				double tmp_d_2 = convertPX2ToDouble(tmp_px2_2);
 				VERBOSE4(stdout, "double back to verify: %f\n", tmp_d_2);
 			}
