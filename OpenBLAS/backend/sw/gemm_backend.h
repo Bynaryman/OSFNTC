@@ -434,14 +434,21 @@ static IFLOAT from_bytes_to_IFLOAT(
 		}
 	}
 	if (arith_type == 3) {  // posit
-		// if (arithmetic_bitwidth == 1) {
-		// 	if (sizeof(IFLOAT)==4) {
-		// 	return (IFLOAT*)(arith_in);
-		// 	}
-		// 	if (sizeof(IFLOAT)==8) {
-		// 	return (IFLOAT*)(arith_in);
-		// 	}
-		// }
+		if (arithmetic_bitwidth == 1) {
+			if (sizeof(IFLOAT)==4) {
+				posit_2_t tmp_px2 = { .v = 0 };
+				memcpy(((char*)(&(tmp_px2.v)+3)), bytes_in, 4);
+				double tmp_d = convertPX2ToDouble(tmp_px2);
+				float tmp_f = (float)tmp_d;
+				return tmp_f;
+			}
+			if (sizeof(IFLOAT)==8) {
+				posit_2_t tmp_px2 = { .v = 0 };
+				memcpy(((char*)(&(tmp_px2.v)+3)), bytes_in, 4);
+				double tmp_d = convertPX2ToDouble(tmp_px2);
+				return tmp_d;
+			}
+		}
 		// if (arithmetic_bitwidth == 2) {
 		// 	if (sizeof(IFLOAT)==4) {
 		// 	return (IFLOAT*)(arith_in);
