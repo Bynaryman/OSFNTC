@@ -293,14 +293,27 @@ static char* from_IFLOAT_to_bytes(
 		}
 	}
 	if (arith_type == 3) {  // posit
-		// if (arithmetic_bitwidth == 1) {
-		// 	if (sizeof(IFLOAT)==4) { // from single to posit82
-		// 	return (void*)(arith_in);
-		// 	}
-		// 	if (sizeof(IFLOAT)==8) { // from double to posit82
-		// 	return (void*)(arith_in);
-		// 	}
-		// }
+		if (arithmetic_bitwidth == 1) {
+			if (sizeof(IFLOAT)==4) { // from single to posit82
+				double tmp_d = (double)(*arith_in);
+				VERBOSE3(stdout, "incoming float as double: %f\n", tmp_d);
+				posit_2_t tmp_px2 = convertDoubleToPX2(tmp_d, 8);
+				//posit_2_t tmp_px2_2 = convertDoubleToPX2(tmp_d, 16);
+				//posit_2_t tmp_px2_3 = convertDoubleToPX2(tmp_d, 8);
+				//uint64_t tmp_ui64_2 = pX2_int(tmp_px2_2);
+				//uint64_t tmp_ui64_3 = pX2_int(tmp_px2_3);
+				VERBOSE4(stdout, "posit8 2 as uint32 in struct: %u\n", tmp_px2.v);
+				memcpy(bytes_out, &(tmp_px2.v), 1);
+
+				posit_2_t tmp_px2_2 = { .v = 0 };
+				memcpy(&(tmp_px2_2.v), bytes_out, 1);
+				double tmp_d_2 = convertPX2ToDouble(tmp_px2_2);
+				VERBOSE4(stdout, "double back to verify: %f\n", tmp_d_2);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit82
+			return (void*)(arith_in);
+			}
+		}
 		// // if (arithmetic_bitwidth == 2) {
 		// 	if (sizeof(IFLOAT)==4) { // from single to posit162
 		// 	return (void*)(arith_in);
