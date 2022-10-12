@@ -19,9 +19,9 @@ import torch.utils.data
 import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
-#import torchvision.models as models
+import torchvision.models as models_imagenet # these are the default topologies trained with imagenet
 #import models.cifar as models
-import PyTorch_CIFAR10.cifar10_models as models
+import PyTorch_CIFAR10.cifar10_models as models_cifar10 # these modified nn topologies and pretrained
 from torch.utils.data import Subset
 
 # try this hack to avoid too many open files
@@ -29,9 +29,9 @@ import torch.multiprocessing
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
-supported_data_sets = ['CIFAR10', 'CIFAR100', 'imagenet']
+supported_data_sets = ['CIFAR10', 'imagenet']
 
-model_names = sorted(name for name in models.__dict__
+model_names = sorted(name for name in [models_imagenet.__dict__, models_cifar10.__dict__]]
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
@@ -233,10 +233,16 @@ def main_worker(gpu, ngpus_per_node, args):
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
-        model = models.__dict__[args.arch](pretrained=True, num_classes=num_classes)
+		if args.data_set == "CIFAR10":
+			model = models_cifar10.__dict__[args.arch](pretrained=True, num_classes=num_classes)
+		else:
+			model = models_imagenet.__dict__[args.arch](pretrained=True, num_classes=num_classes)
     else:
         print("=> creating model '{}'".format(args.arch))
-        model = models.__dict__[args.arch](num_classes=num_classes)
+		if args.data_set == "CIFAR10":
+			model = models_cifar10.__dict__[args.arch](num_classes=num_classes)
+		else:
+			model = models_imagenet.__dict__[args.arch](num_classes=num_classes)
 
     if not torch.cuda.is_available():
         print('using CPU, this will be slow')
