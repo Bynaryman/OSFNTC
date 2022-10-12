@@ -233,10 +233,10 @@ def main_worker(gpu, ngpus_per_node, args):
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
-		if args.data_set == "CIFAR10":
-			model = models_cifar10.__dict__[args.arch](pretrained=True, num_classes=num_classes)
-		else:
-			model = models_imagenet.__dict__[args.arch](pretrained=True, num_classes=num_classes)
+        if args.data_set == "CIFAR10":
+            model = models_cifar10.__dict__[args.arch](pretrained=True, num_classes=num_classes)
+        else:
+            model = models_imagenet.__dict__[args.arch](pretrained=True, num_classes=num_classes)
     else:
         print("=> creating model '{}'".format(args.arch))
 		if args.data_set == "CIFAR10":
