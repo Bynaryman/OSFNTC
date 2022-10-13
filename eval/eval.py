@@ -44,7 +44,7 @@ parser.add_argument('--data_set', metavar='model name', default='imagenet',
                     help='dataset between' +
                           ' | '.join(supported_data_sets))
 parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
-                    choices=[model_names_imagenet, model_names_cifar10],
+                    choices=model_names_imagenet+ model_names_cifar10,
 					help='model architectures: (default: resnet18)\n' +
 					'IMAGENET: ' + ' | '.join(model_names_imagenet) +
 					'CIFAR10: ' +  ' | '.join(model_names_cifar10)
