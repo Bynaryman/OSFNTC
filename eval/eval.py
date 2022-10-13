@@ -398,9 +398,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
 def validate(val_loader, model, criterion, args):
 
-	if args.glimpse == True:
-		val_loader = val_loader[:150]
-
     def run_validate(loader, base_progress=0):
         with torch.no_grad():
             end = time.time()
@@ -427,6 +424,9 @@ def validate(val_loader, model, criterion, args):
 
                 if i % args.print_freq == 0:
                     progress.display(i + 1)
+
+    if args.glimpse == True:
+        val_loader = val_loader[:150]
 
     batch_time = AverageMeter('Time', ':6.3f', Summary.NONE)
     losses = AverageMeter('Loss', ':.4e', Summary.NONE)
