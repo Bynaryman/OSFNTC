@@ -73,6 +73,10 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
                     help='evaluate model on validation set')
+parser.add_argument('--glimpse', dest='glimpse', action='store_true',
+                    help='runs on a subset of images to give a glimpse of following events')
+#parser.add_argument('--all', dest='all', action='store_true',
+#                    help='evaluate all models (nn arch) with all data sets')
 parser.add_argument('--pretrained', dest='pretrained', action='store_true',
                     help='use pre-trained model')
 parser.add_argument('--world-size', default=-1, type=int,
@@ -393,6 +397,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
 
 def validate(val_loader, model, criterion, args):
+
+	if args.glimpse == True:
+		val_loader = val_loader[:150]
 
     def run_validate(loader, base_progress=0):
         with torch.no_grad():
