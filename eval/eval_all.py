@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import subprocess
 import re
+import warnings
+warnings.filterwarnings("ignore")
+
 
 import torchvision.models as models_imagenet # these are the default topologies trained with imagenet
 import PyTorch_CIFAR10.cifar10_models as models_cifar10 # these modified nn topologies and pretrained
@@ -21,7 +24,7 @@ for i in model_names_cifar10:
 	print("CIFAR10 x {}".format(i))
 	res = subprocess.check_output(eval_cmd.format(data_set="CIFAR10", model=i), shell=True)
 	val = re.search("RET_VAL:.*", res.decode("utf-8"), re.M)
-	print(val)
+	print(val.group(1))
 
 for i in model_names_imagenet:
 	print("IMAGENET x {}".format(i))
