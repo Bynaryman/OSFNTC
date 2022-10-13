@@ -440,7 +440,7 @@ def validate(val_loader, model, criterion, args):
     # switch to evaluate mode
     model.eval()
 
-    run_validate(val_loader. args.glimpse)
+    run_validate(val_loader, args.glimpse)
     if args.distributed:
         top1.all_reduce()
         top5.all_reduce()
