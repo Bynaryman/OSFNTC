@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-import os
+import subprocess
+import re
 
 import torchvision.models as models_imagenet # these are the default topologies trained with imagenet
 import PyTorch_CIFAR10.cifar10_models as models_cifar10 # these modified nn topologies and pretrained
-
-GLIMPSE_IMG_NUMBER = 150
 
 supported_data_sets = ['CIFAR10', 'imagenet']
 
@@ -20,9 +19,10 @@ eval_cmd = "LD_LIBRARY_PATH=/opt/OpenBLAS/lib/ OMP_NUM_THREADS=1 VERBOSITY=1 pyt
 
 for i in model_names_cifar10:
 	print("CIFAR10 x {}".format(i))
-	os.system(eval_cmd.format(data_set="CIFAR10", model=i))
+	res = subprocess.check_output(eval_cmd.format(data_set="CIFAR10", model=i), shell=True)
+	val = re.search("RET_VAL:.*", result.decode("utf-8"), re.M)
+	print(val)
 
 for i in model_names_imagenet:
 	print("IMAGENET x {}".format(i))
-	os.system(eval_cmd.format(data_set="imagenet", model=i))
-
+	res = subprocess.check_output(eval_cmd.format(data_set="IMAGENET", model=i), shell=True)

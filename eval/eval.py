@@ -454,7 +454,8 @@ def validate(val_loader, model, criterion, args):
             num_workers=args.workers, pin_memory=True)
         run_validate(aux_val_loader, args.glimpse,len(val_loader))
 
-    progress.display_summary()
+	print("{},{},{}".format(top1.avg,top5.avg,batch_time.avg)
+    #progress.display_summary()
 
     return top1.avg
 
