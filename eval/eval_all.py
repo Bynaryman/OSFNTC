@@ -20,13 +20,18 @@ model_names_cifar10 = sorted(name for name in models_cifar10.__dict__
 
 eval_cmd = "LD_LIBRARY_PATH=/opt/OpenBLAS/lib/ OMP_NUM_THREADS=1 VERBOSITY=1 python eval.py --evaluate -p 50 --pretrained --data_set {data_set} -a {model} -b 1 --glimpse"
 
+print("CIFAR10")
 for i in model_names_cifar10:
-	print("CIFAR10 x {}".format(i))
+	print("{},".format(i))
 	res = subprocess.check_output(eval_cmd.format(data_set="CIFAR10", model=i), shell=True)
 	val = re.search("RET_VAL:.*", res.decode("utf-8"), re.M)
-	str_res=val.group(0)[7:].split(",")
+	str_res=val.group(0)[8:].split(",")
 	print(str_res)
 
+print("\nImageNet")
 for i in model_names_imagenet:
-	print("IMAGENET x {}".format(i))
+	print("{},".format(i))
 	res = subprocess.check_output(eval_cmd.format(data_set="IMAGENET", model=i), shell=True)
+	val = re.search("RET_VAL:.*", res.decode("utf-8"), re.M)
+	str_res=val.group(0)[8:].split(",")
+	print(str_res)
