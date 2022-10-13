@@ -22,16 +22,14 @@ eval_cmd = "LD_LIBRARY_PATH=/opt/OpenBLAS/lib/ OMP_NUM_THREADS=1 VERBOSITY=1 pyt
 
 print("CIFAR10")
 for i in model_names_cifar10:
-	print("{},".format(i))
 	res = subprocess.check_output(eval_cmd.format(data_set="CIFAR10", model=i), shell=True)
 	val = re.search("RET_VAL:.*", res.decode("utf-8"), re.M)
 	str_res=val.group(0)[8:].split(",")
-	print(str_res)
+	print("{},{},{},{}".format(i,str_res[0],str_res[1],str_res[2]))
 
 print("\nImageNet")
 for i in model_names_imagenet:
-	print("{},".format(i))
 	res = subprocess.check_output(eval_cmd.format(data_set="IMAGENET", model=i), shell=True)
 	val = re.search("RET_VAL:.*", res.decode("utf-8"), re.M)
 	str_res=val.group(0)[8:].split(",")
-	print(str_res)
+	print("{},{},{},{}".format(i,str_res[0],str_res[1],str_res[2]))
