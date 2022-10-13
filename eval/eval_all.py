@@ -18,6 +18,9 @@ model_names_cifar10 = sorted(name for name in models_cifar10.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models_cifar10.__dict__[name]))
 
+print(model_names_cifar10)
+print(model_names_imagenet)
+
 eval_cmd = "LD_LIBRARY_PATH=/opt/OpenBLAS/lib/ OMP_NUM_THREADS=1 VERBOSITY=1 python eval.py --evaluate -p 50 --pretrained --data_set {data_set} -a {model} -b 1 --glimpse"
 
 print("CIFAR10")
