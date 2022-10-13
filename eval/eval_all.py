@@ -24,7 +24,8 @@ for i in model_names_cifar10:
 	print("CIFAR10 x {}".format(i))
 	res = subprocess.check_output(eval_cmd.format(data_set="CIFAR10", model=i), shell=True)
 	val = re.search("RET_VAL:.*", res.decode("utf-8"), re.M)
-	print(val.group(0))
+	str_res=val.group(0)[7:].split(",")
+	print(str_res)
 
 for i in model_names_imagenet:
 	print("IMAGENET x {}".format(i))
