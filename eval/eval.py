@@ -31,11 +31,11 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 
 supported_data_sets = ['CIFAR10', 'imagenet']
 
-model_names_imagenet = sorted(name for name in models_imagenet.__dict__)
+model_names_imagenet = sorted(name for name in models_imagenet.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
-model_names_cifar10 = sorted(name for name in models_cifar10.__dict__)
+model_names_cifar10 = sorted(name for name in models_cifar10.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
