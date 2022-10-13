@@ -398,7 +398,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
 def validate(val_loader, model, criterion, args):
 
-    def run_validate(loader, base_progress=0):
+    def run_validate(loader, glimpse, base_progress=0):
         with torch.no_grad():
             end = time.time()
             for i, (images, target) in enumerate(loader):
@@ -424,9 +424,9 @@ def validate(val_loader, model, criterion, args):
 
                 if i % args.print_freq == 0:
                     progress.display(i + 1)
+                if i >= GLIMPSE_IMG_NUMBER and glimpse==True:
+                    break
 
-    if args.glimpse == True:
-        val_loader = val_loader[:150]
 
     batch_time = AverageMeter('Time', ':6.3f', Summary.NONE)
     losses = AverageMeter('Loss', ':.4e', Summary.NONE)
@@ -440,7 +440,7 @@ def validate(val_loader, model, criterion, args):
     # switch to evaluate mode
     model.eval()
 
-    run_validate(val_loader)
+    run_validate(val_loader. args.glimpse)
     if args.distributed:
         top1.all_reduce()
         top5.all_reduce()
@@ -451,7 +451,7 @@ def validate(val_loader, model, criterion, args):
         aux_val_loader = torch.utils.data.DataLoader(
             aux_val_dataset, batch_size=args.batch_size, shuffle=False,
             num_workers=args.workers, pin_memory=True)
-        run_validate(aux_val_loader, len(val_loader))
+        run_validate(aux_val_loader, args.glimpse,len(val_loader))
 
     progress.display_summary()
 
