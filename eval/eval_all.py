@@ -18,6 +18,8 @@ model_names_cifar10 = sorted(name for name in models_cifar10.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models_cifar10.__dict__[name]))
 
+model_names_cifar10.remove(mobilenet_v2)
+
 print(model_names_cifar10)
 print(model_names_imagenet)
 
