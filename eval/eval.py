@@ -28,6 +28,7 @@ from torch.utils.data import Subset
 import torch.multiprocessing
 torch.multiprocessing.set_sharing_strategy('file_system')
 
+GLIMPSE_IMG_NUMBER = 150
 
 supported_data_sets = ['CIFAR10', 'imagenet']
 
