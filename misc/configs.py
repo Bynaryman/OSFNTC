@@ -92,13 +92,14 @@ configs_proposal2 = [
         #(200,"posit:4:0"      , 64,  64,  4 , 3, 1,  6 , -4 , 6 ),  # posit<4,0> x enhanced intuition
 
         #(200,"posit:8:2"      ,48 ,  48,  24, 6, 3,   6,  -8, 6 ),  # posit<8,2> x approximate
+        (200,"posit:8:2"      ,48 ,  48,  24, 6, 3,   6,  -48, 9 ),  # posit<8,2> x approximate
         #(200,"posit:8:2"      ,28 ,  28,  24, 6, 3,  48, -48, 31),  # posit<8,2> x exact (quire)
 
         #(200,"posit:16:2"     ,32 ,  31,  56, 7,11,   6, -24, 9 ),  # posit<16,2> x approximate
         #(200,"posit:16:2"     ,16 ,  16,  56, 7,11, 112,-112,31 ),  # posit<16,2> x exact (quire)
 
-        (200,"posit:32:2"     ,12 ,  12, 120, 8,27,   9, -48, 9 ),  # posit<32,2> x approximate
-        (200,"posit:32:2"     ,12 ,  12, 120, 8,27,   9, -10, 9 ),  # posit<32,2> x approximate
+        #(200,"posit:32:2"     ,12 ,  12, 120, 8,27,   9, -48, 9 ),  # posit<32,2> x approximate
+        (200,"posit:32:2"     ,12 ,  12, 120, 8,27,   6, -64, 9 ),  # posit<32,2> x approximate
         #(200,"posit:32:2"     ,10 ,  10, 120, 8,27, 240,-240, 31),  # posit<32,2> x exact (quire)
 
         #(200,"posit:64:2"     ,6  ,   6, 248, 9,59,   6,-112, 9 ),  # posit<64,2> x approximate
@@ -109,12 +110,19 @@ configs_proposal2 = [
         #(200,"ieee:5:10"      ,28 ,  28,  15, 5,10,  30, -48, 7 ),  # IEEE 754 HP x exact (kulisch)
 
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 9 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   5, -48, 9 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   4, -48, 9 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   3, -48, 9 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 7 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 5 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 3 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 1 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -10, 9 ),  # IEEE 754 SP x approximate
-		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -38, 9 ),  # IEEE 754 SP x approximate
-		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -28, 9 ),  # IEEE 754 SP x approximate
-		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6,  -18, 9 ),  # IEEE 754 SP x approximate
-		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   7,  -7, 11 ),  # IEEE 754 SP x approximate
-		(200,"ieee:8:23"      ,10 ,  10, 127, 8,23,   127, -128, 9 ),  # IEEE 754 SP x approximate
+		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -38, 9 ),  # IEEE 754 SP x approximate
+		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -28, 9 ),  # IEEE 754 SP x approximate
+		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6,  -18, 9 ),  # IEEE 754 SP x approximate
+		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   7,  -7, 11 ),  # IEEE 754 SP x approximate
+		#(200,"ieee:8:23"      ,10 ,  10, 127, 8,23,   127, -128, 9 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,10 ,  10, 127, 8,23, 254,-298, 7 ),  # IEEE 754 SP x exact (kulisch)
 
 		#(200,"ieee:11:52"     ,8  ,   7,1023,11,52,   6, -112,9 ),  # IEEE 754 DP x approximate
@@ -128,9 +136,17 @@ configs_proposal2 = [
 		#(200,"ieee:5:2"       ,48 ,  48,  15, 5, 2,  30, -40, 5),  # FP8 E5M2 x exact (kulisch)
 
         #(200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -24, 2 ),  # bfloat16 x approximate
-        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   6, -12, 10 ),  # bfloat16 x approximate
-        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   6, -18, 2 ),  # bfloat16 x approximate
-        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   10, -10, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -22, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -20, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -18, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -16, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -14, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -12, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -10, 2 ),  # bfloat16 x approximate
+        (200,"bfloat16"       ,32 ,  31, 127, 8, 7,   5, -8, 2 ),  # bfloat16 x approximate
+        #(200,"bfloat16"       ,32 ,  31, 127, 8, 7,   6, -12, 10 ),  # bfloat16 x approximate
+        #(200,"bfloat16"       ,32 ,  31, 127, 8, 7,   6, -18, 2 ),  # bfloat16 x approximate
+        #(200,"bfloat16"       ,32 ,  31, 127, 8, 7,   10, -10, 2 ),  # bfloat16 x approximate
         #(200,"bfloat16"       ,10 ,  10, 127, 8, 7, 254,-266, 7 ),  # bfloat16 x exact (kulisch)
 
 ]
