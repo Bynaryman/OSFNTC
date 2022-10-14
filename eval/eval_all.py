@@ -18,7 +18,8 @@ model_names_cifar10 = sorted(name for name in models_cifar10.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models_cifar10.__dict__[name]))
 
-model_names_cifar10.remove(mobilenet_v2)
+model_names_cifar10.remove("mobilenet_v2")   # seems to generate GEMMs we do not support. tbc
+model_names_imagenet.remove("inception_v3")  # needs other dependecies. (scipy ?)
 
 print(model_names_cifar10)
 print(model_names_imagenet)
