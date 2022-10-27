@@ -295,34 +295,34 @@ static char* from_IFLOAT_to_bytes(
 	if (arith_type == 3) {  // posit
 		if (arithmetic_bitwidth == 1) {
 			if (sizeof(IFLOAT)==4) { // from single to posit82
+
 				double tmp_d = (double)(*arith_in);
 				VERBOSE3(stdout, "incoming float as double: %f\n", tmp_d);
-				posit_2_t tmp_px2 = convertDoubleToPX2(tmp_d, 8);
-				//posit_2_t tmp_px2_2 = convertDoubleToPX2(tmp_d, 16);
-				//posit_2_t tmp_px2_3 = convertDoubleToPX2(tmp_d, 8);
-				//uint64_t tmp_ui64_2 = pX2_int(tmp_px2_2);
-				//uint64_t tmp_ui64_3 = pX2_int(tmp_px2_3);
-				VERBOSE4(stdout, "posit8 2 as uint32 in struct: %u\n", tmp_px2.v);
-				memcpy(bytes_out, ((char*)(&(tmp_px2.v))+3), 1);
+				posit8_t tmp_p8 = convertDoubleToP8(tmp_d);
+				VERBOSE4(stdout, "posit8 0 as uint8 in struct: %u\n", tmp_p8.v);
+				memcpy(bytes_out,&(tmp_p8.v), 1);
 
-				posit_2_t tmp_px2_2 = { .v = 0 };
-				memcpy(((char*)(&(tmp_px2_2.v)))+3, bytes_out, 1);
-				double tmp_d_2 = convertPX2ToDouble(tmp_px2_2);
+				posit8_t tmp_p8_2 = { .v = 0 };
+				memcpy(&(tmp_p8_2.v), bytes_out, 1);
+				double tmp_d_2 = convertP8ToDouble(tmp_p8_2);
 				VERBOSE4(stdout, "double back to verify: %f\n", tmp_d_2);
 			}
 			if (sizeof(IFLOAT)==8) { // from double to posit82
 			return (void*)(arith_in);
 			}
 		}
-		// // if (arithmetic_bitwidth == 2) {
-		// 	if (sizeof(IFLOAT)==4) { // from single to posit162
-		// 	return (void*)(arith_in);
-		// 	}
-		// 	if (sizeof(IFLOAT)==8) { // from double to posit162
-		// 	return (void*)(arith_in);
-		// 	}
-
-		// }
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) { // from single to posit162
+				double tmp_d = (double)(*arith_in);
+				VERBOSE3(stdout, "incoming float as double: %f\n", tmp_d);
+				posit_2_t tmp_p16 = convertDoubleToPX2(tmp_d,16);
+				VERBOSE4(stdout, "posit16 2 as uint16 in struct: %u\n", tmp_p16.v);
+				memcpy(bytes_out,&(tmp_p16.v)+2, 2);
+			}
+			if (sizeof(IFLOAT)==8) { // from double to posit162
+			return (void*)(arith_in);
+			}
+		}
 		if (arithmetic_bitwidth == 4) {
 			if (sizeof(IFLOAT)==4) { // from single to posit322
 				double tmp_d = (double)(*arith_in);
@@ -436,9 +436,14 @@ static IFLOAT from_bytes_to_IFLOAT(
 	if (arith_type == 3) {  // posit
 		if (arithmetic_bitwidth == 1) {
 			if (sizeof(IFLOAT)==4) {
-				posit_2_t tmp_px2 = { .v = 0 };
-				memcpy(((char*)(&(tmp_px2.v)))+3, bytes_in, 1);
-				double tmp_d = convertPX2ToDouble(tmp_px2);
+				// posit_2_t tmp_px2 = { .v = 0 };
+				// memcpy(((char*)(&(tmp_px2.v)))+3, bytes_in, 1);
+				// double tmp_d = convertPX2ToDouble(tmp_px2);
+				// float tmp_f = (float)tmp_d;
+				// return tmp_f;
+				posit8_t tmp_p8 = { .v = 0 };
+				memcpy(&(tmp_p8.v), bytes_in, 1);
+				double tmp_d = convertP8ToDouble(tmp_p8);
 				float tmp_f = (float)tmp_d;
 				return tmp_f;
 			}
@@ -449,14 +454,21 @@ static IFLOAT from_bytes_to_IFLOAT(
 				return tmp_d;
 			}
 		}
-		// if (arithmetic_bitwidth == 2) {
-		// 	if (sizeof(IFLOAT)==4) {
-		// 	return (IFLOAT*)(arith_in);
-		// 	}
-		// 	if (sizeof(IFLOAT)==8) {
-		// 	return (IFLOAT*)(arith_in);
-		// 	}
-		// }
+		if (arithmetic_bitwidth == 2) {
+			if (sizeof(IFLOAT)==4) {
+				posit_2_t tmp_px2 = { .v = 0 };
+				memcpy(((char*)(&(tmp_px2.v)))+2, bytes_in, 2);
+				double tmp_d = convertPX2ToDouble(tmp_px2);
+				float tmp_f = (float)tmp_d;
+				return tmp_f;
+			}
+			if (sizeof(IFLOAT)==8) {
+				posit_2_t tmp_px2 = { .v = 0 };
+				memcpy(((char*)(&(tmp_px2.v)))+2, bytes_in, 2);
+				double tmp_d = convertPX2ToDouble(tmp_px2);
+				return tmp_d;
+			}
+		}
 		if (arithmetic_bitwidth == 4) {
 			if (sizeof(IFLOAT)==4) {
 				posit_2_t tmp_px2 = { .v = 0 };
