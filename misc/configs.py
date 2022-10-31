@@ -101,8 +101,8 @@ configs_proposal2 = [
         #(200,"posit:8:2"      ,16 ,  15,  24, 6, 3,   5,  -24, 2 ),  # posit<8,2> x approximate
         #(200,"posit:8:2"      ,28 ,  28,  24, 6, 3,  48, -48, 31),  # posit<8,2> x exact (quire)
 
-        (200,"posit:16:2"     ,32 ,  31,  56, 7,11,   6, -24, 9 ),  # posit<16,2> x approximate
-        (200,"posit:16:2"     ,16 ,  16,  56, 7,11, 112,-112,31 ),  # posit<16,2> x exact (quire)
+        #(200,"posit:16:2"     ,32 ,  31,  56, 7,11,   6, -24, 9 ),  # posit<16,2> x approximate
+        #(200,"posit:16:2"     ,16 ,  16,  56, 7,11, 112,-112,31 ),  # posit<16,2> x exact (quire)
 
         #(200,"posit:32:2"     ,12 ,  12, 120, 8,27,   9, -48, 9 ),  # posit<32,2> x approximate
         #(200,"posit:32:2"     ,12 ,  12, 120, 8,27,   6, -64, 9 ),  # posit<32,2> x approximate
@@ -118,6 +118,8 @@ configs_proposal2 = [
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   6, -54, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   6, -64, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -24, 9 ),  # IEEE 754 HP x approximate
+		(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -24, 9 ),  # IEEE 754 HP x approximate
+		(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -20, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -44, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   10, -24, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   10, -54, 9 ),  # IEEE 754 HP x approximate
