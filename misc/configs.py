@@ -118,8 +118,8 @@ configs_proposal2 = [
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   6, -54, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   6, -64, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -24, 9 ),  # IEEE 754 HP x approximate
-		(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -24, 9 ),  # IEEE 754 HP x approximate
-		(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -20, 9 ),  # IEEE 754 HP x approximate
+		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -24, 9 ),  # IEEE 754 HP x approximate
+		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -20, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   8, -44, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   10, -24, 9 ),  # IEEE 754 HP x approximate
 		#(200,"ieee:5:10"      ,32 ,  31,  15, 5,10,   10, -54, 9 ),  # IEEE 754 HP x approximate
@@ -131,6 +131,8 @@ configs_proposal2 = [
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -36, 9 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -32, 9 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   5, -48, 9 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -24, 9 ),  # IEEE 754 SP x approximate
+		(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -20, 9 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   4, -48, 9 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   3, -48, 9 ),  # IEEE 754 SP x approximate
 		#(200,"ieee:8:23"      ,16 ,  15, 127, 8,23,   6, -48, 7 ),  # IEEE 754 SP x approximate
