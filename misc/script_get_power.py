@@ -23,8 +23,8 @@ for c in configs:
     name = "/users/lledoux/Documents/SA/scratchpad_ocaccel/opt_routed_dcps/tclscript_SA_200_{}_{}_{}_{}_m{}_{}_HSSD.tcl".format(c[2],c[3],c[1].replace(":","_"),c[7],abs(c[8]),c[9])
     tclscriptfile = open(name, "w")
     tclscriptfile.write("open_checkpoint /users/lledoux/Documents/SA/scratchpad_ocaccel/opt_routed_dcps/SA_200_{}_{}_{}_{}_m{}_{}_HSSD.dcp\n".format(c[2],c[3],c[1].replace(":","_"),c[7],abs(c[8]),c[9]))
-    tclscriptfile.write("report_utilization -hierarchical -file /users/lledoux/Documents/SA/opt_routed_dcps/SA_200_{}_{}_{}_{}_m{}_{}_HSSD_utilization_opt_routed.rpt\n".format(c[2],c[3],c[1].replace(":","_"),c[7],abs(c[8]),c[9]))
-    tclscriptfile.write("report_power -file /users/lledoux/Documents/SA/opt_routed_dcps/SA_200_{}_{}_{}_{}_m{}_{}_HSSD_power_opt_routed.rpt\n".format(c[2],c[3],c[1].replace(":","_"),c[7],abs(c[8]),c[9]))
+    tclscriptfile.write("report_utilization -hierarchical -file /users/lledoux/Documents/SA/scratchpad_ocaccel/opt_routed_dcps/SA_200_{}_{}_{}_{}_m{}_{}_HSSD_utilization_opt_routed.rpt\n".format(c[2],c[3],c[1].replace(":","_"),c[7],abs(c[8]),c[9]))
+    tclscriptfile.write("report_power -file /users/lledoux/Documents/SA/scratchpad_ocaccel/opt_routed_dcps/SA_200_{}_{}_{}_{}_m{}_{}_HSSD_power_opt_routed.rpt\n".format(c[2],c[3],c[1].replace(":","_"),c[7],abs(c[8]),c[9]))
     tclscriptfile.close()
 
 for c in configs:
