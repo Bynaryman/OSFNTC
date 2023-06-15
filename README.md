@@ -90,14 +90,10 @@ git checkout -b your-new-branch-name
 
 4. **Make Necessary Changes and Commit Those Changes** - Now you can make changes in the source code. After you've made changes or added files, you can add those new files to your local repository, which we do with the `git add .` command:
 
-```
-git add .
-```
-
 Now we commit those changes with the `git commit` command:
 
 ```
-git commit -m "Commit message"
+git commit -m "My super contribution that does a 10x speed improvement"
 ```
 
 5. **Push Changes to GitHub** - These changes are now in the HEAD of your local working copy. To send those changes to your remote repository, execute the following `git push` command:
