@@ -1,9 +1,12 @@
-# Project Title
+# OSFNTC
 
 ![Build Status](https://travis-ci.com/user/repo.svg?branch=master)
 ![Coverage Status](https://coveralls.io/repos/github/user/repo/badge.svg?branch=master)
 
-Brief description of the project and its purpose. Describe what your project does and what it is used for.
+**O**pen-**S**ource **F**ramework for **N**umerically-**T**ailored **C**omputations
+
+This project is "An Open-Source Framework for Efficient Numerically-Tailored Computations", hence the acronym **OSFNTC**.
+The title of the corresponding paper is enclosed in quotation marks.
 
 ## Table of Contents
 - [About the Paper](#about-the-paper)
@@ -16,7 +19,13 @@ Brief description of the project and its purpose. Describe what your project doe
 
 ## About the Paper
 
-(Write about the scientific paper this project is based on. Explain the main findings, the methodologies used, and the implications for this project.)
+We introduce a flexible open-source framework specifically designed to streamline efficient and numerically-optimized Matrix-Matrix Multiplications (MMMs). This framework offers two key features: Firstly, it provides an automated pipeline for precise arithmetic datapath generation, which enables the creation of highly customized systolic MMM kernels. Secondly, it allows for the effortless integration of these generated kernels into any user code, regardless of the programming language used, without any need for modifications.
+
+We utilize this framework within a cutting-edge platform that consists of a Power9 host, an OpenCAPI link, and a Xilinx Virtex UltraScale+ FPGA. The framework exhibits a systemic improvement in terms of accuracy per energy cost across a range of High-Performance Computing (HPC) workloads. These workloads present diverse numerical requirements, including those found in Artificial Intelligence (AI) inference and Sea Surface Height (SSH) computation.
+
+For AI inference, we consider a variety of leading-edge neural network models. These include ResNet18, ResNet34, ResNet50, DenseNet121, DenseNet161, DenseNet169, and VGG11. We use two datasets and two computer formats in combination with 27 distinct intermediate arithmetic datapaths. Our approach consistently reduces energy consumption across all scenarios. For instance, we achieve a reduction by factors of 3.3x for IEEE754-32 and 1.4x for Bfloat16 during ImageNet inference with ResNet50, all while maintaining accuracies of 82.3% and 86%, which are comparable to the results achieved with traditional Floating-Point Units (FPUs).
+
+In the context of SSH computation, our methodology obtains fully reproducible results using double-precision words, which exceed the accuracy of traditional double- and quad-precision arithmetic in FPUs. Our approach increases SSH computation accuracy by a minimum of 5x and 27x compared to IEEE754-64 and IEEE754-128, respectively. As a result, we achieve improvements in accuracy per power cost by 5.6x and 15.1x, respectively.
 
 ## Project Structure
 
