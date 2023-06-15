@@ -72,39 +72,39 @@ If you're open to contributions, great! Here are some guidelines you can follow:
 
 Open a terminal and run the following git command:
 
-\`\`\`
+```
 git clone "url you just copied"
-\`\`\`
+```
 
 3. **Create a New Branch** - Change to the repository directory on your computer (if you are not already there):
 
-\`\`\`
+```
 cd repository-name
-\`\`\`
+```
 
 Now create a new branch using the `git checkout` command:
 
-\`\`\`
+```
 git checkout -b your-new-branch-name
-\`\`\`
+```
 
 4. **Make Necessary Changes and Commit Those Changes** - Now you can make changes in the source code. After you've made changes or added files, you can add those new files to your local repository, which we do with the `git add .` command:
 
-\`\`\`
+```
 git add .
-\`\`\`
+```
 
 Now we commit those changes with the `git commit` command:
 
-\`\`\`
+```
 git commit -m "Commit message"
-\`\`\`
+```
 
 5. **Push Changes to GitHub** - These changes are now in the HEAD of your local working copy. To send those changes to your remote repository, execute the following `git push` command:
 
-\`\`\`
+```
 git push origin <your-branch-name>
-\`\`\`
+```
 
 6. **Submit your Changes for Review** - If you go to your repository on GitHub, you'll see a `Compare & pull request` button. Click on that button and you'll be taken to a page where you can create a pull request.
 
@@ -114,8 +114,8 @@ Describe the license under which your project is released.
 
 ## Authors
 
-- Name [@githubhandle](https://github.com/githubhandle)
-- Name [@githubhandle](https://github.com/githubhandle)
+- Me / Bynaryman / Louis Ledoux [@Bynaryman](https://github.com/Bynaryman)
+- Marc Casas [@Marccg1](https://github.com/Marccg1)
 
 
 # ocse
