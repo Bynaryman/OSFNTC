@@ -177,9 +177,68 @@ git push origin <your-branch-name>
 
 Academic Free License (“AFL”) v. 3.0
 
+## Citing
+
+To cite this work, please refer to the articles published in FCCM2022 and FPL2023 whose bibtex are shown below
+
+```
+@INPROCEEDINGS{
+    ledoux2022,  
+    author={Ledoux, Louis and Casas, Marc},
+    booktitle={2022 IEEE 30th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)},
+    title={A Generator of Numerically-Tailored and High-Throughput Accelerators for Batched GEMMs},
+    year={2022},
+    doi={10.1109/FCCM53951.2022.9786164}
+}
+```
+
+```
+@SUBMITTED{
+    ledoux2023,  
+    author={Ledoux, Louis and Casas, Marc},
+    booktitle={FPL},
+    title={An Open-Source Framework for Efficient Numerically-Tailored Computations},
+    year={2023},
+    doi={Still NONE}
+}
+```
+
+Some Subsets of this work have also been presented in other not peer reviewed venues such as BSCSymposium23 and OpenPOWER Summit 2019, again bibtex below
+
+```
+@misc{ledoux:hal-04094835,
+  TITLE = {{An Open-Source Framework for Efficient Numerically-Tailored Computations}},
+  AUTHOR = {Ledoux, Louis and Casas, Marc},
+  URL = {https://hal.science/hal-04094835},
+  NOTE = {Poster},
+  HOWPUBLISHED = {{BSCSymposium23}},
+  ORGANIZATION = {{Barcelona Supercomputing Center}},
+  YEAR = {2023},
+  MONTH = May,
+  KEYWORDS = {GEMMs ; matrix-matrix-multiply ; full stack framework ; automated pipeline ; flopoco ; OpenCAPI ; OpenBLAS ; High Performance Computing ; approximate/trans/extended precision},
+  PDF = {https://hal.science/hal-04094835/file/BSC_Symposium_10_Louis_Ledoux_final.pdf},
+  HAL_ID = {hal-04094835},
+  HAL_VERSION = {v1},
+}
+
+```
+
+```
+@inproceedings{ledoux:hal-04094850,
+  TITLE = {{Accelerating DL inference with (Open)CAPI and posit numbers}},
+  AUTHOR = {Ledoux, Louis and Casas, Marc},
+  URL = {https://hal.science/hal-04094850},
+  BOOKTITLE = {{OpenPOWER summit 2019}},
+  ADDRESS = {Lyon, France},
+  ORGANIZATION = {{linux foundation}},
+  YEAR = {2019},
+  MONTH = Oct,
+  KEYWORDS = {FPGA ; posit ; acceleration ; PCIE ; CAPI ; CAPI2 ; POWER9},
+  HAL_ID = {hal-04094850},
+  HAL_VERSION = {v1},
+}
+```
 ## Authors
 
 - Me / Bynaryman / Louis Ledoux [@Bynaryman](https://github.com/Bynaryman)
 - Marc Casas [@Marccg1](https://github.com/Marccg1)
-
-
