@@ -205,13 +205,21 @@ The following Figure depicts the myriad of evaluated configurations in terms of 
 
 ## ASIC Tapeout
 
+This work is both target-agnostic and open source, which inspired us to push its boundaries by trying to make it a chip. Utilizing the exact same toolchain, we were able to successfully manufacture a functional, open-source tapeout. This achievement was made possible through a fruitful collaboration with Google, Skywater, and Efabless.
+
+Special thanks to [@mattvenn](https://github.com/mattvenn) of the Zero To ASIC course for making it possible.
+
+The image below showcases a ray-tracing render of the 3D view of the GDS file. We replaced the metal with glass to achieve this stunning, glowing visual effect. The featured design is a 3x3 Systolic Array that uses posit<8,0> arithmetic and exact accumulators, also known as Quires.
+
 ![image](https://github.com/Bynaryman/OSFNTC/assets/937470/9fafa062-419e-4111-8377-8ad016256fdc)
 
+We invite you to explore the following links for a deeper understanding of this project. They will guide you to the code that generated this chip, and offer additional valuable insights into this open-source PDK (Process Development Kit)) collaboration.
 
-The exact same toolflow succesfully made a chip, opensource, target agnostic
-https://zerotoasiccourse.com/post/mpw5_submitted/
-https://github.com/Bynaryman/wrapped_teras
-https://github.com/Bynaryman/teras/tree/master
+1. [Zero to ASIC MPW5](https://github.com/mattvenn/zero_to_asic_mpw5)
+2. [MPW5 Submitted Article](https://zerotoasiccourse.com/post/mpw5_submitted/)
+3. [Wrapped Teras](https://github.com/Bynaryman/wrapped_teras)
+4. [Teras Main Repository](https://github.com/Bynaryman/teras/tree/master)
+
 
 ## Contribution
 
