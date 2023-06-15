@@ -7,7 +7,7 @@
 
 This project is "An Open-Source Framework for Efficient Numerically-Tailored Computations", hence the acronym **OSFNTC**.
 
-The title of the corresponding paper is enclosed in quotation marks.
+The title of the corresponding paper is enclosed in the quotation marks.
 
 ## Table of Contents
 - [About the Paper](#about-the-paper)
