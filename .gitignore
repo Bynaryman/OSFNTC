@@ -3,3 +3,4 @@ pytorch/
 numpy/
 runs/CTranslate2/
 eval/PyTorch_CIFAR10/cifar10_models/state_dicts/
+history.txt
