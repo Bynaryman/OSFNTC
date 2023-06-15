@@ -6,6 +6,7 @@
 **O**pen-**S**ource **F**ramework for **N**umerically-**T**ailored **C**omputations
 
 This project is "An Open-Source Framework for Efficient Numerically-Tailored Computations", hence the acronym **OSFNTC**.
+
 The title of the corresponding paper is enclosed in quotation marks.
 
 ## Table of Contents
@@ -29,24 +30,25 @@ In the context of SSH computation, our methodology obtains fully reproducible re
 
 ## Project Structure
 
-Here's a basic project structure:
+OSFNTC/
+├── OpenBLAS/ # OpenBLAS library directory
+├── PySigmoid/ # PySigmoid library directory
+├── SoftPosit/ # SoftPosit library directory
+├── eval/ # Evaluation scripts and data
+├── flopoco/ # FloPoCo library directory
+├── misc/ # Miscellaneous scripts and files
+├── oc-accel/ # OpenCAPI acceleration framework directory
+├── ocse/ # OpenCAPI Software Enablement directory
+├── runs/ # Directory for run scripts and logs
+├── sim_config/ # Simulation configuration files
+├── .gitignore # Git ignore rules
+├── Makefile # Makefile for building the project
+├── README.md # This file, a concise overview of the project
+├── history.txt # Revision history
+├── requirements.txt # Python requirements
+└── requirements_P9.txt # Python requirements for Power9
 
-\`\`\`
-/project
-  /src
-    /module1
-    /module2
-  /tests
-    /module1
-    /module2
-  /docs
-  /data
-\`\`\`
-
-- `src`: Source code files
-- `tests`: Test code files
-- `docs`: Documentation files
-- `data`: Data files
+Please refer to the individual directories for additional readme files and more detailed explanations where applicable.
 
 ## Installation
 
