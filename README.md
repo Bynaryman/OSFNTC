@@ -136,7 +136,30 @@ ct2-opennmt-py-converter --model_path averaged-10-epoch.pt --output_dir ende_ctr
 
 ## Usage
 
-Describe how to use the project after installation. Screenshots or code examples are often helpful.
+This section is currently under development, but the basic process involves following the steps laid out by oc-accel to create a custom action and generate a bitstream. Once the setup is complete, you can run high-level code that invokes General Matrix Multiply (GEMM) operations, which will then be processed by the FPGA.
+
+User-level code and numerical libraries do not need to be changed or recompiled to redirect GEMM calls to our customized Matrix-Matrix Multiplication (MMM) units. Typically, an application would allocate some virtual memory space for the input and output matrices, then call one of the GEMM subroutines (sgemm, dgemm, zgemm, cgemm). This process is illustrated in steps 1) and 2) of the overall framework figure provided in the introduction. Often, these applications are statically or dynamically linked with a Basic Linear Algebra Subprograms (BLAS) library.
+
+The execution of the GEMM operation can be dispatched to the FPGA or executed normally on the CPU or GPU, depending on the dimensions of the matrix. This is demonstrated in the following example:
+```bash
+LD_LIBRARY_PATH=/opt/lib/our_openblas.lib ./gemm.py # will dispatch the GEMM execution to the FPGA (depending on matrix dimensions)
+LD_LIBRARY_PATH=/opt/lib/OpenBLAS.lib ./gemm.py # will work as normal, either on CPU or GPU execution
+```
+
+Here's how to call the dgemm and sgemm functions in Python:
+```python
+m,n,k = 1024, 1024, 1024
+# calls dgemm
+A = np.random.random((m,k))
+B = np.random.random((k,n))
+C = np.matmul(A, B)
+
+# calls sgemm
+A = np.random.random((m,k)).astype(np.float32)
+B = np.random.random((k,n)).astype(np.float32)
+C = np.matmul(A, B)
+
+```
 
 ## Contribution
 
