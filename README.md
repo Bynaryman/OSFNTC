@@ -213,7 +213,7 @@ The image below showcases a ray-tracing render of the 3D view of the GDS file. W
 
 ![image](https://github.com/Bynaryman/OSFNTC/assets/937470/9fafa062-419e-4111-8377-8ad016256fdc)
 
-We invite you to explore the following links for a deeper understanding of this project. They will guide you to the code that generated this chip, and offer additional valuable insights into this open-source PDK (Process Development Kit)) collaboration.
+We invite you to explore the following links for a deeper understanding of this project. They will guide you to the code that generated this chip, and offer additional valuable insights into this open-source PDK (Process Development Kit) collaboration.
 
 1. [Zero to ASIC MPW5](https://github.com/mattvenn/zero_to_asic_mpw5)
 2. [MPW5 Submitted Article](https://zerotoasiccourse.com/post/mpw5_submitted/)
