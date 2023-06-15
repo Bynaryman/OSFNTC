@@ -1,4 +1,3 @@
-\`\`\`markdown
 # Project Title
 
 ![Build Status](https://travis-ci.com/user/repo.svg?branch=master)
@@ -102,7 +101,6 @@ Describe the license under which your project is released.
 
 - Name [@githubhandle](https://github.com/githubhandle)
 - Name [@githubhandle](https://github.com/githubhandle)
-\
 
 
 # ocse
