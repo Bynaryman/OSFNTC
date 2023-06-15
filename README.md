@@ -177,16 +177,15 @@ To reduce errors and approximate the correct result, several techniques are util
 This study focuses on the effectiveness of hardware units, comparing our Fused Dot Products (FDPs) to the double- and quad-precision FMAs found in computational systems. The units compared are the IEEE-754 double-precision FMA, the IEEE-754 quad-precision FMA, and our 91-bit FDP fed with IEEE754-64 words.
 
 We assessed average, relative standard deviation (RSD), accuracy, and power cost per accurate bit of SSH variable for different vector sizes.
+<p align="center">
+<img src="https://github.com/Bynaryman/OSFNTC/assets/937470/338d6221-c4e1-4b67-9e35-685b3abec5ba" width="50%">
+</p>
 
 The 64-bit and 128-bit FPUs showed decreased reproducibility as vector size increased, while our 91-bit FDP maintained reproducibility across all vector sizes. Quad-precision FPUs improved numerical quality over double-precision FPUs but didn't offer reproducibility.
 
 Our FDP consistently exhibits 52 correct bits, at least 5 and 27.7 times more than quad-precision and double-precision respectively. We also measured the cost of one correct bit in terms of power consumption. Our 91-bit FDP's power cost was found to be the most efficient, providing more correct bits per wattage than quad-precision and double-precision FMAs.
 
 In conclusion, our study demonstrates that a sufficiently precise accumulator provides reproducibility, greater accuracy in HPC workloads, and costs less than double and extended precision methods.
-<p align="center">
-<img src="https://github.com/Bynaryman/OSFNTC/assets/937470/338d6221-c4e1-4b67-9e35-685b3abec5ba" width="50%">
-</p>
-
 ### AI (Artificial Intelligence)
 
 ![image](https://github.com/Bynaryman/OSFNTC/assets/937470/fa832531-fa79-44b9-ac37-308847355bf6)
