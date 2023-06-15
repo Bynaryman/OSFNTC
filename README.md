@@ -186,6 +186,7 @@ The 64-bit and 128-bit FPUs showed decreased reproducibility as vector size incr
 Our FDP consistently exhibits 52 correct bits, at least 5 and 27.7 times more than quad-precision and double-precision respectively. We also measured the cost of one correct bit in terms of power consumption. Our 91-bit FDP's power cost was found to be the most efficient, providing more correct bits per wattage than quad-precision and double-precision FMAs.
 
 In conclusion, our study demonstrates that a sufficiently precise accumulator provides reproducibility, greater accuracy in HPC workloads, and costs less than double and extended precision methods.
+
 ### AI (Artificial Intelligence)
 
 We evaluate the accuracy and power trade-offs of low-precision accumulators across various neural network models, datasets, and computer formats.
@@ -194,10 +195,11 @@ Our focus lies on the inference portion of neural network computation, utilizing
 We employ Pytorch as a base framework and link it to our modified OpenBLAS.
 We use popular neural network models such as ResNet18, ResNet34, ResNet50, DenseNet121, DenseNet161, DenseNet169, and VGG11 with batch normalization, and evaluate them on the CIFAR-10 and ImageNet datasets.
 
-The two following Figures show the myriad of measured profiles:
+The following Figure shows Top1 Score VS. the energy cost of infering the whole validation set. In some instances, we observe that adjusting the accumulator by just a few bits can save an amount of energy equivalent to that required for a 3-year-old toddler to climb a 3-meter hill.
 
 ![image](https://github.com/Bynaryman/OSFNTC/assets/937470/fa832531-fa79-44b9-ac37-308847355bf6)
 
+The following Figure depicts the myriad of evaluated configurations in terms of Top1/Top5 scores and score cost.
 ![image](https://github.com/Bynaryman/OSFNTC/assets/937470/75293628-a9ff-4bc9-8f50-ef14fc2ce061)
 
 
