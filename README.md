@@ -57,20 +57,20 @@ Please refer to the individual directories for additional readme files and more 
 
 ## Installation
 
-The installation process is a tedious task and depends on what your objective, your machine, kernels, Operatin Systems are.
-Most of the time each subframework embeded here has a Readme file explaining installation steps.
-To make it work, the following call will modify several environment variable used by the underneath framework.
+The installation process for this project is complex and varies depending on your specific goals, machine, kernel, and operating system. Each subframework included here typically has its own Readme file explaining the necessary installation steps.
+
+To set up the environment variables used by the underlying framework, execute the following script:
 
 ```bash
 source ./misc/script_add_stuff_to_venv.sh
 ```
 
-The process is iterative and will certainly not work at the first try as I just tested on 3 different machines and the steps slightly changed between each other.
+This process is iterative and may require several attempts to succeed. Testing on three different machines revealed slight variations in the required steps.
 
-I add here specific commands or comments needed to install some frameworks
+Below are specific commands and comments required to install some of the frameworks.
 
 ### ocse
-Modified libocxl/Makefile to enforce pulling of misc/ocxl.
+The libocxl/Makefile has been modified to ensure the correct misc/ocxl version is pulled.
 
 ### openblas
 ```bash
@@ -99,7 +99,7 @@ Among other things, we use  the library to generate input matrices.
 
 ### OpenNMT Ctranslate2
 ```bash
-#need open blas installed in /usr
+# Requires OpenBLAS to be installed in /usr
 git clone --recursive https://github.com/OpenNMT/CTranslate2.git
 mkdir build && cd build
 cmake -DWITH_MKL=OFF -DWITH_OPENBLAS=ON -DOPENMP_RUNTIME=COMP -DENABLE_CPU_DISPATCH=OFF ..
@@ -109,7 +109,7 @@ sudo make install
 
 #### Python wrapper
 ```bash
-#set CTRANSLATE2_ROOT to build folder
+# Set CTRANSLATE2_ROOT to build folder
 export CTRANSLATE2_ROOT="$(pwd)"
 cd python
 pip install -r install_requirements.txt
