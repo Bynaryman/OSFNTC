@@ -34,23 +34,23 @@ The repository is organized as follows:
 
 ```bash
 OSFNTC/
-├── OpenBLAS/              # OpenBLAS library directory
-├── PySigmoid/             # PySigmoid library directory
-├── SoftPosit/             # SoftPosit library directory
+├── OpenBLAS/              # Custom OpenBLAS library directory
+├── PySigmoid/             # Custom PySigmoid library directory
+├── SoftPosit/             # Custom SoftPosit library directory
 ├── eval/                  # Evaluation scripts and data
-├── flopoco/               # FloPoCo library directory
+├── flopoco/               # Custom FloPoCo library directory
 ├── misc/                  # Miscellaneous scripts and files
 ├── oc-accel/              # OpenCAPI acceleration framework directory
-├── ocse/                  # OpenCAPI Software Enablement directory
+├── ocse/                  # OpenCAPI Simulation Engine directory
 ├── runs/                  # Directory for run scripts and logs
-├── sim_config/            # Simulation configuration files
+├── sim_config/            # Harware Simulation configuration files
 ├── .gitignore             # Git ignore rules
 ├── Makefile               # Makefile for building the project
 ├── README.md              # This file, a concise overview of the project
-├── history.txt            # Revision history
-├── requirements.txt       # Python requirements
-└── requirements_P9.txt    # Python requirements for Power9
+├── requirements.txt       # Python requirements for x86 virtual env
+└── requirements_P9.txt    # Python requirements for Power9 virtual env
 
+```
 
 Please refer to the individual directories for additional readme files and more detailed explanations where applicable.
 
