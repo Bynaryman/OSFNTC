@@ -188,7 +188,18 @@ Our FDP consistently exhibits 52 correct bits, at least 5 and 27.7 times more th
 In conclusion, our study demonstrates that a sufficiently precise accumulator provides reproducibility, greater accuracy in HPC workloads, and costs less than double and extended precision methods.
 ### AI (Artificial Intelligence)
 
+We evaluate the accuracy and power trade-offs of low-precision accumulators across various neural network models, datasets, and computer formats.
+Our focus lies on the inference portion of neural network computation, utilizing pre-trained neural networks in their original floating-point formats.
+
+We employ Pytorch as a base framework and link it to our modified OpenBLAS.
+We use popular neural network models such as ResNet18, ResNet34, ResNet50, DenseNet121, DenseNet161, DenseNet169, and VGG11 with batch normalization, and evaluate them on the CIFAR-10 and ImageNet datasets.
+
+The two following Figures show the myriad of measured profiles:
+
 ![image](https://github.com/Bynaryman/OSFNTC/assets/937470/fa832531-fa79-44b9-ac37-308847355bf6)
+
+![image](https://github.com/Bynaryman/OSFNTC/assets/937470/75293628-a9ff-4bc9-8f50-ef14fc2ce061)
+
 
 ## ASIC Tapeout
 The exact same toolflow succesfully made a chip, opensource, target agnostic
