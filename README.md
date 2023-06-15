@@ -204,6 +204,10 @@ The following Figure depicts the myriad of evaluated configurations in terms of 
 
 
 ## ASIC Tapeout
+
+![image](https://github.com/Bynaryman/OSFNTC/assets/937470/9fafa062-419e-4111-8377-8ad016256fdc)
+
+
 The exact same toolflow succesfully made a chip, opensource, target agnostic
 https://zerotoasiccourse.com/post/mpw5_submitted/
 https://github.com/Bynaryman/wrapped_teras
