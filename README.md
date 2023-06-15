@@ -47,6 +47,7 @@ OSFNTC/
 ├── .gitignore             # Git ignore rules
 ├── Makefile               # Makefile for building the project
 ├── README.md              # This file, a concise overview of the project
+├── LICENSE.txt            # The used license
 ├── requirements.txt       # Python requirements for x86 virtual env
 └── requirements_P9.txt    # Python requirements for Power9 virtual env
 
@@ -106,7 +107,7 @@ git push origin <your-branch-name>
 
 ## License
 
-Describe the license under which your project is released.
+Academic Free License (“AFL”) v. 3.0
 
 ## Authors
 
