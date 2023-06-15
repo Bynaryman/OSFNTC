@@ -163,10 +163,39 @@ B = np.random.random((k,n)).astype(np.float32)
 C = np.matmul(A, B)
 
 ```
+
 ## Evaluation
 
+Here, we briefly summarize the two big families of HPC code that we evaluated, each demonstrating distinct numerical requirements.
+
+### SSH (Sea Surface Height)
+
+Sea Surface Height (SSH) is a crucial metric in ocean circulation model development, aiding in the tracking of ocean currents, eddies, and climate changes. SSH represents sea surface volume, derived from the product of integrated sea surface area and height.
+
+To reduce errors and approximate the correct result, several techniques are utilized. Self-Compensated and Double-Compensated Summations (SCS and DCS) estimate the round-off error at each step and subtract it in subsequent steps. Sorting the values in decreasing magnitude order is also effective, especially where values alternate signs.
+
+This study focuses on the effectiveness of hardware units, comparing our Fused Dot Products (FDPs) to the double- and quad-precision FMAs found in computational systems. The units compared are the IEEE-754 double-precision FMA, the IEEE-754 quad-precision FMA, and our 91-bit FDP fed with IEEE754-64 words.
+
+We assessed average, relative standard deviation (RSD), accuracy, and power cost per accurate bit of SSH variable for different vector sizes.
+
+The 64-bit and 128-bit FPUs showed decreased reproducibility as vector size increased, while our 91-bit FDP maintained reproducibility across all vector sizes. Quad-precision FPUs improved numerical quality over double-precision FPUs but didn't offer reproducibility.
+
+Our FDP consistently exhibits 52 correct bits, at least 5 and 27.7 times more than quad-precision and double-precision respectively. We also measured the cost of one correct bit in terms of power consumption. Our 91-bit FDP's power cost was found to be the most efficient, providing more correct bits per wattage than quad-precision and double-precision FMAs.
+
+In conclusion, our study demonstrates that a sufficiently precise accumulator provides reproducibility, greater accuracy in HPC workloads, and costs less than double and extended precision methods.
+<p align="center">
+<img src="https://github.com/Bynaryman/OSFNTC/assets/937470/338d6221-c4e1-4b67-9e35-685b3abec5ba" width="50%">
+</p>
+
+### AI (Artificial Intelligence)
+
+![image](https://github.com/Bynaryman/OSFNTC/assets/937470/fa832531-fa79-44b9-ac37-308847355bf6)
+
 ## ASIC Tapeout
-The exact same toolflow succesfully made a chip
+The exact same toolflow succesfully made a chip, opensource, target agnostic
+https://zerotoasiccourse.com/post/mpw5_submitted/
+https://github.com/Bynaryman/wrapped_teras
+https://github.com/Bynaryman/teras/tree/master
 
 ## Contribution
 
