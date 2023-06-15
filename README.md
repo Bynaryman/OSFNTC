@@ -77,16 +77,16 @@ This process is iterative and may require several attempts to succeed. Testing o
 
 Below are specific commands and comments required to install some of the frameworks.
 
-### ocse
+### OCSE (OpenCAPI Simulation Engine)
 The libocxl/Makefile has been modified to ensure the correct misc/ocxl version is pulled.
 
-### openblas
+### OpenBLAS
 ```bash
 make USE_OPENMP=1
 sudo make install #(will put on default path in /opt which is ok)
 ```
 
-### pytorch
+### Pytorch
 ```bash
 git submodule sync
 git submodule update --init --recursive
@@ -96,7 +96,7 @@ source misc/script_add_stuff_to_venv.sh
 python setup.py install
 ```
 
-### numpy
+### Numpy
 ```bash
 pip install cython
 git submodule update --init
