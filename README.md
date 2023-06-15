@@ -28,6 +28,13 @@ For AI inference, we consider a variety of leading-edge neural network models. T
 
 In the context of SSH computation, our methodology obtains fully reproducible results using double-precision words, which exceed the accuracy of traditional double- and quad-precision arithmetic in FPUs. Our approach increases SSH computation accuracy by a minimum of 5x and 27x compared to IEEE754-64 and IEEE754-128, respectively. As a result, we achieve improvements in accuracy per power cost by 5.6x and 15.1x, respectively.
 
+
+The two phases framework is depicted by the following image. On the left we observe the runtime execution flow, whereas, the rightmost part depicts the a priori hardware generation flow: 
+
+
+![image](https://github.com/Bynaryman/OSFNTC/assets/937470/d24f3f4b-1615-4bed-b0f2-75b6d18dc985)
+
+
 ## Project Structure
 
 The repository is organized as follows:
