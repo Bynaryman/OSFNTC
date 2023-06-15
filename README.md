@@ -16,6 +16,7 @@ The title of the corresponding paper is enclosed in quotation marks.
 - [Usage](#usage)
 - [Contribution](#contribution)
 - [License](#license)
+- [Citing](#citing)
 - [Authors](#authors)
 
 ## About the Paper
