@@ -14,6 +14,8 @@ The title of the corresponding paper is enclosed in quotation marks.
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Evaluation](#evaluation)
+- [ASIC tapeout](#asic-tapeout)
 - [Contribution](#contribution)
 - [License](#license)
 - [Citing](#citing)
@@ -161,6 +163,10 @@ B = np.random.random((k,n)).astype(np.float32)
 C = np.matmul(A, B)
 
 ```
+## Evaluation
+
+## ASIC Tapeout
+The exact same toolflow succesfully made a chip
 
 ## Contribution
 
